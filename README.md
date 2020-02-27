@@ -2,6 +2,10 @@
 
 - 개인폴더 생성해서 샘플 코드, 현재 공부중인  및 조사 자료 정리
 
+- slack : koscomgarage.slack.com
+
+- jira : https://newcreatior.atlassian.net/
+
 - Binance.py -> Binance 거래소 시세 정보 api 모듈
 
 
