@@ -2,6 +2,8 @@
 
 - 개인폴더 생성해서 샘플 코드, 현재 공부중인  및 조사 자료 정리
 
+- 실제 프로젝트 관련 코드는 /Project 디렉토리에 이동
+
 - slack : koscomgarage.slack.com
 
 - jira : https://newcreatior.atlassian.net/
