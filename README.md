@@ -8,7 +8,9 @@
 
 - Binance.py -> Binance 거래소 시세 정보 api 모듈
 
-
+- database : https://aquerytool.com/
+             공유 코드 d3645e81-f2ec-a7f6-1117-c1e900ebf9ae
+             
 프로젝트 주제 - 차트의 기술적 분석기반 시스템 트레이딩 알고리즘 생성
 
 1. 거래 대상
