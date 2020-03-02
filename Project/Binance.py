@@ -125,3 +125,45 @@ class BinanceAPI:
     
         #반환
         return df
+    
+    def get_klines_set_term(self, coin_name="BTCUSDT", interval='1d',kline_from='1 Dec, 2017', kline_to='1 Jan, 2018' ):
+        
+        client = self.api_connect()
+        
+        request_interval = Client.KLINE_INTERVAL_1MINUTE
+        request_from = kline_from
+        request_to = kline_to
+        
+        klines = client.get_historical_klines(coin_name, request_interval, request_from, request_to)
+        
+        #데이터 추출을 위한 변수
+        unix_timestamps=[]
+        timestamps = []
+        closed_prices = []
+        open_prices = []
+        high_prices= []
+        low_prices= []
+        volume = []
+        
+        #시간 추출 unix time
+        for kline in klines:
+            unix_timestamps.append(kline[0])
+        
+        #시간 변환  datetime
+        for unix_timestamp in unix_timestamps:
+            timestamps.append(datetime.fromtimestamp(unix_timestamp/1000))
+
+        # open,close,high,low,volume 추출
+        for kline in klines:
+            open_prices.append(float(kline[1]))
+            high_prices.append(float(kline[2]))
+            low_prices.append(float(kline[3]))
+            closed_prices.append(float(kline[4]))
+            volume .append(float(kline[5]))
+        
+        #dataframe으로 묶음
+        df = pd.DataFrame(list(zip(open_prices,closed_prices,high_prices,low_prices,volume)), index=timestamps, columns = ['open','close','high','low','volume'])
+    
+        #반환
+        return df
+        
