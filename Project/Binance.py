@@ -89,6 +89,8 @@ class BinanceAPI:
             request_term = "6 month ago UTC"
         elif term =='1y':
             request_term = "1 year ago UTC"
+        elit term =='3y':
+            request_term = "3 year ago UTC"
         else:
             request_term = "6 month ago UTC"
         
