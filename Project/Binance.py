@@ -121,7 +121,7 @@ class BinanceAPI:
             volume .append(float(kline[5]))
         
         #dataframe으로 묶음
-        df = pd.DataFrame(list(zip(open_prices,closed_prices,high_prices,low_prices,volume)), index=timestamps, columns = ['open','close','high','low','volume'])
+        df = pd.DataFrame(list(zip(timestamps, open_prices,closed_prices,high_prices,low_prices,volume)), columns = ['timestamp','open','close','high','low','volume'])
     
         #반환
         return df
@@ -162,7 +162,7 @@ class BinanceAPI:
             volume .append(float(kline[5]))
         
         #dataframe으로 묶음
-        df = pd.DataFrame(list(zip(open_prices,closed_prices,high_prices,low_prices,volume)), index=timestamps, columns = ['open','close','high','low','volume'])
+        df = pd.DataFrame(list(zip(timestamps,open_prices,closed_prices,high_prices,low_prices,volume)),  columns = ['timestamp','open','close','high','low','volume'])
     
         #반환
         return df
