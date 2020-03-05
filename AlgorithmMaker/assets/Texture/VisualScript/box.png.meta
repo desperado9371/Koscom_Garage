@@ -3,7 +3,7 @@
   "uuid": "dbacb6ba-ed51-4494-a8e7-78434a0a0dc4",
   "type": "sprite",
   "wrapMode": "clamp",
-  "filterMode": "bilinear",
+  "filterMode": "point",
   "premultiplyAlpha": false,
   "genMipmaps": false,
   "packable": true,
@@ -26,10 +26,10 @@
       "height": 10,
       "rawWidth": 10,
       "rawHeight": 10,
-      "borderTop": 0,
-      "borderBottom": 0,
-      "borderLeft": 0,
-      "borderRight": 0,
+      "borderTop": 3,
+      "borderBottom": 3,
+      "borderLeft": 3,
+      "borderRight": 3,
       "subMetas": {}
     }
   }
