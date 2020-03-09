@@ -1,3 +1,5 @@
+import Block from "./Block";
+
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
 // Learn Attribute:
@@ -10,8 +12,8 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Docker extends cc.Component {
 
-    @property(cc.Node)
-    block : cc.Node = null;
+    @property(Block)
+    block : Block = null;
 
     isConnected = false;
     connectedTo = null;
@@ -25,26 +27,22 @@ export default class Docker extends cc.Component {
             cc.director.getCollisionManager().enabled = true;
         }
 
-
-        if(this.block === null){
-            this.block = this.node.parent;
-        }
     }
     start () {
         this.init();
     }
 
-    onCollisionEnter(other: cc.Collider, self: cc.Collider){
-        
-        /*if(other.node.group === "slot" && ){
 
-        }*/
+    //부모로 Collision Foward
+    onCollisionEnter(other:cc.Collider, self:cc.Collider){
+        this.block.onCollisionEnter(other, self);
     }
-
-    onCollisionStay(other: cc.Collider, self: cc.Collider){
+    onCollisionStay(other:cc.Collider, self:cc.Collider){
+        this.block.onCollisionStay(other, self);
 
     }
-    onCollisionExit(other: cc.Collider, self: cc.Collider){
+    onCollisionExit(other:cc.Collider, self:cc.Collider){
+        this.block.onCollisionExit(other, self);
 
     }
 

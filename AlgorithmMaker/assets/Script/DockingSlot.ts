@@ -10,7 +10,8 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    groupDepth = 0;
+    @property(cc.Node)
+    block: cc.Node = null;
 
 }
 

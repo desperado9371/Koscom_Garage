@@ -14,6 +14,7 @@ export default class MouseManager extends cc.Component {
 
     mouseEvent : cc.Event.EventMouse;
     mousePos : cc.Vec2 = new cc.Vec2();
+    downObject : EventHandler = null;
     // LIFE-CYCLE CALLBACKS:
 
     physicsManager : cc.PhysicsManager = null;
@@ -21,9 +22,11 @@ export default class MouseManager extends cc.Component {
         cc.director.getCollisionManager().enabled = true;
         this.physicsManager = cc.director.getPhysicsManager();
         this.physicsManager.enabled = true;
+        this.node.on(cc.Node.EventType.MOUSE_MOVE, this.mouseMoveEventHandler, this);
+
     }
     start () {
-        this.node.on(cc.Node.EventType.MOUSE_MOVE, this.mouseMoveEventHandler, this);
+       this.init();
         
     }
 
@@ -31,18 +34,32 @@ export default class MouseManager extends cc.Component {
         this.mousePos = event.getLocation();
     }
 
-    mouseOnClickEventHandler(event : cc.Event.EventTouch){
+    mouseDownEventHandler(event : cc.Event.EventTouch){
+        var touchLoc = event.getLocation();
+        var collider = this.physicsManager.testPoint(touchLoc);
+        console.log(collider + ": " + touchLoc);
+        
+        if(collider != null){
+            var handler = collider.node.getComponent(EventHandler);
+            handler.touchDownHandler(event);
+            this.downObject = handler;
+        }
+    }
+
+    mouseUpEventHandler(event : cc.Event.EventTouch){
         var touchLoc = event.getLocation();
         var collider = this.physicsManager.testPoint(touchLoc);
         if(collider != null){
             var handler = collider.node.getComponent(EventHandler);
             handler.touchDownHandler(event);
+            if(this.downObject != null){
+                this.downObject.touchUpHandler(event);
+            }
         }
     }
 
     getMousePos() : cc.Vec2{
         return this.mousePos;
-        cc.Intersection.pointInPolygon
     }
 
     getMouseDelta() : cc.Vec2{

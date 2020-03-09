@@ -1,4 +1,5 @@
 import MouseManager from "./MouseManager";
+import DockingSlot from "./DockingSlot"
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -17,7 +18,8 @@ const BlockColor = cc.Enum ({
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class Draggable extends cc.Component {
+export default class Block extends cc.Component {
+
     
     @property(MouseManager)
     mouseManager : MouseManager = null;
@@ -27,13 +29,7 @@ export default class Draggable extends cc.Component {
     @property(cc.Node)
     title: cc.Node = null;
 
-    @property(cc.Collider)
-    magnet: cc.Collider = null;
 
-    @property(cc.Collider)
-    slot: cc.Collider = null;
-
-    isSlotOccupied = false;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -43,6 +39,10 @@ export default class Draggable extends cc.Component {
 
         if(this.title == null){
             this.title = this.node.getChildByName("title");
+        }
+        
+        if(cc.director.getCollisionManager().enabled == false){
+            cc.director.getCollisionManager().enabled = true;
         }
 
 
@@ -74,7 +74,15 @@ export default class Draggable extends cc.Component {
 
         //마우스 이벤트 코드 설정
         if(this.mouseManager == null){
-            this.mouseManager = this.node.parent.getComponentInChildren(MouseManager);
+            var parent = this.node;
+            while(true){
+                if(parent.parent.name === "Canvas"){
+                    parent = parent.parent;
+                    break;
+                }
+                parent = parent.parent;
+            }
+            this.mouseManager = parent.getComponentInChildren(MouseManager);
         }
 
 
@@ -86,33 +94,55 @@ export default class Draggable extends cc.Component {
         this.init();
     }
 
-    isDown = false;
 
+    //드래그 이동에 관한 변수들
+    isDown = false;
     startPos : cc.Vec2 = new cc.Vec2();
     dPos: cc.Vec2 = new cc.Vec2();
     nodePos : cc.Vec3 = new cc.Vec3();
+    unstickThreshold = 40;
     start () {
-
-
-
 
     }
 
 
-
-
     update (dt) {
-        //console.log(this.dPos);
+        
+        //포지션 이동 설정
         if(this.isDown === true){
-            this.dPos.x = this.startPos.x - this.mouseManager.getMousePos().x;
-            this.dPos.y = this.startPos.y - this.mouseManager.getMousePos().y;
-            this.node.setPosition(this.nodePos.x - this.dPos.x, 
-                                 this.nodePos.y - this.dPos.y);
+            var mousePos = this.mouseManager.getMousePos();
+            //붙은 블록이 있는지에 따라 따라 붙음
+            if(this.connectedSlot != null){
+                this.dPos.x = this.stuckPos.x - mousePos.x;
+                this.dPos.y = this.stuckPos.y - mousePos.y;
+                if(this.dPos.len() > this.unstickThreshold){
+                    this.onCollisionExit(null, null);
+                }
+                else{
+                    var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
+                    this.node.setPosition(otherBlock.position.x + 120, otherBlock.position.y);
+                }
+            }
+            else{
+                this.dPos.x = this.startPos.x - mousePos.x;
+                this.dPos.y = this.startPos.y - mousePos.y;
+                this.node.setPosition(this.nodePos.x - this.dPos.x, 
+                                     this.nodePos.y - this.dPos.y);
 
+            }
             
         }
 
         
+    }
+
+    lateUpdate(){
+        //다른 블록에 끌려가는 것
+        if(this.connectedSlot != null && this.isDown === false){
+            var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
+            this.node.setPosition(otherBlock.position.x + 120, otherBlock.position.y);
+                
+        }
     }
 
     mouseUpEventHandler(event){
@@ -125,6 +155,8 @@ export default class Draggable extends cc.Component {
 
     mouseDownEventHandler(event){
         if(this.isDown == false){
+            this.stuckPos.x = this.mouseManager.getMousePos().x;
+            this.stuckPos.y = this.mouseManager.getMousePos().y;
             this.startPos = this.mouseManager.getMousePos();
             this.nodePos = this.node.position;
             this.isDown = true;
@@ -133,4 +165,26 @@ export default class Draggable extends cc.Component {
 
         console.debug("mouse down called");
     }
+
+    connectedSlot : cc.Collider = null;
+    stuckPos : cc.Vec3 = new cc.Vec3();
+    onCollisionEnter(other:cc.Collider, self:cc.Collider){
+        
+        if(this.isDown === true && self.node.group === 'docker'){
+            if(this.connectedSlot === null){
+                
+                this.connectedSlot = other;
+                this.stuckPos.x = this.mouseManager.getMousePos().x;
+                this.stuckPos.y = this.mouseManager.getMousePos().y;
+            }
+        }
+
+    }
+    onCollisionStay(other:cc.Collider, self:cc.Collider){
+
+    }
+    onCollisionExit(other:cc.Collider, self:cc.Collider){
+        this.connectedSlot = null;
+    }
+
 }
