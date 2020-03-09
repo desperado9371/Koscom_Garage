@@ -1,0 +1,251 @@
+{
+	"Volumn": {
+		"ADI": {
+			"name": "ADI",
+			"Arg": [
+				"high",
+				"low",
+				"close",
+				"volume"
+			]
+		},
+		"OBV": {
+			"name": "OBV",
+			"Arg": [
+				"close",
+				"volume"
+			]
+		},
+		"CMF": {
+			"name": "CMF",
+			"Arg": [
+				"high",
+				"low",
+				"close",
+				"volume"
+			]
+		},
+		"FI": {
+			"name": "FI",
+			"Arg": [
+				"high",
+				"low",
+				"volume"
+			]
+		},
+		"EoM": {
+			"name": "EoM",
+			"Arg": [
+				"high",
+				"low",
+				"volume"
+			]
+		},
+		"VPT": {
+			"name": "VPT",
+			"Arg": [
+				"close",
+				"volume"
+			]
+		},
+		"NVI": {
+			"name": "NVI",
+			"Arg": [
+				"close",
+				"volume"
+			]
+		}
+	},
+	"Volatility": {
+		"ATR": {
+			"name": "ATR",
+			"Arg": [
+				"close",
+				"high",
+				"low",
+				"volume"
+			]
+		},
+		"BB": {
+			"name": "BB",
+			"Arg": [
+				"close"
+			]
+		},
+		"KC": {
+			"name": "KC",
+			"Arg": [
+				"close",
+				"high",
+				"low"
+			]
+		},
+		"DC": {
+			"name": "DC",
+			"Arg": [
+				"close"
+			]
+		}
+	},
+	"Trend": {
+		"MACD": {
+			"name": "MACD",
+			"Arg": [
+				"close"
+			]
+		},
+		"ADX": {
+			"name": "ADX",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"VI": {
+			"name": "VI",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"TRIX": {
+			"name": "TRIX",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"MI": {
+			"name": "MI",
+			"Arg": [
+				"high",
+				"low"
+			]
+		},
+		"CCI": {
+			"name": "CCI",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"DPO": {
+			"name": "DPO",
+			"Arg": [
+				"close"
+			]
+		},
+		"KST": {
+			"name": "KST",
+			"Arg": [
+				"close"
+			]
+		},
+		"Ichimoku": {
+			"name": "Ichimoku",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"Parabolic_SAR": {
+			"name": "Parabolic_SAR",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		}
+	},
+	"Momentum": {
+		"MFI": {
+			"name": "MFI",
+			"Arg": [
+				"high",
+				"low",
+				"close",
+				"Volumn"
+			]
+		},
+		"RSI": {
+			"name": "RSI",
+			"Arg": [
+				"close"
+			]
+		},
+		"TSI": {
+			"name": "TSI",
+			"Arg": [
+				"close"
+			]
+		},
+		"UO": {
+			"name": "UO",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"SR": {
+			"name": "SR",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"WR": {
+			"name": "WR",
+			"Arg": [
+				"high",
+				"low",
+				"close"
+			]
+		},
+		"AO": {
+			"name": "AO",
+			"Arg": [
+				"high",
+				"low"
+			]
+		},
+		"KAMA": {
+			"name": "KAMA",
+			"Arg": [
+				"close"
+			]
+		},
+		"ROC": {
+			"name": "ROC",
+			"Arg": [
+				"close"
+			]
+		}
+	},
+	"Others": {
+		"DR": {
+			"name": "DR",
+			"Arg": [
+				"close"
+			]
+		},
+		"DLR": {
+			"name": "DLR",
+			"Arg": [
+				"close"
+			]
+		},
+		"CR": {
+			"name": "CR",
+			"Arg": [
+				"close"
+			]
+		}
+	}
+}
