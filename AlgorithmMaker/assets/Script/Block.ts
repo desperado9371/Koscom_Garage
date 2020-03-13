@@ -120,7 +120,7 @@ export default class Block extends cc.Component {
                 }
                 else{
                     var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
-                    this.node.setPosition(otherBlock.position.x + 120, otherBlock.position.y);
+                    this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
                 }
             }
             else{
@@ -131,6 +131,15 @@ export default class Block extends cc.Component {
 
             }
             
+
+
+        }
+
+        //다른 블록에 끌려가는 것
+        if(this.connectedSlot != null && this.isDown === false){
+            var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
+            this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
+                       
         }
 
         
@@ -140,7 +149,7 @@ export default class Block extends cc.Component {
         //다른 블록에 끌려가는 것
         if(this.connectedSlot != null && this.isDown === false){
             var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
-            this.node.setPosition(otherBlock.position.x + 120, otherBlock.position.y);
+            this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
                 
         }
     }
@@ -167,23 +176,30 @@ export default class Block extends cc.Component {
     }
 
     connectedSlot : cc.Collider = null;
+    nextBlock : Block = null;
     stuckPos : cc.Vec3 = new cc.Vec3();
     onCollisionEnter(other:cc.Collider, self:cc.Collider){
-        
-        if(this.isDown === true && self.node.group === 'docker'){
-            if(this.connectedSlot === null){
-                
-                this.connectedSlot = other;
-                this.stuckPos.x = this.mouseManager.getMousePos().x;
-                this.stuckPos.y = this.mouseManager.getMousePos().y;
+        if(other.node.group === 'group' && self.node.group === 'block')
+        {
+            
+        }
+        else{
+            if(this.isDown === true && self.node.group === 'docker'){
+                if(this.connectedSlot === null){
+                    
+                    this.connectedSlot = other;
+                    other.getComponent(DockingSlot).block.getComponent(Block).nextBlock = this;
+                    this.stuckPos.x = this.mouseManager.getMousePos().x;
+                    this.stuckPos.y = this.mouseManager.getMousePos().y;
+                }
             }
         }
-
     }
     onCollisionStay(other:cc.Collider, self:cc.Collider){
 
     }
     onCollisionExit(other:cc.Collider, self:cc.Collider){
+        this.connectedSlot.getComponent(DockingSlot).block.getComponent(Block).nextBlock = null;
         this.connectedSlot = null;
     }
 

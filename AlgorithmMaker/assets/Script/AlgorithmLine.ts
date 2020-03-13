@@ -25,17 +25,17 @@ export default class AlgorithmLine extends cc.Component {
     onPlusButtonClick(){
         this.group.active = true;
         this.plusButton.active = false;
-        this.minusButton.active = true;
+        //this.minusButton.active = true;
     }
     onMinusButtonClick(){
         this.group.active = false;
         this.plusButton.active = true;
-        this.minusButton.active = false;
+        //this.minusButton.active = false;
     }
     init(){
         this.group.active = false;
         this.plusButton.active = true;
-        this.minusButton.active = false;
+        //this.minusButton.active = false;
     }
     // LIFE-CYCLE CALLBACKS:
 
