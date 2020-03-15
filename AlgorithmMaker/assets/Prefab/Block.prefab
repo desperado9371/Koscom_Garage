@@ -61,8 +61,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        293.129,
-        179.941,
+        304.676,
+        -36.141,
         0,
         0,
         0,
@@ -1053,10 +1053,17 @@
     },
     "_enabled": true,
     "mouseManager": null,
-    "color": 0,
+    "color": 4,
     "title": {
       "__id__": 2
     },
+    "body": {
+      "__id__": 10
+    },
+    "relationSymbol": {
+      "__id__": 22
+    },
+    "initOnLoad": false,
     "_id": ""
   },
   {

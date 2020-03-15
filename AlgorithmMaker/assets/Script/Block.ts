@@ -28,15 +28,25 @@ export default class Block extends cc.Component {
     color = BlockColor.Brown
     @property(cc.Node)
     title: cc.Node = null;
+    @property(cc.Node)
+    body: cc.Node = null;
 
+    @property(cc.Node)
+    relationSymbol: cc.Node = null;
+
+    @property
+    initOnLoad = false;
 
 
     // LIFE-CYCLE CALLBACKS:
 
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+      
 
-
-    init(){
-
+    init(width:number, color:number, titleText:string, bodyText:string){
+        
         if(this.title == null){
             this.title = this.node.getChildByName("title");
         }
@@ -44,6 +54,11 @@ export default class Block extends cc.Component {
         if(cc.director.getCollisionManager().enabled == false){
             cc.director.getCollisionManager().enabled = true;
         }
+
+        this.node.width = width;
+        this.color = color;
+        //this.title.getComponent(cc.Label).string = titleText;
+        //this.body.getComponent(cc.Label).string = bodyText;
 
 
         //색상 설정
@@ -89,9 +104,13 @@ export default class Block extends cc.Component {
         this.node.on(cc.Node.EventType.TOUCH_END, this.mouseUpEventHandler, this);
         this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.mouseUpEventHandler, this);
         this.node.on(cc.Node.EventType.TOUCH_START, this.mouseDownEventHandler, this);
+
     }
     onLoad () {
-        this.init();
+        if(this.initOnLoad){
+            
+            this.init(100, this.getRandomArbitrary(0,5), 'Title', 'Body');
+        }
     }
 
 
