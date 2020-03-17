@@ -4,6 +4,10 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path('algo/',views.algo, name='algo'),
+    path('signup/', views.signup, name='signup'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    path('algo/', views.algo, name='algo'),
+    path('backtest/', views.backtest, name='backtest'),
     path('', views.post_list, name='post_list'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

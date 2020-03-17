@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-<p> This is algo making page</p>
+    {% if User.is_authenticated %}
+      <p>Your account doesn't have access to this page. To proceed,
+      please login with an account that has access.</p>
+    {% else %}
+      <p>Please login to see this page.</p>
+    {% endif %}
 </body>
 </html>
