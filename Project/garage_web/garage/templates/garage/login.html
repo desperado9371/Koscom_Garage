@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login test</title>
+</head>
+<body>
+
+    <div class="cotainer">
+    <h1> login test</h1>
+
+    {% block error %}
+        {% if error %}
+
+        <p> {{ error }} </p>
+
+        {% endif %}
+    {% endblock %}
+
+    <form method="POST" action="{% url 'login'%}">
+        {% csrf_token %}
+        Username:
+        <br>
+        <input name="username"type="text">
+        <br>
+        Password:
+        <br>
+        <input name="password" type="password">
+        <br><br>
+        <input type="submit" class="btn btn-primary" value="login">
+    </form>
+</div>
+
+
+  <script>
+function myFunction() {
+  alert("Hello! I am an alert box!");
+}
+</script>
+
+</body>
+</html>
