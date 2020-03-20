@@ -61,8 +61,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        304.676,
-        -36.141,
+        146.334,
+        142.194,
         0,
         0,
         0,
@@ -1038,7 +1038,7 @@
     "node": {
       "__id__": 25
     },
-    "_enabled": true,
+    "_enabled": false,
     "block": {
       "__id__": 28
     },

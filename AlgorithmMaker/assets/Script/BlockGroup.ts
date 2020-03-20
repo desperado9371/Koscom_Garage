@@ -50,6 +50,7 @@ export default class BlockGroup extends cc.Component {
             
             var pos = block.element.node.position;
             var tmpBlock = block.element;
+            
             while(tmpBlock != null){
                 tmpBlock.node.setPosition(pos);
                 pos.x += 138;
