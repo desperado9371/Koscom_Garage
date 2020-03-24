@@ -61,8 +61,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -240,
-        125,
+        0,
+        0,
         0,
         0,
         0,
@@ -953,7 +953,7 @@
     "node": {
       "__id__": 2
     },
-    "_enabled": true,
+    "_enabled": false,
     "tag": 0,
     "_offset": {
       "__type__": "cc.Vec2",
@@ -2030,6 +2030,7 @@
     "relationSymbol": {
       "__id__": 48
     },
+    "initOnLoad": false,
     "_id": ""
   },
   {
@@ -2401,8 +2402,8 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 40,
-    "_left": 120,
-    "_right": -120,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_verticalCenter": 0,

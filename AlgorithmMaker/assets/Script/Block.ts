@@ -44,8 +44,11 @@ export default class Block extends cc.Component {
         return Math.random() * (max - min) + min;
     }
       
+    initWithRand(){
+        this.init(100, this.getRandomArbitrary(0,5), 'Title' + this.getRandomArbitrary(0,500), 'Body');
+    }
 
-    init(width:number, color:number, titleText:string, bodyText:string){
+    init(width:number, color:number, titleText:string, bodyText:string, isStuck:boolean = false){
         
         if(this.title == null){
             this.title = this.node.getChildByName("title");
@@ -100,10 +103,12 @@ export default class Block extends cc.Component {
             this.mouseManager = parent.getComponentInChildren(MouseManager);
         }
 
+        if(isStuck === false){
+            this.node.on(cc.Node.EventType.TOUCH_END, this.mouseUpEventHandler, this);
+            this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.mouseUpEventHandler, this);
+            this.node.on(cc.Node.EventType.TOUCH_START, this.mouseDownEventHandler, this);
+        }
 
-        this.node.on(cc.Node.EventType.TOUCH_END, this.mouseUpEventHandler, this);
-        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.mouseUpEventHandler, this);
-        this.node.on(cc.Node.EventType.TOUCH_START, this.mouseDownEventHandler, this);
 
     }
     onLoad () {
@@ -135,7 +140,8 @@ export default class Block extends cc.Component {
                 this.dPos.x = this.stuckPos.x - mousePos.x;
                 this.dPos.y = this.stuckPos.y - mousePos.y;
                 if(this.dPos.len() > this.unstickThreshold){
-                    this.onCollisionExit(null, null);
+                    this.connectedSlot.getComponent(DockingSlot).block.getComponent(Block).nextBlock = null;
+                    this.connectedSlot = null;
                 }
                 else{
                     var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
@@ -218,8 +224,7 @@ export default class Block extends cc.Component {
 
     }
     onCollisionExit(other:cc.Collider, self:cc.Collider){
-        this.connectedSlot.getComponent(DockingSlot).block.getComponent(Block).nextBlock = null;
-        this.connectedSlot = null;
+
     }
 
 }

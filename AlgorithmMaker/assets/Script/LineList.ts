@@ -15,6 +15,9 @@ export default class LineList extends cc.Component {
     @property(cc.Prefab)
     line:cc.Prefab =  null;
 
+    @property(cc.Node)
+    blockParent:cc.Node = null;
+
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
@@ -25,14 +28,15 @@ export default class LineList extends cc.Component {
     
     addLine(){
         var newLine = cc.instantiate(this.line);
+        
         newLine.setParent(this.node);
-        newLine.getComponent(AlgorithmLine).init(this.node);
+        newLine.getComponent(AlgorithmLine).init(this.node, this.blockParent);
         newLine.active= true;
         newLine.position = new cc.Vec3(0,0,0);
     }
 
-    removeLine(index:number){
-        this.node.removeChild(this.node.children[index]);
+    removeLine(){
+        
     }
 
     // update (dt) {}
