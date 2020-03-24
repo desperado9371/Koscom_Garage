@@ -9658,6 +9658,16 @@ hr.light {
   }
 }
 
+
+header.graph {
+    padding-top: 10rem;
+    background: linear-gradient(to bottom, rgba(6, 10, 15, 0.27) 40%, rgba(71, 80, 86, 0.6) 100%));
+    background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-size: cover;
+}
+
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 72px);
@@ -9670,7 +9680,9 @@ header.masthead {
 
 header.masthead h1 {
   font-size: 2.25rem;
+  padding-bottom: calc(10rem - 72px);
 }
+
 
 @media (min-width: 992px) {
   header.masthead {

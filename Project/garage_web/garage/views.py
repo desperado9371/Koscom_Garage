@@ -96,7 +96,11 @@ def backtest(request):
     #
     # print(candledata)
 
-    return render(request, 'garage/backtest.html', {'data': [10, 20, 30, 20, 40, 30, 50],
-                                                   'labels': [1, 2, 3, 4, 5, 6, 7]})
+    upbit_min = pd.read_csv('upbit_krwbtc_1min.csv')
+
+   # print( upbit_min['close'][-30:].tolist())
+
+    return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-60:].tolist(),
+                                                   'labels': upbit_min['timestamp'][-60:].tolist()})
 
 
