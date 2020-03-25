@@ -38,7 +38,7 @@ export default class BlockGroup extends cc.Component {
             this.list.remove(block);
         }
     }
-
+/*
     lateUpdate(){
         var l = this.list;
         if(this.list.size() <= 0){
@@ -82,6 +82,6 @@ export default class BlockGroup extends cc.Component {
             }
         }
     }
-
+*/
     // update (dt) {}
 }

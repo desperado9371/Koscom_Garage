@@ -27,8 +27,26 @@ export default class AlgorithmLine extends cc.Component {
     @property(Block)
     startBlock: Block = null;
 
+    getAlgorithmString(){
+        let ret : string = '';
 
 
+        var block = this.startBlock;
+        while(true){
+            var nextBlock = block.nextBlock;
+            ret += nextBlock.title + ', ';
+            if(nextBlock === null){
+                break;
+            }
+            block = nextBlock;
+        }
+
+        return ret;
+    }
+
+    repositionStartBlock(){
+
+    }
     onPlusButtonClick(){
         this.group.active = true;
         this.plusButton.active = false;
@@ -40,7 +58,7 @@ export default class AlgorithmLine extends cc.Component {
         if(this.node.parent.childrenCount > 1){
             var block = this.startBlock;
             while(true){
-                var nextBlock = this.startBlock.nextBlock;
+                var nextBlock = block.nextBlock;
                 block.node.destroy();
                 if(nextBlock === null){
                     break;
@@ -56,7 +74,7 @@ export default class AlgorithmLine extends cc.Component {
             //첫라인을 지울경우 start block 제외하고 지워줌
             var block = this.startBlock.nextBlock;
             while(block != null){
-                var nextBlock = this.startBlock.nextBlock;
+                var nextBlock = block.nextBlock;
                 block.node.destroy();
                 if(nextBlock === null){
                     break;
@@ -73,7 +91,19 @@ export default class AlgorithmLine extends cc.Component {
         }
         //this.minusButton.active = false;
     }
+    /*
+    lateUpdate(){
+        var block = this.startBlock;
 
+        var pos = block.node.position;
+        var tmpBlock = block;
+            
+        while(tmpBlock != null){
+            tmpBlock.node.setPosition(pos);
+            pos.x += tmpBlock.node.getContentSize().width;
+            tmpBlock = tmpBlock.nextBlock;
+        }
+    }*/
     
 
 
@@ -81,7 +111,7 @@ export default class AlgorithmLine extends cc.Component {
         this.group.active = false;
         this.plusButton.active = true;
         this.startBlock.node.active = false;
-        this.startBlock.init(50, 1, '시작블록', '', true);
+        this.startBlock.init(150, 1, '시작블록', '', true);
 
         /*var onMinusClick = new cc.Component.EventHandler();
         onMinusClick.target = lineParent;

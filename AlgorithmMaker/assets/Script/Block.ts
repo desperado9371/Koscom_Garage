@@ -45,7 +45,7 @@ export default class Block extends cc.Component {
     }
       
     initWithRand(){
-        this.init(100, this.getRandomArbitrary(0,5), 'Title' + this.getRandomArbitrary(0,500), 'Body');
+        this.init(150, this.getRandomArbitrary(0,5), 'Title' + this.getRandomArbitrary(0,500), 'Body');
     }
 
     init(width:number, color:number, titleText:string, bodyText:string, isStuck:boolean = false){
