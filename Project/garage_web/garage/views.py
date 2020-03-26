@@ -100,7 +100,7 @@ def backtest(request):
 
    # print( upbit_min['close'][-30:].tolist())
 
-    return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-60:].tolist(),
+    return render(request, 'garage/bt_index.html', {'data': upbit_min['close'][-60:].tolist(),
                                                    'labels': upbit_min['timestamp'][-60:].tolist()})
 
 
