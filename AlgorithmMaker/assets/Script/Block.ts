@@ -1,5 +1,6 @@
 import MouseManager from "./MouseManager";
 import DockingSlot from "./DockingSlot"
+import PropertyBox from "./PropertyBox";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -33,6 +34,8 @@ export default class Block extends cc.Component {
 
     @property(cc.Node)
     relationSymbol: cc.Node = null;
+
+    propertyBox : PropertyBox = null;
 
     @property
     initOnLoad = false;
@@ -91,7 +94,8 @@ export default class Block extends cc.Component {
 
 
         //마우스 이벤트 코드 설정
-        if(this.mouseManager == null){
+        //property box로 연동위해 준비
+        if(this.mouseManager == null || this.propertyBox == null){
             var parent = this.node;
             while(true){
                 if(parent.parent.name === "Canvas"){
@@ -101,7 +105,9 @@ export default class Block extends cc.Component {
                 parent = parent.parent;
             }
             this.mouseManager = parent.getComponentInChildren(MouseManager);
+            this.propertyBox = parent.getComponentInChildren(PropertyBox);
         }
+
 
         if(isStuck === false){
             this.node.on(cc.Node.EventType.TOUCH_END, this.mouseUpEventHandler, this);
@@ -183,7 +189,7 @@ export default class Block extends cc.Component {
         if(this.isDown == true){
             console.debug("mouse up called");
             this.isDown = false;
-
+            this.propertyBox.onBlockClick(this);
         }
     }
 
