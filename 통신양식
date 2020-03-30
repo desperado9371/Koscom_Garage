@@ -11,17 +11,18 @@
             "candleDuration": "1",
             "shortMA": "5",
             "longMA": "12",
-            "calcSymbol": ">"
+            "calcSymbol": ""
           },
           {
             "name": "CCI",
             "candleDuration": "1",
             "value": "3",
-            "calcSymbol": "*"
+            "calcSymbol": ">"
           },
           {
             "name": "number",
             "value": "10"
+            "calcSymbol": "*"
           }
         ]
       }
