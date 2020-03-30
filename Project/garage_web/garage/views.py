@@ -11,6 +11,7 @@ import sys
 import ta
 
 # Create your views here.
+from sphinx.builders.html import return_codes_re
 
 
 def post_list(request):
@@ -102,5 +103,3 @@ def backtest(request):
 
     return render(request, 'garage/bt_index.html', {'data': upbit_min['close'][-60:].tolist(),
                                                    'labels': upbit_min['timestamp'][-60:].tolist()})
-
-
