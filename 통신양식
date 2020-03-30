@@ -1,16 +1,32 @@
-algo
 {
-	"group1":{
-		"min":"1",
-		"max":"3"
-		"조건갯수":"3"
-		"블록":[
-			 "MACD" :{"분봉","1","2","부호"}
-			 "CCI"  :{"분봉","3","부호"}
-			 "OBV"  "{"분봉","4","5","부호"}
-			]
-	
-		}
+  "algo": {
+    "min": "1",
+    "max": "1",
+    "numCondition": "1",
+    "conditions": [
+      {
+        "blocks": [
+          {
+            "name": "MACD",
+            "candleDuration": "1",
+            "shortMA": "5",
+            "longMA": "12",
+            "calcSymbol": ">"
+          },
+          {
+            "name": "CCI",
+            "candleDuration": "1",
+            "value": "3",
+            "calcSymbol": "*"
+          },
+          {
+            "name": "number",
+            "value": "10"
+          }
+        ]
+      }
+    ]
+  }
 }
 
 
