@@ -10,6 +10,7 @@ import datetime
 import time
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
+import json
 
 app = Flask(__name__)
 sockets = Sockets(app)
@@ -18,15 +19,24 @@ sockets = Sockets(app)
 def index():
     return 'hello'
 
-@sockets.route('/test')
-def test(ws):
+@sockets.route('/Cocos')
+def Cocos(ws):
     while not ws.closed:
         msg = ws.receive()
-        print('i received:{msg}')
+        print(f'i received:{msg}')
+        
+        #Indicators 수신시 지표정보 Json 전송
+        if msg == 'Indicators':
+            with open("/home/ubuntu/ydHwang/Indicators.txt", 'r') as f:
+                json_data = json.load(f)
+            print(json.dumps(json_data, indent="\t") )
+            ws.send(json.dumps(json_data, indent="\t"))
+            
+        #Echo    
         if msg:
             now = 'Server receieved '+msg+datetime.datetime.now().isoformat()
             ws.send(now)
-            print('i sent:{now}')
+            print(f'i sent:{now}')
             time.sleep(1)
 
 
