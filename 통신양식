@@ -32,5 +32,5 @@
 
 
 
-algo|save|"USER"|"ALGO_NAME"|"JSON"
-algo|load|"USER"|"SEQ"
+save|USER|ALGO_NAME|JSON
+load|USER|SEQ
