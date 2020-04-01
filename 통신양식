@@ -36,3 +36,6 @@ save|USER|ALGO_NAME|JSON
 예시)save|User_ID|Test|{"City": "Galle", "Description": "Best damn city in the world"}
 
 load|USER|SEQ
+예시) 
+load|User_ID|3
+load|User_ID|all
