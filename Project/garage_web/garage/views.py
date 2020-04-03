@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 from binance.client import Client
 from datetime import datetime
 import numpy as np
@@ -19,6 +20,9 @@ def post_list(request):
 
 
 def algo(request):
+    if request.COOKIES.get('username') is not None:
+        print("cookie found!")
+        print(request.COOKIES.get('username'))
     return render(request, 'garage/algo.html', {})
 
 
@@ -30,8 +34,10 @@ def login(request):
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
+            response = redirect('/')
+            response.set_cookie('username', username)
             print("login as "+username)
-            return redirect('/')
+            return response
         else:
             print("login fail")
             return render(request, 'garage/login.html', { 'error':'username or password is incorrect!'})
@@ -51,9 +57,15 @@ def signup(request):
 
 
 def logout(request):
+    response = redirect('/')
+    response.delete_cookie('username')
     auth.logout(request)
-    return redirect('/')
+    return response
 
+def algomaker(request):
+    response = redirect('http://172.22.14.68')
+    response.set_cookie('username', 'test', domain='http://172.22.14.68')
+    return response
 
 
 def backtest(request):
