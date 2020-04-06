@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6da5b5ef-60ba-44b5-9166-bbcf87489030" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../backtest_order.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../backtest_order.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/garage_web.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/garage_web.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/garage/templates/garage/algo.html" beforeDir="false" afterPath="$PROJECT_DIR$/garage/templates/garage/algo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/garage/templates/garage/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/garage/templates/garage/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/garage/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/garage/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/garage/templates/garage/backtest.html" beforeDir="false" afterPath="$PROJECT_DIR$/garage/templates/garage/backtest.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/garage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/garage/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,19 +68,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="706" y="374" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1583975432171" />
-    <state x="739" y="275" key="FileChooserDialogImpl" timestamp="1583975186171">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="985" y="381" key="FileChooserDialogImpl" timestamp="1586137213280">
+      <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="739" y="275" key="FileChooserDialogImpl/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1583975186171" />
-    <state x="461" y="162" key="SettingsEditor" timestamp="1583975200511">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="985" y="381" key="FileChooserDialogImpl/0.0.2560.1440/-1440.-645.1440.2560@0.0.2560.1440" timestamp="1586137213280" />
+    <state x="615" y="224" key="SettingsEditor" timestamp="1586137527263">
+      <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="461" y="162" key="SettingsEditor/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1583975200511" />
-    <state x="725" y="371" width="829" height="352" key="com.intellij.ide.util.TipDialog" timestamp="1585872521418">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="615" y="224" key="SettingsEditor/0.0.2560.1440/-1440.-645.1440.2560@0.0.2560.1440" timestamp="1586137527263" />
+    <state x="967" y="514" width="829" height="352" key="com.intellij.ide.util.TipDialog" timestamp="1586137179274">
+      <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="725" y="371" width="829" height="352" key="com.intellij.ide.util.TipDialog/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1585872521418" />
     <state x="725" y="371" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/-1080.-463.1080.1880@0.0.1920.1040" timestamp="1583366052232" />
+    <state x="967" y="514" key="com.intellij.ide.util.TipDialog/0.0.2560.1440/-1440.-645.1440.2560@0.0.2560.1440" timestamp="1586137179274" />
     <state x="696" y="263" width="672" height="678" key="search.everywhere.popup" timestamp="1583310868190">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
