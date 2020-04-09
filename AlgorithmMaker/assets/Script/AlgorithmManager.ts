@@ -26,7 +26,28 @@ export default class AlgorithmManager extends cc.Component {
     }
 
     SaveAlgorithm(){
-        WebSocketConnect.getSock().send("save algorithm");
+        var testJson : JSON ;
+        testJson = JSON.parse('{\"algo\": {\"min\": \"1\",\"max\": \"1\",\"numCondition\": \"1\",\"conditions\": [{\"blocks\": [{\"name\": \"MACD\",\"candleDuration\": \"1\",\"shortMA\": \"5\",\"longMA\": \"12\",\"calcSymbol\": \"\"},{\"name\": \"CCI\",\"candleDuration\": \"1\",\"value\": \"3\",\"calcSymbol\": \">\"},{\"name\": \"number\",\"value\": \"10\",\"calcSymbol\": \"*\"}]}]}}');
+        console.log(JSON.stringify(testJson));
+        
+        //WebSocketConnect.getSock().send('save|test_user|test_algo_name|'+JSON.stringify(testJson));
+        this.requestIndicators();
+        
+
+    }
+    requestIndicators(){
+        WebSocketConnect.getSock().send('Indicators');
+    }
+
+    loadAlgorithm(){
+        WebSocketConnect.getSock().send('load|test_user|all');
+
+    }
+
+    onRecieveIndicators(json : string){
+        var indicators: JSON = JSON.parse(json);
+        var jsonRoot = Object.getOwnPropertyNames(indicators);
+        
     }
 
     // update (dt) {}

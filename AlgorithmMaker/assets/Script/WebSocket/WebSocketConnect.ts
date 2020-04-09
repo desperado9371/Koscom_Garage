@@ -11,6 +11,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class WebSocketConnect extends cc.Component {
     ws : WebSocket;
+    isOpen : boolean = false;
     static sock : WebSocketConnect;
     static getSock(){
       return WebSocketConnect.sock;
@@ -20,14 +21,19 @@ export default class WebSocketConnect extends cc.Component {
     // onLoad () {}
 
     start () {
-      this.ws = new WebSocket("ws://54.180.86.151:80/test");
+      this.ws = new WebSocket("ws://54.180.86.151:80/Cocos");
       this.ws.onopen = this.onOpen;
       this.ws.onmessage = this.onRecieve;
+      this.ws.onclose = this.onClose;
       WebSocketConnect.sock = this;
     }
 
     onOpen(event){
+      this.isOpen = true;
+    }
 
+    onClose(event){
+      this.isOpen = false;
     }
 
     onRecieve(event){
@@ -35,8 +41,15 @@ export default class WebSocketConnect extends cc.Component {
       
     }
 
+
     send(str : string){
-      this.ws.send(str);
+      if(this.isOpen = true){
+        this.ws.send(str);
+
+      }
+      else{
+        console.error("WebSocket Not Connected");
+      }
     }
 
 
