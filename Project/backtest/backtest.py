@@ -18,24 +18,60 @@ def backtest_listener(user_id='UserID', algo_id='test', initial_balance=10000000
     return price_data, trade_data, profit_list
 
 
-async def middleware_connect():
+async def middleware_connect(user_id, algo_id):
+    """
+    미들웨어와 웹소켓방식으로 직접 통신하는 함수
+
+    :param user_id:
+    :param algo_id:
+    :return:
+    """
     async with websockets.connect("ws://54.180.86.151:80/Cocos") as websocket:
-        await websocket.send("load|User_ID|all")
+        msg = "load"
+        msg = msg + "|" + user_id
+        msg = msg + "|" + algo_id
+        await websocket.send(msg)
         data_rcv = await websocket.recv()
         return data_rcv
 
 
 def algorithm_request(user_id, algo_id):
+    """
+    사용자 id와 알고리즘 id를 입력받아 DB로부터 알고리즘을 조회하는 함수
+
+    param user_id:
+    :param algo_id:
+    :return:
+    """
     algorithm = ""
-    data = asyncio.get_event_loop().run_until_complete(middleware_connect())
-    indicators = json.loads(data)
+    data = asyncio.get_event_loop().run_until_complete(middleware_connect(user_id, algo_id))
+    algo_json = json.loads(data)
 
     return algorithm
 
 
-def get_price_data(market='upbit', time_delta='1m'):
+def get_price_data(market='upbit', time_delta='1d'):
+    """
+    파일로 되어있는 시세 정보를 시장과 시간단위 를 입력받아서 읽어오는 함수
 
-    return
+    :param market:
+    :param time_delta:
+    :return:
+    """
+
+    bitcoin_dt = pd.DataFrame
+    if market == 'upbit':
+        if time_delta == '1d':
+            bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
+        elif time_delta == '1m':
+            bitcoin_dt = pd.read_csv('upbit_krwbtc_1min.csv')
+    elif market == 'binance':
+        if time_delta == '1d':
+            bitcoin_dt = pd.read_csv('binance_btcusdt_1day.csv')
+        elif time_delta == '1m':
+            bitcoin_dt = pd.read_csv('binance_btcusdt_1min.csv')
+
+    return bitcoin_dt
 
 
 def calculate_indicators():
@@ -44,6 +80,11 @@ def calculate_indicators():
 
 
 def macd():
+    """
+    추세지표인 MACD를 계산하는 함수
+
+    :return:
+    """
     bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
     df = bitcoin_dt
     macd = ta.trend.MACD(bitcoin_dt['close'])
@@ -78,6 +119,16 @@ def get_trade_list():
 def execute_backtest(init_krw_bal = 100000000, init_btc_bal = 0, order_quantity = 5,
                     date_list=['2019-01-11','2019-02-11','2019-02-20','2019-06-11','2019-07-11','2019-07-20'],
                     type_list=['buy','buy','buy','sell','sell','sell'] ):
+    """
+    백테스트를 실행하는 함수
+
+    :param init_krw_bal:
+    :param init_btc_bal:
+    :param order_quantity:
+    :param date_list:
+    :param type_list:
+    :return:
+    """
 
     krw_bal = init_krw_bal
     btc_bal = init_btc_bal
@@ -105,6 +156,17 @@ def execute_backtest(init_krw_bal = 100000000, init_btc_bal = 0, order_quantity 
 
 def send_order(market='upbit', order_type='buy', quantity=1, target_date="2018-10-11", krw_balance=0.0,
                btc_balance=0.0):
+    """
+    과거데이터에 주문을 실행하는 함수
+
+    :param market:
+    :param order_type:
+    :param quantity:
+    :param target_date:
+    :param krw_balance:
+    :param btc_balance:
+    :return:
+    """
     bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
 
     target_date = datetime.strptime(target_date, "%Y-%m-%d")
