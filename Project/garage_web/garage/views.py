@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from binance.client import Client
 from datetime import datetime
 import numpy as np
 import pandas as pd
@@ -12,7 +11,7 @@ import sys
 import ta
 
 # Create your views here.
-from sphinx.builders.html import return_codes_re
+#from sphinx.builders.html import return_codes_re
 
 
 def post_list(request):
@@ -69,49 +68,45 @@ def algomaker(request):
 
 
 def backtest(request):
-    # client = Client('ng0Zhq6ea42X3QxMV2RAubZxs508gguTISRwM13lQFFPrDDTxRiqmq3pBvIcvJMy',
-    #                 'vHZDWuQvPf4mcaDvzxwRbtIWDbWuCyFyyG59bCZeTW6A6sd98qbHfCsFDVDdN3wn')
-    # klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY, "1 month ago UTC")
-    #
-    #
-    #
-    # unix_timestamps = []
-    # for kline in klines:
-    #     unix_timestamps.append(kline[0])
-    #
-    # timestamps = []
-    #
-    # closed_prices = []
-    # open_prices = []
-    # high_prices = []
-    # low_prices = []
-    # volume = []
-    # print(sys.path)
-    # df = pd.DataFrame(list(zip(open_prices, closed_prices, high_prices, low_prices, volume)), index=timestamps,
-    #                   columns=['open', 'close', 'high', 'low', 'volume'])
-    #
-    # for kline in klines:
-    #     closed_prices.append(float(kline[4]))
-    #     open_prices.append(float(kline[1]))
-    #     high_prices.append(float(kline[2]))
-    #     low_prices.append(float(kline[3]))
-    #     volume.append(float(kline[5]))
-    #
-    # for unix_timestamp in unix_timestamps:
-    #     timestamps.append(datetime.fromtimestamp(unix_timestamp / 1000).strftime("%m/%d/%Y"))
-    #
-    # for kline in klines:
-    #     unix_timestamps.append(kline[0])
-    #
-    # candledata = []
-    # for i in range(len(timestamps)):
-    #     candledata.append([timestamps[i],low_prices[i],open_prices[i],closed_prices[i],high_prices[i]])
-    #
-    # print(candledata)
 
-    upbit_min = pd.read_csv('upbit_krwbtc_1min.csv')
+    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
 
    # print( upbit_min['close'][-30:].tolist())
 
-    return render(request, 'garage/bt_index.html', {'data': upbit_min['close'][-60:].tolist(),
-                                                   'labels': upbit_min['timestamp'][-60:].tolist()})
+    return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-30:].tolist(),
+                                                   'labels': upbit_min['timestamp'][-30:].tolist()})
+
+
+def send_order(market='upbit', order_type='buy', quantity=1, target_date="2018-10-11", krw_balance=0.0,
+               btc_balance=0.0):
+    bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
+
+    target_date = datetime.strptime(target_date, "%Y-%m-%d")
+
+    price = -1
+
+    for index, bitcoin in bitcoin_dt.iterrows():
+        temp = datetime.strptime(bitcoin['timestamp'][:10], "%Y-%m-%d")
+        if temp == target_date:
+            price = float(bitcoin['close'])
+            break;
+
+    if order_type == 'buy':
+        if (price * quantity) <= krw_balance:
+            krw_balance = krw_balance - (price * quantity)
+            btc_balance = btc_balance + quantity
+            print("주문 성공 : 구매 -  btckrw:{} 수량:{} 원화잔고:{} 비트코인잔고:{}".
+                  format(float(bitcoin['close']), quantity, krw_balance, btc_balance))
+        else:
+            print("주문실패 : 잔고부족")
+
+    elif order_type == 'sell':
+        if quantity <= btc_balance:
+            krw_balance = krw_balance + (price * quantity)
+            btc_balance = btc_balance - quantity
+            print("주문 성공 : 판매 -  btckrw:{} 수량:{} 원화잔고:{} 비트코인잔고:{}".
+                  format(float(bitcoin['close']), quantity, krw_balance, btc_balance))
+        else:
+            print("주문실패 : 잔고부족")
+
+    return krw_balance, btc_balance
