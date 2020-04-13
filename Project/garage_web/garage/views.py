@@ -17,6 +17,8 @@ import ta
 def post_list(request):
     return render(request, 'garage/index.html', {})
 
+def login_test(request):
+    return render(request, 'garage/login_main.html',{})
 
 def algo(request):
     if request.COOKIES.get('username') is not None:
