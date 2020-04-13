@@ -18,7 +18,20 @@ def post_list(request):
     return render(request, 'garage/index.html', {})
 
 def login_test(request):
-    return render(request, 'garage/login_main.html',{})
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            response = redirect('/')
+            response.set_cookie('username', username)
+            print("login as " + username)
+            return response
+        else:
+            print("login fail")
+            return render(request, 'garage/logintest.html', {'error': 'username or password is incorrect!'})
+    return render(request, 'garage/logintest.html', {})
 
 def algo(request):
     if request.COOKIES.get('username') is not None:

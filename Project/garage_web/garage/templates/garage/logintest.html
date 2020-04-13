@@ -38,7 +38,8 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 navbar-scrolled" id="login">
 	    <div class="container">
-	      <img class="img" src="images/logo_box.png" alt="" width="50" height="25">
+			{% load staticfiles %}
+	      <img class="img" src="{% static 'garage/images/logo_box.png'%}" alt="" width="50" height="25">
 	      <a class="navbar-brand js-scroll-trigger" href="#page-top"><font size="4.5"><b>&nbsp; Algorithm Trading</b></font>
 	        </a>
 	      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,22 +65,32 @@
 	  </nav>
 
 	<div class="limiter">
+
+
 		<div class="container-login100">
 			<div class="wrap-login100 p-t-50 p-b-90">
-				<form class="login100-form validate-form flex-sb flex-w">
+
+				<form class="login100-form validate-form flex-sb flex-w" method="POST" action="{% url 'logintest' %}">
+					{% csrf_token %}
 					<span class="login100-form-title p-b-51">
 						로그인
 					</span>
+					{% block error %}
+					{% if error %}
 
+					<p> {{ error }} </p>
+
+					{% endif %}
+					{% endblock %}
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "아이디를 입력해주세요">
-						<input class="input100" type="text" name="username" placeholder="이메일 주소">
+						<input class="input100" type="text" name="username" placeholder="아이디">
 						<span class="focus-input100"></span>
 					</div>
 
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "비밀번호를 입력해주세요">
-						<input class="input100" type="password" name="pass" placeholder="비밀번호">
+						<input class="input100" type="password" name="password" placeholder="비밀번호">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -103,7 +114,7 @@
 					</div>
 					<div class="flex-r w-full p-t-3 p-b-24">
 						<div>
-							<a href="#" class="txt2">
+							<a href="/signup" class="txt2">
 								아직 계정이 없으신가요?
 							</a>
 						</div>
@@ -116,7 +127,6 @@
 
 	<div id="dropDownSelect1"></div>
 
-	{% load staticfiles %}
 <!--===============================================================================================-->
 	<script src="{% static 'garage/vendor/jquery/jquery-3.2.1.min.js'%}"></script>
 <!--===============================================================================================-->
