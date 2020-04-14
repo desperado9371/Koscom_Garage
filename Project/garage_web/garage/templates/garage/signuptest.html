@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>알고리즘 트레이딩</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	{% load staticfiles %}
+<!--===============================================================================================-->
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'garage/images/icons/apple-touch-icon.png'%}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png"'%}>
+	<link rel="manifest" href="{% static 'garage/images/icons/site.webmanifest'%}">
+	<link rel="mask-icon" href="{% static 'garage/images/icons/safari-pinned-tab.svg'%}" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/bootstrap/css/bootstrap.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/fonts/font-awesome-4.7.0/css/font-awesome.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/fonts/Linearicons-Free-v1.0.0/icon-font.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/animate/animate.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/css-hamburgers/hamburgers.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/animsition/css/animsition.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/select2/select2.min.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/daterangepicker/daterangepicker.css'%}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/css/util.css'%}">
+	<link rel="stylesheet" type="text/css" href="{% static 'garage/css/main.css'%}">
+<!--===============================================================================================-->
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 navbar-scrolled" id="login">
+	    <div class="container">
+			{% load staticfiles %}
+	      <img class="img" src="{% static 'garage/images/logo_box.png'%}" alt="" width="50" height="25">
+	      <a class="navbar-brand js-scroll-trigger" href="/"><font size="4.5"><b>&nbsp; Algorithm Trading</b></font>
+	        </a>
+	      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="navbar-toggler-icon"></span>
+	      </button>
+	      <div class="collapse navbar-collapse" id="navbarResponsive">
+	        <ul class="navbar-nav ml-auto my-2 my-lg-0">
+	          <li class="nav-item">
+	            <a class="nav-link js-scroll-trigger" href="#services">소개</a>
+	          </li>
+	          <li class="nav-item">
+	            <a class="nav-link js-scroll-trigger" href="">알고리즘 만들기</a>
+	          </li>
+	          <li class="nav-item">
+	            <a class="nav-link js-scroll-trigger" href="#">알고리즘 관리</a>
+	          </li>
+	          <li class="nav-item">
+	            <a class="nav-link js-scroll-trigger" href="#">마켓플레이스</a>
+	          </li>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+
+	<div class="limiter">
+
+
+		<div class="container-login100">
+			<div class="wrap-login100 p-t-50 p-b-90">
+
+				<form class="login100-form validate-form flex-sb flex-w" method="POST" action="{% url 'logintest' %}">
+					{% csrf_token %}
+					<span class="login100-form-title p-b-51">
+						회원가입
+					</span>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "아이디를 입력해주세요">
+						<input class="input100" type="text" name="username" placeholder="아이디">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div><br><br></div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "비밀번호를 입력해주세요">
+						<input class="input100" type="password" name="password1" placeholder="비밀번호">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "비밀번호를 다시 입력해주세요">
+						<input class="input100" type="password" name="password2" placeholder="비밀번호 확인">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="container-login100-form-btn m-t-17 p-b-10">
+						<button class="login100-form-btn">
+							회원가입
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="{% static 'garage/vendor/jquery/jquery-3.2.1.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'garage/vendor/animsition/js/animsition.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'garage/vendor/bootstrap/js/popper.js'%}"></script>
+	<script src="{% static 'garage/vendor/bootstrap/js/bootstrap.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'garage/vendor/select2/select2.min.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'garage/vendor/daterangepicker/moment.min.js'%}"></script>
+	<script src="{% static 'garage/vendor/daterangepicker/daterangepicker.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'garage/vendor/countdowntime/countdowntime.js'%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'garage/js/main.js'%}"></script>
+
+</body>
+</html>
