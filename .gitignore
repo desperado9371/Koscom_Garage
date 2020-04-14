@@ -3,3 +3,7 @@
 *.xml
 *.pyc
 Project/garage_web/.idea/workspace.xml
+*.iml
+Project/garage_web/.idea/garage_web.iml
+*.pyc
+*.xml
