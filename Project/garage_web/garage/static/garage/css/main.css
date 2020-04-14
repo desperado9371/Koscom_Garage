@@ -54,8 +54,6 @@ a:hover {
     color: #666666;
   }
 
-}
-
 /*---------------------------------------------*/
 h1,h2,h3,h4,h5,h6 {
 	margin: 0px;
@@ -172,7 +170,7 @@ iframe {
 .wrap-login100 {
   width: 450px;
   padding: 15px;
-  border-color: : black;
+  border-color: black;
   background: #fff;
   border-radius: 10px;
   position: center;
@@ -212,7 +210,7 @@ iframe {
 /*---------------------------------------------*/
 .input100 {
   font-family: NanumSquareB;
-  color: #666666
+  color: #666666;
   line-height: 1.2;
   font-size: 14px;
   display: block;
@@ -222,13 +220,7 @@ iframe {
   padding: 0 20px 0 25px;
 }
 /*---------------------------------------------*/
-input[type=password] {
-        font-family: "";
 
-        &::placeholder {
-        	font-family: "NanumSquare";
-        }
-    }
 /*------------------------------------------------------------------
 [ Focus Input ]*/
 
