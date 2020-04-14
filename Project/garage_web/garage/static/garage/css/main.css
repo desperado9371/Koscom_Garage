@@ -35,6 +35,7 @@ body, html {
 a {
 	font-family: NanumSquareR;
 	font-size: 14px;
+  font-weight: 500;
 	line-height: 1.7;
 	color: #666666;
 	margin: 0px;
@@ -159,8 +160,9 @@ iframe {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;;
