@@ -41,7 +41,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Buildout config" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -66,25 +66,32 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="712" y="389" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog" timestamp="1586831931149">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="712" y="389" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1586831931149" />
     <state x="706" y="374" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1583975432171">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="706" y="374" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1583975432171" />
-    <state x="739" y="275" key="FileChooserDialogImpl" timestamp="1586759107816">
+    <state x="739" y="275" key="FileChooserDialogImpl" timestamp="1586831928848">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="739" y="275" key="FileChooserDialogImpl/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1586759107816" />
+    <state x="739" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1586831928848" />
     <state x="985" y="381" key="FileChooserDialogImpl/0.0.2560.1440/-1440.-645.1440.2560@0.0.2560.1440" timestamp="1586238902536" />
-    <state x="461" y="162" key="SettingsEditor" timestamp="1586741338030">
+    <state x="461" y="162" key="SettingsEditor" timestamp="1586832785164">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="162" key="SettingsEditor/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1586741338030" />
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1586832785164" />
     <state x="615" y="224" key="SettingsEditor/0.0.2560.1440/-1440.-645.1440.2560@0.0.2560.1440" timestamp="1586137527263" />
-    <state x="725" y="371" width="829" height="352" key="com.intellij.ide.util.TipDialog" timestamp="1586821794027">
+    <state x="725" y="371" width="829" height="352" key="com.intellij.ide.util.TipDialog" timestamp="1586831948609">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="725" y="371" width="829" height="352" key="com.intellij.ide.util.TipDialog/-1080.-407.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1586821794027" />
     <state x="725" y="371" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/-1080.-463.1080.1880@0.0.1920.1040" timestamp="1583366052232" />
+    <state x="725" y="371" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1586831948609" />
     <state x="967" y="514" key="com.intellij.ide.util.TipDialog/0.0.2560.1440/-1440.-645.1440.2560@0.0.2560.1440" timestamp="1586238660723" />
     <state x="696" y="263" width="672" height="678" key="search.everywhere.popup" timestamp="1586741366979">
       <screen x="0" y="0" width="1920" height="1040" />
