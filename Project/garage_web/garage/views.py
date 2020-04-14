@@ -18,32 +18,32 @@ def post_list(request):
     return render(request, 'garage/index.html', {})
 
 
-def login_test(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            response = redirect('/')
-            response.set_cookie('username', username)
-            print("login as " + username)
-            return response
-        else:
-            print("login fail")
-            return render(request, 'garage/logintest.html', {'error': 'username or password is incorrect!'})
-    return render(request, 'garage/logintest.html', {})
-
-
-def signup_test(request):
-    if request.method == "POST":
-        if request.POST["password1"] == request.POST["password2"]:
-            user = User.objects.create_user(
-                username=request.POST["username"], password=request.POST["password1"])
-            auth.login(request, user)
-            return redirect('/')
-        return render(request, 'garage/signuptest.html', {})
-    return render(request, 'garage/signuptest.html', {})
+# def login_test(request):
+#     if request.method == "POST":
+#         username = request.POST["username"]
+#         password = request.POST["password"]
+#         user = auth.authenticate(request, username=username, password=password)
+#         if user is not None:
+#             auth.login(request, user)
+#             response = redirect('/')
+#             response.set_cookie('username', username)
+#             print("login as " + username)
+#             return response
+#         else:
+#             print("login fail")
+#             return render(request, 'garage/logintest.html', {'error': 'username or password is incorrect!'})
+#     return render(request, 'garage/logintest.html', {})
+#
+#
+# def signup_test(request):
+#     if request.method == "POST":
+#         if request.POST["password1"] == request.POST["password2"]:
+#             user = User.objects.create_user(
+#                 username=request.POST["username"], password=request.POST["password1"])
+#             auth.login(request, user)
+#             return redirect('/')
+#         return render(request, 'garage/signuptest.html', {})
+#     return render(request, 'garage/signuptest.html', {})
 
 
 
