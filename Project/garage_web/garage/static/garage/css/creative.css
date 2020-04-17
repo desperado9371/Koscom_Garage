@@ -46,9 +46,9 @@
 *::after {
   box-sizing: border-box;
 }
-@@font-face {
+@font-face {
   font-family: "NanumSquare";
-  src:url(img/NanumSquare.ttf)
+  src:url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css)
 }
 html {
   font-family: "NanumSquare", sans-serif;
@@ -9329,7 +9329,7 @@ button.bg-dark:focus {
 }
 
 .text-uppercase {
-  font-size: uppercase !important;
+  text-transform: uppercase !important;
 }
 
 .text-capitalize {
@@ -9659,7 +9659,7 @@ hr.light {
 
 header.graph {
     padding-top: 10rem;
-    background: linear-gradient(to bottom, rgba(6, 10, 15, 0.27) 40%, rgba(71, 80, 86, 0.6) 100%));
+    background: linear-gradient(to bottom, rgba(6, 10, 15, 0.27) 40%, rgba(71, 80, 86, 0.6) 100%);
     background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -9726,7 +9726,6 @@ header.masthead h1 {
   color: #fff;
   background: rgba(244, 98, 58, 0.9);
   transition: opacity 0.25s ease;
-  text-align: center;
 }
 
 #portfolio .container-fluid .portfolio-box .portfolio-box-caption .project-category {
