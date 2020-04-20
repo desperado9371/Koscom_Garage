@@ -90,17 +90,16 @@ def logout(request):
     auth.logout(request)
     return response
 
+
 def algomaker(request):
-    response = redirect('http://172.22.14.68')
-    response.set_cookie('username', 'test', domain='http://172.22.14.68')
-    return response
+    return render(request, 'garage/cocos_algo.html', {})
 
 
 def backtest(request):
 
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
 
-   # print( upbit_min['close'][-30:].tolist())
+    # print( upbit_min['close'][-30:].tolist())
 
     return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-30:].tolist(),
                                                    'labels': upbit_min['timestamp'][-30:].tolist()})
