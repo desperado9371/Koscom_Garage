@@ -6,6 +6,8 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import HandItem from "./HandItem";
+import Card from "./Card";
+import Deck from "./Deck";
 
 const {ccclass, property} = cc._decorator;
 
@@ -43,24 +45,61 @@ export default class HandManager extends cc.Component {
         if(HandManager.instance === null){
             HandManager.instance = this;
         }
-    }                                                                             
-
-    hands : [[HandItem]];
+        this.init();
+    }              
+    hands : HandItem[][] = [];
     handIndex = 0;
+    
+    init(){
+        var h : HandItem[] = [];
+        var d = new Deck();
+        d.testInit();
+        h.push(d);
+        h.push(d);
+        h.push(d);
 
-    displayNextHand(hand : [HandItem]){
-        this.handIndex++;
-        this.hands[this.handIndex] = hand;
+        this.hands.push(h);
 
+        this.displayHand();
+    }
+
+
+    setNextHand(hand : HandItem[]){
+        
+        this.hands[this.handIndex+1] = hand;
     }
 
     displayPreviousHand(){
         this.handIndex--;
+        this.displayHand();
     }
 
+    displayNextHand(){
+        this.handIndex++;
+        this.displayHand();
+    }
     displayHand(){
         var hand = this.hands[this.handIndex];
         this.handParent.destroyAllChildren();
+        for(var k = 0; k < hand.length; k++){
+            var item = hand[k];
+            var obj:cc.Node = null;
+            
+            if(item.getType() === 'Card'){
+                obj = cc.instantiate(this.cardPrefab);
+                var card = obj.getComponent(Card);
+                card.testInit();
+            }
+            else if(item.getType() === 'Deck'){
+                obj = cc.instantiate(this.deckPrefab);
+                var deck = obj.getComponent(Deck);
+                deck.testInit();
+            }
+            else{
+                console.log("type error"); 
+            }
+            obj.setParent(this.handParent);
+        }
 
     }
     

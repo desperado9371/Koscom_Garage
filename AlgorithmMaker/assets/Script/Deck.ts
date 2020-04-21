@@ -13,21 +13,31 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Deck extends HandItem {
+    getType(): string {
+        return 'Deck';
+    }
 
-    package: [HandItem];
+    package: Array<HandItem> = null;
     handManager : HandManager = null;
 
 
-    onClick(): Function {
+    onClick() {
         
         var hm = HandManager.getInstance();
-        hm.displayNextHand(this.package);
+        hm.setNextHand(this.package);
+        hm.displayNextHand();
         
-        return;
     }
 
     init(nextItems: [HandItem]){
         this.package = nextItems;
+    }
+    testInit(){
+        this.package = new Array<HandItem>();
+        this.package.push(new Deck);
+        this.package.push(new Card);
+        this.package.push(new Card);
+        this.package.push(new Card);
     }
 
     start () {

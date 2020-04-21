@@ -12,6 +12,9 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Card extends HandItem {
+    getType(): string {
+        return 'Card';
+    }
     
 
     description : string = null;
@@ -23,6 +26,9 @@ export default class Card extends HandItem {
 
     init(){
         
+    }
+    testInit(){
+        this.description = 'z';
     }
 
 

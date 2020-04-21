@@ -10,6 +10,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default abstract class HandItem extends cc.Component {
 
-    abstract onClick(): Function;
-
+    abstract onClick();
+    abstract getType(): string;
 }
