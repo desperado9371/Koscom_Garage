@@ -10,13 +10,17 @@
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+::selection {
+    background: #0ff;
+}
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
   --red: #dc3545;
-  --orange: #f4623a;
+  --orange: #24E1E8;
   --yellow: #ffc107;
   --green: #28a745;
   --teal: #20c997;
@@ -24,7 +28,7 @@
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
-  --primary: #f4623a;
+  --primary: #24E1E8;
   --secondary: #6c757d;
   --success: #28a745;
   --info: #17a2b8;
@@ -162,7 +166,7 @@ sup {
 }
 
 a {
-  color: #f4623a;
+  color: #24E1E8;
   text-decoration: none;
   background-color: transparent;
 }
@@ -2258,35 +2262,35 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary {
-  color: #000000;
+  color: black;
   background-color: #24E1E8;
+  border-color: #24E1E8;
 }
 
 .btn-primary:hover {
-  color: white;
-  border-color: #6C63FF;
-  background-color: #6C63FF;
+  color: #fff;
+  background-color: #445EF2;
+  border-color: #ee3e0d;
 }
 
 .btn-primary:focus, .btn-primary.focus {
-  box-shadow: 0 0 0 0.2rem;
+  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.5);
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
-
-  background-color: #f4623a;
-
+  color: #fff;
+  background-color: #24E1E8;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
-
-
+  color: #fff;
+  background-color: #6C63FF;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-primary.dropdown-toggle:focus {
-
+  box-shadow: 0 0 0 0.2rem rgba(36, 225, 232, 0.5);
 }
 
 .btn-secondary {
@@ -2528,14 +2532,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #f4623a;
-  border-color: #f4623a;
+  color: #24E1E8;
+  border-color: #24E1E8;
 }
 
 .btn-outline-primary:hover {
   color: #fff;
-  background-color: #f4623a;
-  border-color: #f4623a;
+  background-color: #24E1E8;
+  border-color: #24E1E8;
 }
 
 .btn-outline-primary:focus, .btn-outline-primary.focus {
@@ -2543,15 +2547,15 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
-  color: #f4623a;
+  color: #24E1E8;
   background-color: transparent;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active,
 .show > .btn-outline-primary.dropdown-toggle {
   color: #fff;
-  background-color: #f4623a;
-  border-color: #f4623a;
+  background-color: #24E1E8;
+  border-color: #24E1E8;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
@@ -2785,7 +2789,7 @@ fieldset:disabled a.btn {
 
 .btn-link {
   font-weight: 400;
-  color: #f4623a;
+  color: #24E1E8;
   text-decoration: none;
 }
 
@@ -3084,7 +3088,7 @@ input[type="button"].btn-block {
 .dropdown-item.active, .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #f4623a;
+  background-color: #24E1E8;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -3437,8 +3441,8 @@ input[type="button"].btn-block {
 
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #f4623a;
-  background-color: #f4623a;
+  border-color: #24E1E8;
+  background-color: #24E1E8;
 }
 
 .custom-control-input:focus ~ .custom-control-label::before {
@@ -3502,8 +3506,8 @@ input[type="button"].btn-block {
 }
 
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::before {
-  border-color: #f4623a;
-  background-color: #f4623a;
+  border-color: #24E1E8;
+  background-color: #24E1E8;
 }
 
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::after {
@@ -3728,7 +3732,7 @@ input[type="button"].btn-block {
   width: 1rem;
   height: 1rem;
   margin-top: -0.25rem;
-  background-color: #f4623a;
+  background-color: #24E1E8;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -3759,7 +3763,7 @@ input[type="button"].btn-block {
 .custom-range::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
-  background-color: #f4623a;
+  background-color: #24E1E8;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -3793,7 +3797,7 @@ input[type="button"].btn-block {
   margin-top: 0;
   margin-right: 0.2rem;
   margin-left: 0.2rem;
-  background-color: #f4623a;
+  background-color: #24E1E8;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -3932,7 +3936,7 @@ input[type="button"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #f4623a;
+  background-color: #24E1E8;
 }
 
 .nav-fill .nav-item {
@@ -4597,7 +4601,7 @@ input[type="button"].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #f4623a;
+  color: #24E1E8;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
@@ -4630,8 +4634,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #f4623a;
-  border-color: #f4623a;
+  background-color: #24E1E8;
+  border-color: #24E1E8;
 }
 
 .page-item.disabled .page-link {
@@ -4714,7 +4718,7 @@ a.badge:hover, a.badge:focus {
 
 .badge-primary {
   color: #fff;
-  background-color: #f4623a;
+  background-color: #24E1E8;
 }
 
 a.badge-primary:hover, a.badge-primary:focus {
@@ -5025,7 +5029,7 @@ a.badge-dark:focus, a.badge-dark.focus {
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #f4623a;
+  background-color: #24E1E8;
   transition: width 0.6s ease;
 }
 
@@ -5115,8 +5119,8 @@ a.badge-dark:focus, a.badge-dark.focus {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #f4623a;
-  border-color: #f4623a;
+  background-color: #24E1E8;
+  border-color: #24E1E8;
 }
 
 .list-group-horizontal {
@@ -6277,6 +6281,7 @@ button.bg-light:focus {
 
 .bg-dark {
   background-color: #343a40 !important;
+  padding: 0rem;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -6334,7 +6339,7 @@ button.bg-dark:focus {
 }
 
 .border-primary {
-  border-color: #f4623a !important;
+  border-color: #24E1E8 !important;
 }
 
 .border-secondary {
@@ -9365,7 +9370,7 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: #f4623a !important;
+  color: #24E1E8 !important;
 }
 
 a.text-primary:hover, a.text-primary:focus {
@@ -9587,6 +9592,12 @@ hr.light {
 
 .page-section {
   padding: 8rem 0;
+
+}
+
+#service_top {
+   display : block ;
+   margin : 0 auto ;
 }
 
 #mainNav {
@@ -9598,23 +9609,23 @@ hr.light {
 #mainNav .navbar-brand {
   font-family:  "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-weight: 500;
-  color: #ffffff;
+  color: #black;
 }
 
 #mainNav .navbar-nav .nav-item .nav-link {
   color: #6c757d;
   font-family: "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-weight: 500;
+  font-weight: 400;
   font-size: 0.9rem;
   padding: 0.75rem 0;
 }
 
 #mainNav .navbar-nav .nav-item .nav-link:hover, #mainNav .navbar-nav .nav-item .nav-link:active {
-  color: #f4623a;
+  color: #24E1E8;
 }
 
 #mainNav .navbar-nav .nav-item .nav-link.active {
-  color: #f4623a !important;
+  color: #24E1E8 !important;
 }
 
 @media (min-width: 992px) {
@@ -9656,16 +9667,6 @@ hr.light {
   }
 }
 
-
-header.graph {
-    padding-top: 10rem;
-    background: linear-gradient(to bottom, rgba(6, 10, 15, 0.27) 40%, rgba(71, 80, 86, 0.6) 100%));
-    background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-size: cover;
-}
-
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 72px);
@@ -9678,9 +9679,7 @@ header.masthead {
 
 header.masthead h1 {
   font-size: 2.25rem;
-  padding-bottom: 0;
 }
-
 
 @media (min-width: 992px) {
   header.masthead {
@@ -9724,7 +9723,7 @@ header.masthead h1 {
   text-align: center;
   opacity: 0;
   color: #fff;
-  background: rgba(244, 98, 58, 0.9);
+  background: rgba(36, 225, 232, 0.9);
   transition: opacity 0.25s ease;
   text-align: center;
 }
