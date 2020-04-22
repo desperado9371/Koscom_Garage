@@ -22,6 +22,9 @@ export default class AlgorithmManager extends cc.Component {
     // onLoad () {}
 
     start () {
+        //화면대응
+        cc.view.resizeWithBrowserSize(true);
+        cc.view.setDesignResolutionSize(960, 640, cc.ResolutionPolicy.SHOW_ALL);
         
     }
 

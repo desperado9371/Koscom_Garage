@@ -9,28 +9,14 @@
 				"volume"
 			]
 		},
-		"OBV": {
-			"name": "OBV",
-			"Arg": [
-				"close",
-				"volume"
-			]
-		},
 		"CMF": {
 			"name": "CMF",
 			"Arg": [
 				"high",
 				"low",
 				"close",
-				"volume"
-			]
-		},
-		"FI": {
-			"name": "FI",
-			"Arg": [
-				"high",
-				"low",
-				"volume"
+				"volume",
+				"period"
 			]
 		},
 		"EoM": {
@@ -38,6 +24,31 @@
 			"Arg": [
 				"high",
 				"low",
+				"volume",
+				"period"
+			]
+		},
+		"FI": {
+			"name": "FI",
+			"Arg": [
+				"high",
+				"low",
+				"close",
+				"volume",
+				"period"
+			]
+		},
+		"NVI": {
+			"name": "NVI",
+			"Arg": [
+				"close",
+				"volume"
+			]
+		},
+		"OBV": {
+			"name": "OBV",
+			"Arg": [
+				"close",
 				"volume"
 			]
 		},
@@ -48,11 +59,14 @@
 				"volume"
 			]
 		},
-		"NVI": {
-			"name": "NVI",
+		"VWAP": {
+			"name": "VWAP",
 			"Arg": [
+				"high",
+				"low",
 				"close",
-				"volume"
+				"Volumn",
+				"period"
 			]
 		}
 	},
@@ -60,69 +74,52 @@
 		"ATR": {
 			"name": "ATR",
 			"Arg": [
-				"close",
 				"high",
 				"low",
-				"volume"
+				"close",
+				"period"
 			]
 		},
 		"BB": {
 			"name": "BB",
 			"Arg": [
-				"close"
-			]
-		},
-		"KC": {
-			"name": "KC",
-			"Arg": [
 				"close",
-				"high",
-				"low"
+				"period",
+				"ndev"
 			]
 		},
 		"DC": {
 			"name": "DC",
 			"Arg": [
-				"close"
+				"close",
+				"period",
+				"ndev"
+			]
+		},
+		"KC": {
+			"name": "KC",
+			"Arg": [
+				"high",
+				"lowclose",
+				"period"
 			]
 		}
 	},
 	"Trend": {
-		"MACD": {
-			"name": "MACD",
-			"Arg": [
-				"close"
-			]
-		},
 		"ADX": {
 			"name": "ADX",
 			"Arg": [
 				"high",
 				"low",
-				"close"
+				"close",
+				"period"
 			]
 		},
-		"VI": {
-			"name": "VI",
+		"AI": {
+			"name": "AI",
 			"Arg": [
-				"high",
-				"low",
-				"close"
-			]
-		},
-		"TRIX": {
-			"name": "TRIX",
-			"Arg": [
-				"high",
-				"low",
-				"close"
-			]
-		},
-		"MI": {
-			"name": "MI",
-			"Arg": [
-				"high",
-				"low"
+				"close",
+				"period"
 			]
 		},
 		"CCI": {
@@ -130,19 +127,23 @@
 			"Arg": [
 				"high",
 				"low",
-				"close"
+				"close",
+				"period",
+				"constant"
 			]
 		},
 		"DPO": {
 			"name": "DPO",
 			"Arg": [
-				"close"
+				"close",
+				"period"
 			]
 		},
-		"KST": {
-			"name": "KST",
+		"EMA": {
+			"name": "EMA",
 			"Arg": [
-				"close"
+				"close",
+				"period"
 			]
 		},
 		"Ichimoku": {
@@ -150,7 +151,42 @@
 			"Arg": [
 				"high",
 				"low",
-				"close"
+				"n1_period",
+				"n2_period",
+				"n3_period"
+			]
+		},
+		"KST": {
+			"name": "KST",
+			"Arg": [
+				"close",
+				"r1_period",
+				"r2_period",
+				"r3_period",
+				"r4_period",
+				"n1_period",
+				"n2_period",
+				"n3_period",
+				"n4_period",
+				"nsig"
+			]
+		},
+		"MACD": {
+			"name": "MACD",
+			"Arg": [
+				"close",
+				"n_fast",
+				"n_slow",
+				"n_sign"
+			]
+		},
+		"MI": {
+			"name": "MI",
+			"Arg": [
+				"high",
+				"low",
+				"n_period",
+				"n2_period"
 			]
 		},
 		"Parabolic_SAR": {
@@ -158,7 +194,32 @@
 			"Arg": [
 				"high",
 				"low",
-				"close"
+				"close",
+				"step",
+				"max_step"
+			]
+		},
+		"SMA": {
+			"name": "SMA",
+			"Arg": [
+				"close",
+				"period"
+			]
+		},
+		"TRIX": {
+			"name": "TRIX",
+			"Arg": [
+				"close",
+				"period"
+			]
+		},
+		"VI": {
+			"name": "VI",
+			"Arg": [
+				"high",
+				"low",
+				"close",
+				"period"
 			]
 		}
 	},
@@ -172,16 +233,54 @@
 				"Volumn"
 			]
 		},
+		"AO": {
+			"name": "AO",
+			"Arg": [
+				"high",
+				"low",
+				"short_period",
+				"log_period"
+			]
+		},
+		"KAMA": {
+			"name": "KAMA",
+			"Arg": [
+				"close",
+				"period",
+				"pow1",
+				"pow2"
+			]
+		},
+		"ROC": {
+			"name": "ROC",
+			"Arg": [
+				"close",
+				"period"
+			]
+		},
 		"RSI": {
 			"name": "RSI",
 			"Arg": [
-				"close"
+				"close",
+				"period"
+			]
+		},
+		"SR": {
+			"name": "SR",
+			"Arg": [
+				"close",
+				"high",
+				"low",
+				"period",
+				"d_n"
 			]
 		},
 		"TSI": {
 			"name": "TSI",
 			"Arg": [
-				"close"
+				"close",
+				"high_period",
+				"low_period"
 			]
 		},
 		"UO": {
@@ -189,15 +288,13 @@
 			"Arg": [
 				"high",
 				"low",
-				"close"
-			]
-		},
-		"SR": {
-			"name": "SR",
-			"Arg": [
-				"high",
-				"low",
-				"close"
+				"close",
+				"short_period",
+				"medium_period",
+				"long_period",
+				"ws",
+				"wm",
+				"wl"
 			]
 		},
 		"WR": {
@@ -205,26 +302,8 @@
 			"Arg": [
 				"high",
 				"low",
-				"close"
-			]
-		},
-		"AO": {
-			"name": "AO",
-			"Arg": [
-				"high",
-				"low"
-			]
-		},
-		"KAMA": {
-			"name": "KAMA",
-			"Arg": [
-				"close"
-			]
-		},
-		"ROC": {
-			"name": "ROC",
-			"Arg": [
-				"close"
+				"close",
+				"lbp"
 			]
 		}
 	},
