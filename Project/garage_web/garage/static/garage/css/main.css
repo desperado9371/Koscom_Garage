@@ -6,10 +6,10 @@
 
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
-
+{% load staticfiles %}
 @font-face {
   font-family: NanumSquareR;
-  src: url('garage/static/garage/fonts/nanumsquare/NanumSquareR.ttf');
+  src: url("/static/fonts/nanumsquare/NanumSquareR.ttf");
 }
 
 @font-face {
