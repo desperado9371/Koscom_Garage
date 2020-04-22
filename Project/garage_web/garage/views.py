@@ -12,7 +12,8 @@ import ta
 
 # Create your views here.
 #from sphinx.builders.html import return_codes_re
-
+def test(request):
+    return render(request, 'garage/test.html',{})
 
 def post_list(request):
     return render(request, 'garage/index.html', {})
