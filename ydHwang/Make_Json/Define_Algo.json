@@ -1,0 +1,24 @@
+{
+	"Algo": {
+		"min": "2",
+		"max": "2",
+		"BuySell": "Buy",
+		"Block": {
+			"MACD": {
+				"name": "MACD",
+				"close": "50000",
+				"n_fast": "60",
+				"n_slow": "30",
+				"n_sign": "5"
+			},
+			"CCI": {
+				"name": "CCI",
+				"high": "50000",
+				"low": "60",
+				"close": "30",
+				"period": "5",
+				"constant": "5"
+			}
+		}
+	}
+}
