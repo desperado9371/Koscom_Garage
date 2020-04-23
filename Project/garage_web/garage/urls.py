@@ -12,5 +12,6 @@ urlpatterns = [
     path('algomaker/', views.algomaker, name='algomaker'),
     # path('logintest/', views.login_test, name='logintest'),
     # path('signuptest/', views.signup_test, name='signuptest'),
+    path('test/', views.test, name='test'),
     path('', views.post_list, name='post_list'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
