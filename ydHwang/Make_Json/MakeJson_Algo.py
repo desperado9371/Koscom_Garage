@@ -19,19 +19,22 @@ Block["CCI"] = CCI
 
 
 MACD["name"] = "MACD"
-MACD["close"] = "50000"
-MACD["n_fast"] = "60"
-MACD["n_slow"] = "30"
-MACD["n_sign"] = "5"
+MACD["input_close"] = "50000"
+MACD["input_n_fast"] = "60"
+MACD["input_n_slow"] = "30"
+MACD["input_n_sign"] = "5"
+MACD["Triger_sign"] = ">"
+MACD["Triger_val"] = "5"
 
 
 CCI["name"] = "CCI"
-CCI["high"] = "50000"
-CCI["low"] = "60"
-CCI["close"] = "30"
-CCI["period"] = "5"
-CCI["constant"] = "5"
-
+CCI["input_high"] = "50000"
+CCI["input_low"] = "60"
+CCI["input_close"] = "30"
+CCI["input_period"] = "5"
+CCI["input_constant"] = "5"
+MACD["Triger_sign"] = "<"
+MACD["Triger_val"] = "2"
 ############################# Volumn
 
 

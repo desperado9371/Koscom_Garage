@@ -6,18 +6,20 @@
 		"Block": {
 			"MACD": {
 				"name": "MACD",
-				"close": "50000",
-				"n_fast": "60",
-				"n_slow": "30",
-				"n_sign": "5"
+				"input_close": "50000",
+				"input_n_fast": "60",
+				"input_n_slow": "30",
+				"input_n_sign": "5",
+				"Triger_sign": "<",
+				"Triger_val": "2"
 			},
 			"CCI": {
 				"name": "CCI",
-				"high": "50000",
-				"low": "60",
-				"close": "30",
-				"period": "5",
-				"constant": "5"
+				"input_high": "50000",
+				"input_low": "60",
+				"input_close": "30",
+				"input_period": "5",
+				"input_constant": "5"
 			}
 		}
 	}
