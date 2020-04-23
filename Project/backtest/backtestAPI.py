@@ -57,7 +57,6 @@ class BacktestAPI:
                 # 받은 문자열을 다시 클라이언트로 전송해줍니다.
                 request = request_str.split('|')
                 print(len(request))
-                temp = "go back"
                 df = self.get_price_data()
                 df_str = df.to_json()
                 client_socket.sendall(df_str.encode())
@@ -66,6 +65,9 @@ class BacktestAPI:
             client_socket.close()
             server_socket.close()
             print('Connection Closed')
+
+            temp = self.algorithm_request('User_id', 'all')
+            print(temp)
 
         price_data = []
         trade_data = []
