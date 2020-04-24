@@ -12,15 +12,249 @@
     <!-- Title Page-->
     <title>Dashboard</title>
 
+    {% load staticfiles %}
     <!-- Fontfaces CSS-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
 
     <!-- Bootstrap CSS-->
-    <link href="vendor/test_bootstrap.min.css" rel="stylesheet" media="all">
+    <link href="{% static 'garage/test/vendor/test_bootstrap.min.css' %}" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
-    <link href="css/theme_test.css" rel="stylesheet" media="all">
+    <link href="{% static 'garage/test/css/theme_test.css' %}" rel="stylesheet" media="all">
 
+    <!-- Google Chart-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 140],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 15],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 15],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 140],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 15],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 15],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 140],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 15],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      ['Mon', 20, 28, 38, 45],
+      ['Tue', 31, 38, 55, 66],
+      ['Wed', 50, 55, 77, 80],
+      ['Thu', 77, 77, 66, 50],
+      ['Fri', 68, 66, 22, 15],
+      ['Sat', 50, 88, 33, 20],
+      ['Sun', 44, 55, 22, 10],
+      // Treat first row as data as well.
+    ], true);
+     //var data = google.visualization.arrayToDataTable({{ datas|safe }},true);
+    //   var data= new google.visualization.DataTable();
+    //   data.addColumn('string', 'Date');
+    //   data.addColumn('number');
+    //   data.addColumn('number');
+    //   data.addColumn('number');
+    //   data.addColumn('number');
+    //   data.addColumn({type: 'string', role: 'style'});
+    //   data.addRow( {{datas|safe}});
+
+    var options = {
+        tooltip: {isHtml: true},
+      legend:'none',
+        animation:{
+          startup: true,
+        duration: 500,
+        easing: 'out',
+      },
+        hAxis: {viewWindow: {min:0, max:50}},
+        candlestick:{
+          fallingColor:{
+              fill: 'blue',
+              stroke: 'blue',
+          },
+          risingColor:{
+              fill: 'red',
+              stroke: 'red',
+          }
+        },
+        colors: ['black'],
+    };
+
+ var chart = new google.visualization.CandlestickChart(
+        document.getElementById('chart_div'));
+    var MAX = 100;
+    var prevButton = document.getElementById('b1');
+    var nextButton = document.getElementById('b2');
+    var changeZoomButton = document.getElementById('b3');
+    function drawChart() {
+      // Disabling the button while the chart is drawing.
+      prevButton.disabled = true;
+      nextButton.disabled = true;
+      changeZoomButton.disabled = true;
+      google.visualization.events.addListener(chart, 'ready',
+          function() {
+            prevButton.disabled = options.hAxis.viewWindow.min <= 0;
+            nextButton.disabled = options.hAxis.viewWindow.max >= MAX;
+            changeZoomButton.disabled = false;
+          });
+      chart.draw(data, options);
+    }
+
+    prevButton.onclick = function() {
+      if (zoomed==0) {
+        options.hAxis.viewWindow.min -= 1;
+        options.hAxis.viewWindow.max -= 1;
+      }
+      else if(zoomed==1){
+          options.hAxis.viewWindow.min -= 5;
+          options.hAxis.viewWindow.max -= 5;
+      }
+      else if(zoomed==2) {
+        options.hAxis.viewWindow.min -= 10;
+        options.hAxis.viewWindow.max -=10 ;
+      }
+      drawChart();
+    }
+    nextButton.onclick = function() {
+      if (zoomed==0) {
+        options.hAxis.viewWindow.min += 1;
+        options.hAxis.viewWindow.max += 1;
+      }
+      else if(zoomed==1){
+          options.hAxis.viewWindow.min += 5;
+          options.hAxis.viewWindow.max += 5;
+      }
+      else if(zoomed==2) {
+        options.hAxis.viewWindow.min += 10;
+        options.hAxis.viewWindow.max +=10 ;
+      }
+      drawChart();
+    }
+    var zoomed = 0;
+    changeZoomButton.onclick = function() {
+      if (zoomed==0) {
+        options.hAxis.viewWindow.min = 0;
+        options.hAxis.viewWindow.max = 7;
+      }
+      else if(zoomed==1){
+          options.hAxis.viewWindow.min=0;
+          options.hAxis.viewWindow.max=20;
+      }
+      else if(zoomed==2) {
+        options.hAxis.viewWindow.min = 0;
+        options.hAxis.viewWindow.max = MAX;
+      }
+      zoomed = zoomed+1;
+      if(zoomed >2)
+          zoomed=0;
+      drawChart();
+    }
+    drawChart();
+  }
+    </script>
+
+<!--    Google Chart-->
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '거래일시');
+        data.addColumn('string', '매수/매도');
+        data.addColumn('string', 'win/loss');
+        data.addColumn('string', '일 수익률');
+        data.addColumn('string', '누적 수익률');
+        data.addColumn('number', '총 자산');
+        data.addRows([
+          ['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+            ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+          ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+          ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+    </script>
 </head>
 
 <body class="animsition">
@@ -28,7 +262,7 @@
         <!-- HEADER MOBILE-->
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
             <div class="container">
-                <img class="img" href="/" src="images/logo_box.png" alt="" width="50" height="25">
+                <img class="img" href="/" src="{% static 'garage/test/images/logo_box.png' %}" alt="" width="50" height="25">
                 <a class="navbar-brand js-scroll-trigger" href="/">
                     <font size=4.5><B>&nbsp Algorithm Trading</B></font>
                 </a>
@@ -136,8 +370,16 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="au-card recent-report">
+                                    <div class="au-card recent-report ">
                                         <!-- 차트는 여기에 넣어주세용  -->
+                                        <div id="chart_div" style="width:100%; height:90%"></div>
+                                        <div class="row justify-content-center">
+                                            <button id="b1">prev</button>
+                                                <div>    &nbsp</div>
+                                             <button id="b2">next</button>
+                                                <div>    &nbsp</div><div>    &nbsp</div>
+                                             <button id="b3">zoom</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +388,11 @@
                             <div class="col-lg-12">
                                 <div class="row m-t-25">
                                     <div class="transaction-item">
+                                        <div class="text">
+                                                    <h2>거래내역 </h2>
+                                                </div>
                                     <!-- 거래내역은 여기에 넣어주세용  -->
+                                        <div id="table_div" style="height:85%">
                                     </div>
                                 </div>
                             </div>
