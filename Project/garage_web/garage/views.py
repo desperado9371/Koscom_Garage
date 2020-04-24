@@ -13,7 +13,46 @@ import ta
 # Create your views here.
 #from sphinx.builders.html import return_codes_re
 def test(request):
-    return render(request, 'garage/test.html',{})
+
+    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
+
+    timestamps = upbit_min['timestamp']
+    opens = upbit_min['open']
+    closes = upbit_min['close']
+    highs = upbit_min['high']
+    lows = upbit_min['low']
+
+    for i in range(len(timestamps)):
+        timestamps[i] = timestamps[i][:10]
+
+    data = list()
+    temp = list()
+    tooltips = list()
+    for i in range(len(timestamps)):
+        if i % 3 == 0:
+            tooltips.append('stroke-width: 5;' +
+                            'stroke-color: #1800c8')
+        if i % 3 == 1:
+            tooltips.append('stroke-width: 5;' +
+                           'stroke-color: #1800c8')
+        if i % 2 == 0:
+            tooltips.append('')
+
+    for i in range(len(timestamps)):
+        temp.append(timestamps[i])
+        temp.append(lows[i])
+        temp.append(opens[i])
+        temp.append(closes[i])
+        temp.append(highs[i])
+        #temp.append(tooltips[i])
+        data.append(temp)
+        temp = list()
+    print( data[:4])
+    # print( upbit_min['close'][-30:].tolist())
+
+    return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
+                                                   'labels': upbit_min['timestamp'][-30:].tolist(),
+                                                    'datas': data[-100:]})
 
 def post_list(request):
     return render(request, 'garage/index.html', {})
