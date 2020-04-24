@@ -1,31 +1,40 @@
 import json
 Algo_group = dict()
 # 중분류
-Block = dict()
+Block1 = dict()
+Block2 = dict()
 
 #소분류
 MACD = dict()
 CCI = dict()
-
+NUM = dict()
+Group1 = dict()
+Group2 = dict()
+SIG = dict()
 Algo = dict()
-Algo["min"]="2"
-Algo["max"]="2"
+
+Algo["srt_date"]="20200102"
+Algo["end_date"]="20200110"
 Algo["BuySell"]="Buy"
-Algo["Block"]=Block
+Algo["Block1"]=Block1
+Algo["Block2"]=Block2
 
+####################################
+Block1["min"]="1"
+Block1["max"]="1"
+Block1["Total_count"]="1"
+Block1["group"]= Group1
 
-Block["MACD"] = MACD
-Block["CCI"] = CCI
-
+Group1["INDI"] = [MACD,SIG,CCI]
 
 MACD["name"] = "MACD"
 MACD["input_close"] = "50000"
 MACD["input_n_fast"] = "60"
 MACD["input_n_slow"] = "30"
 MACD["input_n_sign"] = "5"
-MACD["Triger_sign"] = ">"
-MACD["Triger_val"] = "5"
 
+SIG["name"] = "SIG"
+SIG["val"] = ">"
 
 CCI["name"] = "CCI"
 CCI["input_high"] = "50000"
@@ -33,10 +42,29 @@ CCI["input_low"] = "60"
 CCI["input_close"] = "30"
 CCI["input_period"] = "5"
 CCI["input_constant"] = "5"
-MACD["Triger_sign"] = "<"
-MACD["Triger_val"] = "2"
-############################# Volumn
+#############################
 
+####################################
+Block2["min"]="1"
+Block2["max"]="1"
+Block2["Total_count"]="1"
+Block2["group"]= Group2
+
+Group2["INDI"] = [MACD,SIG,NUM]
+
+MACD["name"] = "MACD"
+MACD["input_close"] = "50000"
+MACD["input_n_fast"] = "60"
+MACD["input_n_slow"] = "30"
+MACD["input_n_sign"] = "5"
+
+SIG["name"] = "SIG"
+SIG["val"] = ">"
+
+NUM["name"] = "NUM"
+NUM["val"] = "20000"
+
+#############################
 
 # json 파일로 저장
 Algo_group["Algo"] = Algo
