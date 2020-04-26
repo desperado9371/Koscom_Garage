@@ -23,6 +23,15 @@ export default class HandManager extends cc.Component {
     @property(cc.Prefab)
     deckPrefab: cc.Prefab = null;
 
+    @property(cc.Animation)
+    handAmination: cc.Animation = null;
+
+    @property(cc.AnimationClip)
+    animClip : cc.AnimationClip = null;
+    @property(cc.AnimationClip)
+    animClipRev : cc.AnimationClip = null;
+
+    isHiding = true;
     static instance : HandManager = null;
     static getInstance() : HandManager{
         if(this.instance === null){
@@ -60,7 +69,10 @@ export default class HandManager extends cc.Component {
 
         this.hands.push(h);
 
-        this.displayHand();
+        
+
+        this.showHand();
+
     }
 
 
@@ -79,8 +91,34 @@ export default class HandManager extends cc.Component {
         this.displayHand();
     }
     displayHand(){
+        this.hideHand();
+
+
+    }
+    
+    onAnimDone(){
+        if(this.isHiding === true){
+            this.showHand();
+        }
+    }
+
+
+    hideHand(){
+        //this.handAmination.stop();
+        this.isHiding = true;
+        //this.handAmination.defaultClip = this.animClip;
+        //this.handAmination.currentClip = this.animClip;
+        //this.handAmination.play();
+        
+    }
+
+    showHand(){
+        //this.handAmination.stop();
+        
         var hand = this.hands[this.handIndex];
         this.handParent.destroyAllChildren();
+
+
         for(var k = 0; k < hand.length; k++){
             var item = hand[k];
             var obj:cc.Node = null;
@@ -101,6 +139,11 @@ export default class HandManager extends cc.Component {
             obj.setParent(this.handParent);
         }
 
+
+        //this.handAmination.defaultClip = this.animClipRev;
+        //this.handAmination.currentClip = this.animClipRev;
+        //this.handAmination.play();
+        this.isHiding = false;
     }
     
 
