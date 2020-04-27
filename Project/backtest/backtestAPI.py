@@ -21,53 +21,50 @@ class BacktestAPI:
         while True:
             HOST = '0.0.0.0'
 
-            # 클라이언트 접속을 대기하는 포트 번호입니다.
+            # 클라이언트 접속을 대기하는 포트 번호
             PORT = 9999
 
-            # 소켓 객체를 생성합니다.
-            # 주소 체계(address family)로 IPv4, 소켓 타입으로 TCP 사용합니다.
+            # 소켓 객체를 생성
+            # 주소 체계(address family)로 IPv4, 소켓 타입으로 TCP 사용
             server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             # 포트 사용중이라 연결할 수 없다는
-            # WinError 10048 에러 해결를 위해 필요합니다.
+            # WinError 10048 에러 해결를 위해 필요
             server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-            # bind 함수는 소켓을 특정 네트워크 인터페이스와 포트 번호에 연결하는데 사용됩니다.
-            # HOST는 hostname, ip address, 빈 문자열 ""이 될 수 있습니다.
-            # 빈 문자열이면 모든 네트워크 인터페이스로부터의 접속을 허용합니다.
-            # PORT는 1-65535 사이의 숫자를 사용할 수 있습니다.
+            # bind 함수는 소켓을 특정 네트워크 인터페이스와 포트 번호에 연결하는데 사용
+            # HOST는 hostname, ip address, 빈 문자열 ""이 될 수 있음
+            # 빈 문자열이면 모든 네트워크 인터페이스로부터의 접속을 허용
+            # PORT는 1-65535 사이의 숫자를 사용
             server_socket.bind((HOST, PORT))
 
-            # 서버가 클라이언트의 접속을 허용하도록 합니다.
+            # 서버가 클라이언트의 접속을 허용
             server_socket.listen()
-            # accept 함수에서 대기하다가 클라이언트가 접속하면 새로운 소켓을 리턴합니다.
+            # accept 함수에서 대기하다가 클라이언트가 접속하면 새로운 소켓을 리턴
             client_socket, addr = server_socket.accept()
-            # 접속한 클라이언트의 주소입니다.
+            # 접속한 클라이언트의 주소
             print('Connected by', addr)
             # 무한루프를 돌면서
             while True:
-                # 클라이언트가 보낸 메시지를 수신하기 위해 대기합니다.
+                # 클라이언트가 보낸 메시지를 수신하기 위해 대기
                 data = client_socket.recv(1024)
-                # 빈 문자열을 수신하면 루프를 중지합니다.
+                # 빈 문자열을 수신하면 루프를 중지
                 if not data:
                     break
-                # 수신받은 문자열을 출력합니다.
+                # 수신받은 문자열을 출력
                 request_str = data.decode()
                 print('Received from', addr, data.decode())
-                # 받은 문자열을 다시 클라이언트로 전송해줍니다.
+                # 받은 문자열을 '|'을 기준으로 파싱
                 request = request_str.split('|')
                 print(len(request))
-                df = self.get_price_data()
-                df_str = df.to_json()
-                client_socket.sendall(df_str.encode())
+                # 테스트 용으로 시세 데이터 반환
+                temp = self.algorithm_request('User_id', 'all')
+                client_socket.sendall(temp.encode())
 
-            # 소켓을 닫습니다.
+            # 소켓을 닫음
             client_socket.close()
             server_socket.close()
             print('Connection Closed')
-
-            temp = self.algorithm_request('User_id', 'all')
-            print(temp)
 
         price_data = []
         trade_data = []
@@ -100,7 +97,9 @@ class BacktestAPI:
         :return:
         """
 
+        # 미들웨어 연결함수 호출
         data = asyncio.get_event_loop().run_until_complete(self.middleware_connect(user_id, algo_id))
+        # 받아온 데이터 정제
         algo_json = eval(data)
 
         return algo_json
@@ -115,7 +114,9 @@ class BacktestAPI:
         """
 
         bitcoin_dt = pd.DataFrame()
+        # 거래소 선택
         if market == 'upbit':
+            # 시간선택
             if time_delta == '1d':
                 bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
             elif time_delta == '1m':
@@ -134,35 +135,78 @@ class BacktestAPI:
 
     ##지표 구현 부분########
     def macd(self, df, n_slow=26, n_fast=12, n_sign=9):
+        """
+        macd 구하는 함수 slow, fast, signal 입력가능
+
+        :param df:
+        :param n_slow:
+        :param n_fast:
+        :param n_sign:
+        :return:
+        """
         indicator_macd = ta.trend.MACD(df['close'],
                                        n_slow=n_slow,
                                        n_fast=n_fast,
                                        n_sign=n_sign)
+        # macd line ( n_fast EMA - n_slow EMA)
         df['macd'] = indicator_macd.macd()
-        df['macd_diff'] = indicator_macd.macd_diff()
+        # signal line ( n_sign EMA )
         df['macd_signal'] = indicator_macd.macd_signal()
+        # macd histogram ( macd line - signal line)
+        df['macd_diff'] = indicator_macd.macd_diff()
+
         return df
 
     def rsi(self, df, n=14):
+        """
+        Relative Strength Index
+        기간 입력가능 n
+        :param df:
+        :param n:
+        :return:
+        """
         indicator_rsi = ta.momentum.RSIIndicator(df['close'],
                                                  n=n)
+        # relative Strength index
         df['rsi'] = indicator_rsi.rsi()
         return df
 
     def bollinger_band(self, df, n=20, ndev=2):
+        """
+        Bollinger Band
+        :param df: 종가데이터
+        :param n: 기간
+        :param ndev: 표준편차
+        :return:
+        """
         indicator_bollinger = ta.volatility.BollingerBands(df['close'],
                                                            n=n,
                                                            ndev=ndev)
+        # Bollinger Channel High Band
         df['bollinger_hband'] = indicator_bollinger.bollinger_hband()
+        # Bollinger Channel Indicator Crossing High Band ( Binary )
+        # returns 1 if close is higher than bollinger_hband, else returns 0
         df['bollinger_hband_indicator'] = indicator_bollinger.bollinger_hband_indicator()
+        # Bollinger Channel Low Band
         df['bollinger_lband'] = indicator_bollinger.bollinger_lband()
+        # Bollinger Channel Indicator Crossing Low Band ( binary )
+        # returns 1 if close is lower than bollinger_lband, else returns 0
         df['bollinger_lband_indicator'] = indicator_bollinger.bollinger_lband_indicator()
+        # Bollinger Channel Middle band
         df['bollinger_mband'] = indicator_bollinger.bollinger_mavg()
+        # Bollinger Channel BandWidth
         df['bollinger_wband'] = indicator_bollinger.bollinger_wband()
         return df
 
     def obv(self, df):
+        """
+        On-balance Volume
+
+        :param df: 종가
+        :return:
+        """
         indicator_obv = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume'])
+        # on-balance volume
         df['obv'] = indicator_obv.on_balance_volume()
         return df
 
@@ -187,11 +231,14 @@ class BacktestAPI:
 
         for index, data in df.iterrows():
             if str(data['macd']) != 'nan':
+                # 전날과 오늘의 곱이 음수일때 즉 제로선 돌파
                 if df['macd'][index - 1] * data['macd'] < 0:
+                    # 오늘이 음수면 하락전환
                     if data['macd'] < 0:
                         # print("sell : {},{}".format(data['macd'],data['timestamp']))
                         date_list.append(data['timestamp'][:10])
                         type_list.append("sell")
+                    # 오늘이 양수면 상승전환
                     else:
                         # print("buy : {},{}".format(data['macd'],data['timestamp']))
                         date_list.append(data['timestamp'][:10])
@@ -212,7 +259,7 @@ class BacktestAPI:
         """
         과거데이터에 주문을 실행하는 함수
 
-        :param market:
+        :param market: 대사
         :param order_type:
         :param quantity:
         :param target_date:
