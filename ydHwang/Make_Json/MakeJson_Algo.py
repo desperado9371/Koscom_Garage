@@ -28,20 +28,15 @@ Block1["group"]= Group1
 Group1["INDI"] = [MACD,SIG,CCI]
 
 MACD["name"] = "MACD"
-MACD["input_close"] = "50000"
-MACD["input_n_fast"] = "60"
-MACD["input_n_slow"] = "30"
-MACD["input_n_sign"] = "5"
+MACD["val"] = {"input_close":"50000","input_n_fast":"60","input_n_slow":"30","input_n_sign":"5"}
 
 SIG["name"] = "SIG"
 SIG["val"] = ">"
 
 CCI["name"] = "CCI"
-CCI["input_high"] = "50000"
-CCI["input_low"] = "60"
-CCI["input_close"] = "30"
-CCI["input_period"] = "5"
-CCI["input_constant"] = "5"
+CCI["val"] = {"input_high":"50000","input_low":"60","input_close":"30","input_period":"5","input_constant":"5"}
+
+
 #############################
 
 ####################################
@@ -53,10 +48,7 @@ Block2["group"]= Group2
 Group2["INDI"] = [MACD,SIG,NUM]
 
 MACD["name"] = "MACD"
-MACD["input_close"] = "50000"
-MACD["input_n_fast"] = "60"
-MACD["input_n_slow"] = "30"
-MACD["input_n_sign"] = "5"
+MACD["val"] = {"input_close":"50000","input_n_fast":"60","input_n_slow":"30","input_n_sign":"5"}
 
 SIG["name"] = "SIG"
 SIG["val"] = ">"

@@ -11,10 +11,12 @@
 				"INDI": [
 					{
 						"name": "MACD",
-						"input_close": "50000",
-						"input_n_fast": "60",
-						"input_n_slow": "30",
-						"input_n_sign": "5"
+						"val": {
+							"input_close": "50000",
+							"input_n_fast": "60",
+							"input_n_slow": "30",
+							"input_n_sign": "5"
+						}
 					},
 					{
 						"name": "SIG",
@@ -22,11 +24,13 @@
 					},
 					{
 						"name": "CCI",
-						"input_high": "50000",
-						"input_low": "60",
-						"input_close": "30",
-						"input_period": "5",
-						"input_constant": "5"
+						"val": {
+							"input_high": "50000",
+							"input_low": "60",
+							"input_close": "30",
+							"input_period": "5",
+							"input_constant": "5"
+						}
 					}
 				]
 			}
@@ -39,10 +43,12 @@
 				"INDI": [
 					{
 						"name": "MACD",
-						"input_close": "50000",
-						"input_n_fast": "60",
-						"input_n_slow": "30",
-						"input_n_sign": "5"
+						"val": {
+							"input_close": "50000",
+							"input_n_fast": "60",
+							"input_n_slow": "30",
+							"input_n_sign": "5"
+						}
 					},
 					{
 						"name": "SIG",
