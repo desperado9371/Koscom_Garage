@@ -1,0 +1,35 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "handAnim",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.25,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 0,
+  "curveData": {
+    "props": {
+      "y": [
+        {
+          "frame": 0,
+          "value": -325.263
+        },
+        {
+          "frame": 0.25,
+          "value": 0
+        }
+      ],
+      "scaleX": [
+        {
+          "frame": 0,
+          "value": 0
+        },
+        {
+          "frame": 0.25,
+          "value": 1
+        }
+      ]
+    }
+  },
+  "events": []
+}

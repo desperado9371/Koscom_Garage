@@ -17,10 +17,12 @@ export default class Deck extends HandItem {
         return 'Deck';
     }
 
-    package: Array<HandItem> = null;
+    package: HandItem[] = null;
     handManager : HandManager = null;
 
-
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
     onClick() {
         
         var hm = HandManager.getInstance();
