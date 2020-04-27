@@ -6,10 +6,10 @@
 
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
-
+{% load staticfiles %}
 @font-face {
   font-family: NanumSquareR;
-  src: url('../fonts/NanumSquare/NanumSquareR.ttf');
+  src: url("/static/fonts/nanumsquare/NanumSquareR.ttf");
 }
 
 @font-face {
@@ -35,6 +35,7 @@ body, html {
 a {
 	font-family: NanumSquareR;
 	font-size: 14px;
+  font-weight: 400;
 	line-height: 1.7;
 	color: #666666;
 	margin: 0px;
@@ -52,8 +53,6 @@ a:hover {
 	text-decoration: none;
     color: #666666;
   }
-
-}
 
 /*---------------------------------------------*/
 h1,h2,h3,h4,h5,h6 {
@@ -159,8 +158,9 @@ iframe {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;;
@@ -170,7 +170,7 @@ iframe {
 .wrap-login100 {
   width: 450px;
   padding: 15px;
-  border-color: : black;
+  border-color: black;
   background: #fff;
   border-radius: 10px;
   position: center;
@@ -210,7 +210,7 @@ iframe {
 /*---------------------------------------------*/
 .input100 {
   font-family: NanumSquareB;
-  color: #666666
+  color: #666666;
   line-height: 1.2;
   font-size: 14px;
   display: block;
@@ -220,13 +220,7 @@ iframe {
   padding: 0 20px 0 25px;
 }
 /*---------------------------------------------*/
-input[type=password] {
-        font-family: "";
 
-        &::placeholder {
-        	font-family: "NanumSquare";
-        }
-    }
 /*------------------------------------------------------------------
 [ Focus Input ]*/
 
