@@ -7,59 +7,55 @@
 			"min": "1",
 			"max": "1",
 			"Total_count": "1",
-			"group": {
-				"INDI": [
-					{
-						"name": "MACD",
-						"val": {
-							"input_close": "50000",
-							"input_n_fast": "60",
-							"input_n_slow": "30",
-							"input_n_sign": "5"
-						}
-					},
-					{
-						"name": "SIG",
-						"val": ">"
-					},
-					{
-						"name": "CCI",
-						"val": {
-							"input_high": "50000",
-							"input_low": "60",
-							"input_close": "30",
-							"input_period": "5",
-							"input_constant": "5"
-						}
+			"group": [
+				{
+					"name": "MACD",
+					"val": {
+						"input_close": "50000",
+						"input_n_fast": "60",
+						"input_n_slow": "30",
+						"input_n_sign": "5"
 					}
-				]
-			}
+				},
+				{
+					"name": "SIG",
+					"val": ">"
+				},
+				{
+					"name": "CCI",
+					"val": {
+						"input_high": "50000",
+						"input_low": "60",
+						"input_close": "30",
+						"input_period": "5",
+						"input_constant": "5"
+					}
+				}
+			]
 		},
 		"Block2": {
 			"min": "1",
 			"max": "1",
 			"Total_count": "1",
-			"group": {
-				"INDI": [
-					{
-						"name": "MACD",
-						"val": {
-							"input_close": "50000",
-							"input_n_fast": "60",
-							"input_n_slow": "30",
-							"input_n_sign": "5"
-						}
-					},
-					{
-						"name": "SIG",
-						"val": ">"
-					},
-					{
-						"name": "NUM",
-						"val": "20000"
+			"group": [
+				{
+					"name": "MACD",
+					"val": {
+						"input_close": "50000",
+						"input_n_fast": "60",
+						"input_n_slow": "30",
+						"input_n_sign": "5"
 					}
-				]
-			}
+				},
+				{
+					"name": "SIG",
+					"val": ">"
+				},
+				{
+					"name": "NUM",
+					"val": "20000"
+				}
+			]
 		}
 	}
 }

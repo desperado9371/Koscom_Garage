@@ -23,9 +23,10 @@ Algo["Block2"]=Block2
 Block1["min"]="1"
 Block1["max"]="1"
 Block1["Total_count"]="1"
-Block1["group"]= Group1
+Block1["group"]= [MACD,SIG,CCI]
 
-Group1["INDI"] = [MACD,SIG,CCI]
+#Group1["INDI"] = [MACD,SIG,CCI]
+
 
 MACD["name"] = "MACD"
 MACD["val"] = {"input_close":"50000","input_n_fast":"60","input_n_slow":"30","input_n_sign":"5"}
@@ -43,9 +44,7 @@ CCI["val"] = {"input_high":"50000","input_low":"60","input_close":"30","input_pe
 Block2["min"]="1"
 Block2["max"]="1"
 Block2["Total_count"]="1"
-Block2["group"]= Group2
-
-Group2["INDI"] = [MACD,SIG,NUM]
+Block2["group"]= [MACD,SIG,NUM]
 
 MACD["name"] = "MACD"
 MACD["val"] = {"input_close":"50000","input_n_fast":"60","input_n_slow":"30","input_n_sign":"5"}
