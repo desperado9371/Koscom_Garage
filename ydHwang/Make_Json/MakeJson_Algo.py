@@ -36,7 +36,7 @@ SIG["name"] = "sig"
 SIG["val"] = ">"
 
 CCI["name"] = "obv"
-CCI["val"] = {"volum":"10"}
+CCI["val"] = {"volumn":"10"}
 
 
 #############################
