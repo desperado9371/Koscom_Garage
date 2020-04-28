@@ -7,50 +7,44 @@
 			"min": "1",
 			"max": "2",
 			"total_count": "2",
-			"group": [
+			"group1": [
 				{
-					"group1": [
-						{
-							"name": "macd",
-							"val": {
-								"input_close": "50000",
-								"input_n_fast": "60",
-								"input_n_slow": "30",
-								"input_n_sign": "5"
-							}
-						},
-						{
-							"name": "sig",
-							"val": ">"
-						},
-						{
-							"name": "obv",
-							"val": {
-								"volum": "10"
-							}
-						}
-					]
+					"name": "macd",
+					"val": {
+						"input_close": "50000",
+						"input_n_fast": "60",
+						"input_n_slow": "30",
+						"input_n_sign": "5"
+					}
 				},
 				{
-					"group2": [
-						{
-							"name": "macd",
-							"val": {
-								"input_close": "50000",
-								"input_n_fast": "60",
-								"input_n_slow": "30",
-								"input_n_sign": "5"
-							}
-						},
-						{
-							"name": "sig",
-							"val": ">"
-						},
-						{
-							"name": "num",
-							"val": "20000"
-						}
-					]
+					"name": "sig",
+					"val": ">"
+				},
+				{
+					"name": "obv",
+					"val": {
+						"volum": "10"
+					}
+				}
+			],
+			"group2": [
+				{
+					"name": "macd",
+					"val": {
+						"input_close": "50000",
+						"input_n_fast": "60",
+						"input_n_slow": "30",
+						"input_n_sign": "5"
+					}
+				},
+				{
+					"name": "sig",
+					"val": ">"
+				},
+				{
+					"name": "num",
+					"val": "20000"
 				}
 			]
 		},
@@ -58,24 +52,20 @@
 			"min": "1",
 			"max": "1",
 			"total_count": "1",
-			"group": [
+			"group1": [
 				{
-					"group1": [
-						{
-							"name": "obv",
-							"val": {
-								"volum": "10"
-							}
-						},
-						{
-							"name": "sig",
-							"val": ">"
-						},
-						{
-							"name": "num",
-							"val": "20000"
-						}
-					]
+					"name": "obv",
+					"val": {
+						"volum": "10"
+					}
+				},
+				{
+					"name": "sig",
+					"val": ">"
+				},
+				{
+					"name": "num",
+					"val": "20000"
 				}
 			]
 		}
