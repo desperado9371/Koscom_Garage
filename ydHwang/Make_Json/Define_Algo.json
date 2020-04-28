@@ -1,15 +1,15 @@
 {
-	"Algo": {
+	"algo": {
 		"srt_date": "20200102",
 		"end_date": "20200110",
-		"BuySell": "Buy",
-		"Block1": {
+		"buysell": "Buy",
+		"block1": {
 			"min": "1",
 			"max": "1",
-			"Total_count": "1",
+			"total_count": "1",
 			"group": [
 				{
-					"name": "MACD",
+					"name": "macd",
 					"val": {
 						"input_close": "50000",
 						"input_n_fast": "60",
@@ -18,28 +18,24 @@
 					}
 				},
 				{
-					"name": "SIG",
+					"name": "sig",
 					"val": ">"
 				},
 				{
-					"name": "CCI",
+					"name": "obv",
 					"val": {
-						"input_high": "50000",
-						"input_low": "60",
-						"input_close": "30",
-						"input_period": "5",
-						"input_constant": "5"
+						"volum": "10"
 					}
 				}
 			]
 		},
-		"Block2": {
+		"block2": {
 			"min": "1",
 			"max": "1",
-			"Total_count": "1",
+			"total_count": "1",
 			"group": [
 				{
-					"name": "MACD",
+					"name": "macd",
 					"val": {
 						"input_close": "50000",
 						"input_n_fast": "60",
@@ -48,11 +44,11 @@
 					}
 				},
 				{
-					"name": "SIG",
+					"name": "sig",
 					"val": ">"
 				},
 				{
-					"name": "NUM",
+					"name": "num",
 					"val": "20000"
 				}
 			]
