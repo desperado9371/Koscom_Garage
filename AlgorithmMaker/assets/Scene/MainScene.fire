@@ -207,7 +207,7 @@
       "array": [
         0,
         0,
-        555.1222838258252,
+        527.4094709047232,
         0,
         0,
         0,
@@ -9536,11 +9536,14 @@
     "deckPrefab": {
       "__uuid__": "e79e4aee-f07e-4c50-be0b-945d7bde4b5e"
     },
-    "handAmination": null,
-    "animClip": {
-      "__uuid__": "cdfad2e4-d4b8-457b-b416-42b77d9a7474"
-    },
-    "animClipRev": null,
+    "handAmination": [
+      {
+        "__id__": 263
+      },
+      {
+        "__id__": 261
+      }
+    ],
     "_id": "58Ai5tHXBH2Z6AghTrngH1"
   },
   {
@@ -9903,7 +9906,7 @@
     "posTo": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0,
+      "y": -700,
       "z": 0
     },
     "scaleFrom": {
@@ -9914,12 +9917,12 @@
     },
     "scaleTo": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": 1,
       "y": 1,
       "z": 1
     },
-    "duration": 5,
-    "callback": null,
+    "duration": 0.5,
+    "callbackEvent": null,
     "_id": "d4gNoxQ8BHurfoYU7glaG7"
   },
   {
@@ -9972,7 +9975,7 @@
     "posTo": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -700,
+      "y": 0,
       "z": 1
     },
     "scaleFrom": {
@@ -9983,12 +9986,12 @@
     },
     "scaleTo": {
       "__type__": "cc.Vec3",
-      "x": 1,
+      "x": 0,
       "y": 1,
       "z": 1
     },
-    "duration": 5,
-    "callback": null,
+    "duration": 0.5,
+    "callbackEvent": null,
     "_id": "fdBbtSHuZDB6R+LAUez3eL"
   },
   {
