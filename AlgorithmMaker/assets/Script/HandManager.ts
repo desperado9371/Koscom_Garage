@@ -8,6 +8,7 @@
 import HandItem from "./HandItem";
 import Card from "./Card";
 import Deck from "./Deck";
+import CAnimation from "./CAnimation";
 
 const {ccclass, property} = cc._decorator;
 
@@ -23,13 +24,10 @@ export default class HandManager extends cc.Component {
     @property(cc.Prefab)
     deckPrefab: cc.Prefab = null;
 
-    @property(cc.Animation)
-    handAmination: cc.Animation = null;
+    @property([CAnimation])
+    handAmination : [CAnimation]; 
 
-    @property(cc.AnimationClip)
-    animClip : cc.AnimationClip = null;
-    @property(cc.AnimationClip)
-    animClipRev : cc.AnimationClip = null;
+
 
     isHiding = true;
     static instance : HandManager = null;
@@ -97,15 +95,48 @@ export default class HandManager extends cc.Component {
     }
     
     onAnimDone(){
-        if(this.isHiding === true){
-            this.showHand();
-        }
+        HandManager.getInstance().showHand();
     }
 
 
     hideHand(){
         //this.handAmination.stop();
         this.isHiding = true;
+
+
+
+        for(var k = 0; k < this.handAmination.length; k++){
+            var anim = this.handAmination[k];
+            if(k === 0 ){
+                cc.tween(anim.node).to(anim.duration.valueOf(),{ position: anim.posTo, scaleX: anim.scaleTo.x})
+                .call(() => {HandManager.getInstance().showHand();})
+                .to(anim.duration.valueOf(),{ position: anim.posFrom, scaleX: anim.scaleFrom.x})
+                .start();
+            }else{
+                cc.tween(anim.node).to(anim.duration.valueOf(),{ position: anim.posTo, scaleX: anim.scaleTo.x})
+                .to(anim.duration.valueOf(),{ position: anim.posFrom, scaleX: anim.scaleFrom.x})
+                .start();
+            }
+
+        }
+
+
+
+
+        /*
+        for(var k = 0; k < this.handAmination.length; k++){
+            this.handAmination[k].stopAnimation();
+            if(k === this.handAmination.length -1){
+                
+                this.handAmination[k].addCallback(this.onAnimDone);
+                this.handAmination[k].startAnim();
+            }
+            else{
+                this.handAmination[k].startAnim();
+            }
+        }*/
+        
+        
         //this.handAmination.defaultClip = this.animClip;
         //this.handAmination.currentClip = this.animClip;
         //this.handAmination.play();
@@ -140,14 +171,41 @@ export default class HandManager extends cc.Component {
         }
 
 
-        //this.handAmination.defaultClip = this.animClipRev;
-        //this.handAmination.currentClip = this.animClipRev;
-        //this.handAmination.play();
         this.isHiding = false;
     }
     
 
+    refreshHand(){
+        var hand = this.hands[this.handIndex];
+        this.handParent.destroyAllChildren();
 
 
-    // update (dt) {}
+        for(var k = 0; k < hand.length; k++){
+            var item = hand[k];
+            var obj:cc.Node = null;
+            
+            if(item.getType() === 'Card'){
+                obj = cc.instantiate(this.cardPrefab);
+                var card = obj.getComponent(Card);
+                card.testInit();
+            }
+            else if(item.getType() === 'Deck'){
+                obj = cc.instantiate(this.deckPrefab);
+                var deck = obj.getComponent(Deck);
+                deck.testInit();
+            }
+            else{
+                console.log("type error"); 
+            }
+            obj.setParent(this.handParent);
+        }
+    }
+
+
+
+    update (dt) {
+        /*for(var k = 0; k < this.handAmination.length; k++){
+            this.handAmination[k].updateAnim(dt);
+        }*/
+    }
 }
