@@ -7,9 +7,6 @@ from django.http import HttpResponse
 from datetime import datetime
 import numpy as np
 import pandas as pd
-import sys
-import ta
-
 # Create your views here.
 
 
@@ -183,38 +180,3 @@ def backtest(request):
     return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-30:].tolist(),
                                                    'labels': upbit_min['timestamp'][-30:].tolist(),
                                                     'datas': data[-100:]})
-
-
-def send_order(market='upbit', order_type='buy', quantity=1, target_date="2018-10-11", krw_balance=0.0,
-               btc_balance=0.0):
-    bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
-
-    target_date = datetime.strptime(target_date, "%Y-%m-%d")
-
-    price = -1
-
-    for index, bitcoin in bitcoin_dt.iterrows():
-        temp = datetime.strptime(bitcoin['timestamp'][:10], "%Y-%m-%d")
-        if temp == target_date:
-            price = float(bitcoin['close'])
-            break;
-
-    if order_type == 'buy':
-        if (price * quantity) <= krw_balance:
-            krw_balance = krw_balance - (price * quantity)
-            btc_balance = btc_balance + quantity
-            print("주문 성공 : 구매 -  btckrw:{} 수량:{} 원화잔고:{} 비트코인잔고:{}".
-                  format(float(bitcoin['close']), quantity, krw_balance, btc_balance))
-        else:
-            print("주문실패 : 잔고부족")
-
-    elif order_type == 'sell':
-        if quantity <= btc_balance:
-            krw_balance = krw_balance + (price * quantity)
-            btc_balance = btc_balance - quantity
-            print("주문 성공 : 판매 -  btckrw:{} 수량:{} 원화잔고:{} 비트코인잔고:{}".
-                  format(float(bitcoin['close']), quantity, krw_balance, btc_balance))
-        else:
-            print("주문실패 : 잔고부족")
-
-    return krw_balance, btc_balance
