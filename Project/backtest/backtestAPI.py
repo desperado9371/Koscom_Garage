@@ -1,3 +1,4 @@
+# coding=utf-8
 import asyncio
 import websockets
 import json
@@ -347,4 +348,6 @@ class BacktestAPI:
         print("현재 원화잔고 : {}\\".format(krw_bal))
         print("현재 비트코인잔고 : {}".format(btc_bal))
         print("수익률 : {}%".format((krw_bal - init_krw_bal) / init_krw_bal * 100))
+
+
 

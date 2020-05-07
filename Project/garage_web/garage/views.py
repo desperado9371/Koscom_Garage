@@ -48,9 +48,30 @@ def test(request):
     print( data[:4])
     # print( upbit_min['close'][-30:].tolist())
 
+    date_list = ['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20']
+    type_list = ['buy', 'buy', 'buy', 'sell', 'sell', 'sell']
+    wl_list = ['', '', '', 'win', 'lose', 'win']
+    daily_prof_list = ['0.1%', '0.3%', '1.0%', '0.5%', '0.6%', '1.2%']
+    accum_prof_list = ['1.1%', '2.1%', '2.0%', '1.1%', '2.2%', '3.3%']
+    balance_list = ['12345', '12346', '12345', '12344', '12346', '12347']
+    trade_list = []
+
+    for i in range(len(date_list)):
+        tmp = []
+        tmp.append(date_list[i])
+        tmp.append(type_list[i])
+        tmp.append(wl_list[i])
+        tmp.append(daily_prof_list[i])
+        tmp.append(accum_prof_list[i])
+        tmp.append(balance_list[i])
+        trade_list.append(tmp)
+    print(trade_list)
+
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
-                                                   'labels': upbit_min['timestamp'][-30:].tolist(),
-                                                    'datas': data[-100:]})
+                                                'labels': upbit_min['timestamp'][-30:].tolist(),
+                                                'trades': trade_list,
+                                                'datas': data[-100:]})
+
 
 def home(request):
     """
