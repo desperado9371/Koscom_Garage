@@ -1,5 +1,6 @@
 {
 	"algo": {
+		"market": "upbit",
 		"srt_date": "20200102",
 		"end_date": "20200110",
 		"buysell": "Buy",
@@ -24,7 +25,7 @@
 				{
 					"name": "obv",
 					"val": {
-						"volumn": "10"
+						"volume": "10"
 					}
 				}
 			],
@@ -54,9 +55,9 @@
 			"total_count": "1",
 			"group1": [
 				{
-					"name": "obv",
+					"name": "rsi",
 					"val": {
-						"volum": "10"
+						"period": "10"
 					}
 				},
 				{
@@ -65,7 +66,7 @@
 				},
 				{
 					"name": "num",
-					"val": "20000"
+					"val": "80"
 				}
 			]
 		}

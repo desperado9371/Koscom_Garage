@@ -15,6 +15,7 @@ Group3 = dict()
 SIG = dict()
 Algo = dict()
 
+Algo["market"]="upbit"
 Algo["srt_date"]="20200102"
 Algo["end_date"]="20200110"
 Algo["buysell"]="Buy"
@@ -36,7 +37,7 @@ SIG["name"] = "sig"
 SIG["val"] = ">"
 
 CCI["name"] = "obv"
-CCI["val"] = {"volumn":"10"}
+CCI["val"] = {"volume":"10"}
 
 
 #############################
