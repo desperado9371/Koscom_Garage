@@ -13,7 +13,12 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class BlockGroup extends cc.Component {
 
-    
+    @property(cc.Label)
+    lblNumber: cc.Label = null;
+
+    @property(Block)
+    targetBlock : Block;
+
     list : LinkedList<Block> = new LinkedList();
     // LIFE-CYCLE CALLBACKS:
     /**
@@ -28,6 +33,10 @@ export default class BlockGroup extends cc.Component {
 
     }
 
+    init(){
+        
+    }
+
     addBlockHead(block : Block){
         if(!this.list.contains(block)){
             this.list.add(block);
@@ -38,50 +47,28 @@ export default class BlockGroup extends cc.Component {
             this.list.remove(block);
         }
     }
-/*
-    lateUpdate(){
-        var l = this.list;
-        if(this.list.size() <= 0){
-            return;
-        }
 
-        var block = this.list.firstNode;
-        while(block != null){
-            
-            var pos = block.element.node.position;
-            var tmpBlock = block.element;
-            
-            while(tmpBlock != null){
-                tmpBlock.node.setPosition(pos);
-                pos.x += 138;
-                tmpBlock = tmpBlock.nextBlock;
-            }
-
-            block = block.next;
+    WrapBlocks(startingBlock : Block){
+        this.targetBlock = startingBlock;
+        var count = 0;
+        this.node.setPosition(startingBlock.node.x - 30, startingBlock.node.y + 15);
+        var temp = startingBlock;
+        var sizeX = 30;
+        while(temp!= null){
+            count++;
+            sizeX += 160; // oneBlock size
+            temp = temp.nextBlock;
         }
-    }
-
-    onCollisionEnter(other:cc.Collider, self:cc.Collider){
-        if(other.node.group === 'block')
-        {
-            var blk = other.node.getComponent(Block);
-            if(blk.connectedSlot == null){
-                this.addBlockHead(blk);
-            }
-        }
-    }
-    onCollisionStay(other:cc.Collider, self:cc.Collider){
+        //sizeX += 30; // maybe extra margin
+               
+        this.node.width = sizeX;
+        
 
     }
-    onCollisionExit(other:cc.Collider, self:cc.Collider){
-        if(other.node.group === 'block')
-        {
-            var blk = other.node.getComponent(Block);
-            if(blk.connectedSlot == null){
-                this.removeBlockHead(blk);
-            }
+
+    update (dt) {
+        if(this.targetBlock != null){
+            this.WrapBlocks(this.targetBlock);
         }
     }
-*/
-    // update (dt) {}
 }
