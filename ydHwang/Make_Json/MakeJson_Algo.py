@@ -23,7 +23,7 @@ Algo["block1"]=Block1
 Algo["block2"]=Block2
 
 ####################################
-Block1["min"]="1"
+Block1["min"]="2"
 Block1["max"]="2"
 Block1["total_count"]="2"
 Block1["group1"] = [MACD,SIG,CCI]

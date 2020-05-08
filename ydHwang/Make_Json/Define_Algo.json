@@ -5,7 +5,7 @@
 		"end_date": "20200110",
 		"buysell": "Buy",
 		"block1": {
-			"min": "1",
+			"min": "2",
 			"max": "2",
 			"total_count": "2",
 			"group1": [
@@ -41,11 +41,11 @@
 				},
 				{
 					"name": "sig",
-					"val": ">"
+					"val": "<"
 				},
 				{
 					"name": "num",
-					"val": "20000"
+					"val": "310000"
 				}
 			]
 		},
