@@ -2,299 +2,357 @@
 <html lang="en">
 
 <head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <!-- Title Page-->
+    <title>Dashboard</title>
 
-  <title>auto</title>
+    {% load staticfiles %}
+    <!-- Fontfaces CSS-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
 
-  <!-- Font Awesome Icons -->
-  {% load staticfiles %}
-  <link href="{% static 'garage/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <!-- Bootstrap CSS-->
+    <link href="{% static 'garage/test/vendor/test_bootstrap.min.css' %}" rel="stylesheet" media="all">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
-  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <!-- Main CSS-->
+    <link href="{% static 'garage/test/css/theme_test.css' %}" rel="stylesheet" media="all">
 
-  <!-- Plugin CSS -->
-  <link href="{% static 'garage/vendor/magnific-popup/magnific-popup2.css' %}" rel="stylesheet">
+    <!-- Google Chart-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-  <!-- Theme CSS - Includes Bootstrap -->
-  <link href="{% static 'garage/css/creative2.css' %}" rel="stylesheet">
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable({{ datas|safe }},true);
+    //   var data= new google.visualization.DataTable();
+    //   data.addColumn('string', 'Date');
+    //   data.addColumn('number');
+    //   data.addColumn('number');
+    //   data.addColumn('number');
+    //   data.addColumn('number');
+    //   data.addColumn({type: 'string', role: 'style'});
+    //   data.addRow( {{datas|safe}});
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
+    var options = {
+        tooltip: {isHtml: true},
+      legend:'none',
+        animation:{
+          startup: true,
+        duration: 500,
+        easing: 'out',
+      },
+      chartArea: {
+        width: '90%',
+        height: '90%',
+      },
+        hAxis: {viewWindow: {min:0, max:50}},
+        candlestick:{
+          fallingColor:{
+              fill: 'blue',
+              stroke: 'blue',
+          },
+          risingColor:{
+              fill: 'red',
+              stroke: 'red',
+          }
+        },
+        colors: ['black'],
+    };
+
+ var chart = new google.visualization.CandlestickChart(
+        document.getElementById('chart_div'));
+    var MAX = 100;
+    var prevButton = document.getElementById('b1');
+    var nextButton = document.getElementById('b2');
+    var changeZoomButton = document.getElementById('b3');
+    function drawChart() {
+      // Disabling the button while the chart is drawing.
+      prevButton.disabled = true;
+      nextButton.disabled = true;
+      changeZoomButton.disabled = true;
+      google.visualization.events.addListener(chart, 'ready',
+          function() {
+            prevButton.disabled = options.hAxis.viewWindow.min <= 0;
+            nextButton.disabled = options.hAxis.viewWindow.max >= MAX;
+            changeZoomButton.disabled = false;
+          });
+      chart.draw(data, options);
+    }
+
+    prevButton.onclick = function() {
+      if (zoomed==0) {
+        options.hAxis.viewWindow.min -= 1;
+        options.hAxis.viewWindow.max -= 1;
+      }
+      else if(zoomed==1){
+          options.hAxis.viewWindow.min -= 5;
+          options.hAxis.viewWindow.max -= 5;
+      }
+      else if(zoomed==2) {
+        options.hAxis.viewWindow.min -= 10;
+        options.hAxis.viewWindow.max -=10 ;
+      }
+      drawChart();
+    }
+    nextButton.onclick = function() {
+      if (zoomed==0) {
+        options.hAxis.viewWindow.min += 1;
+        options.hAxis.viewWindow.max += 1;
+      }
+      else if(zoomed==1){
+          options.hAxis.viewWindow.min += 5;
+          options.hAxis.viewWindow.max += 5;
+      }
+      else if(zoomed==2) {
+        options.hAxis.viewWindow.min += 10;
+        options.hAxis.viewWindow.max +=10 ;
+      }
+      drawChart();
+    }
+    var zoomed = 0;
+    changeZoomButton.onclick = function() {
+      if (zoomed==0) {
+        options.hAxis.viewWindow.min = 0;
+        options.hAxis.viewWindow.max = 7;
+      }
+      else if(zoomed==1){
+          options.hAxis.viewWindow.min=0;
+          options.hAxis.viewWindow.max=20;
+      }
+      else if(zoomed==2) {
+        options.hAxis.viewWindow.min = 0;
+        options.hAxis.viewWindow.max = MAX;
+      }
+      zoomed = zoomed+1;
+      if(zoomed >2)
+          zoomed=0;
+      drawChart();
+    }
+    drawChart();
+  }
+    </script>
+
+<!--    Google Chart-->
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '거래일시');
+        data.addColumn('string', '매수/매도');
+        data.addColumn('string', 'win/loss');
+        data.addColumn('string', '일 수익률');
+        data.addColumn('string', '누적 수익률');
+        data.addColumn('string', '총 자산');
+        //data.addRows([ ['2019-01-11', 'buy', '', '0.1%', '1.1%', '12345'],])
+        data.addRows( {{trades|safe}} );
+        // data.addRows([
+        //   ['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],['2019/05/15','sell','win','0.1%','2%',  {v: 10000, f: '$10,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        //     ['2019/05/15','sell','win','0.1%','2%',   {v:8000,   f: '$11,000'}],
+        //   ['2019/05/15','sell','win','0.1%','2%', {v: 12500, f: '$11,500'}],
+        //   ['2019/05/15','sell','win','0.1%','2%',   {v: 7000,  f: '$11,000'}],
+        // ]);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+    </script>
 </head>
 
-<body id="page-top">
-
-
-
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-    <div class="container">
-      <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top"><font size=4.5><B>&nbsp Algorithm Trading</B></font>
-        </a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto my-2 my-lg-0">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">소개</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#services">알고리즘 만들기</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#portfolio">알고리즘 관리</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#contact">마켓플레이스</a>
-          </li>
-          {% if user.is_authenticated %}
-          <li class="nav-item">
-             <a class="nav-link js-scroll-trigger"> {{ user.username }} </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="logout">로그아웃</a>
-          </li>
-          {% else %}
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="login">로그인</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="signup">회원가입</a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Masthead -->
-  <header class="masthead">
-    <div class="container h-100">
-      <div class="row h-100 align-items-center justify-content-center text-center">
-        <div class="col-lg-10 align-self-end">
-          <h1 class="text-uppercase text-white font-weight-bold">쉽고, 편하게<br>알고리즘 트레이딩</br></h1>
-          <hr class="divider my-4">
-        </div>
-        <div class="col-lg-8 align-self-baseline">
-          <p class="text-white-75 font-weight-light mb-5">알고리즘 모듈을 활용해 투자전략을 알고리즘으로 만들어보세요</p>
-          <a class="btn btn-primary btn-xl js-scroll-trigger" href="#services">더 알아보기</a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-
-  <!-- Services Section -->
-  <section class="page-section" id="services">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-gem text-primary mb-4"></i>
-            <h3 class="h4 mb-2">STEP1</h3>
-            <p class="text-muted mb-0">알고리즘 만들기</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
-            <h3 class="h4 mb-2">STEP2</h3>
-            <p class="text-muted mb-0">과거 데이터, 모의투자로 검증해보기</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-            <h3 class="h4 mb-2">STEP3</h3>
-            <p class="text-muted mb-0">실제 주문으로 연결하기</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-            <h3 class="h4 mb-2">RSTEP4</h3>
-            <p class="text-muted mb-0">마켓플레이스에서 투자전략 매매</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section class="page-section bg-primary" id="about">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="text-black mt-0">STEP1. 알고리즘 만들기</h2>
-          <hr class="divider light my-4">
-          <p class="text-black-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
-          <a class="btn btn-light btn-xl js-scroll-trigger" href="algomaker">Get Started!</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page-section bg-primary" id="about2">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="text-black mt-0">STEP2. 알고리즘 테스트</h2>
-          <hr class="divider light my-4">
-          <p class="text-black-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
-          <a class="btn btn-light btn-xl js-scroll-trigger" href="backtest">Get Started!</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-    <!-- Portfolio Section -->
-    {% load staticfiles %}
-  <section id="portfolio">
-    <div class="container-fluid p-0">
-      <div class="row no-gutters">
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/1.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/1.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                test1
-              </div>
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+            <div class="container">
+                <img class="img" href="/" src="{% static 'garage/test/images/logo_box.png' %}" alt="" width="50" height="25">
+                <a class="navbar-brand js-scroll-trigger" href="/">
+                    <font size=4.5><B>&nbsp Algorithm Trading</B></font>
+                </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#about">소개</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#services">알고리즘 만들기</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="">알고리즘 관리</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#contact">마켓플레이스</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger"> </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="logout">로그아웃</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="login">로그인</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="signup">회원가입</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/2.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/2.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
+        </nav>
+
+        <!-- MAIN CONTENT-->
+        <div class="main-content">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="overview-wrap">
+                                <h2 class="title-2">백테스팅 결과</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="row m-t-25">
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="overview-item overview-item--c1">
+                                        <div class="overview__inner">
+                                            <div class="overview-box clearfix">
+                                                <div class="text">
+                                                    <h2>총 손익 1,000,000</h2>
+                                                    <span>투자원금 : 50,000,000<br>
+                                                    현재자산 : 51,000,000</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="overview-item overview-item--c2">
+                                        <div class="overview__inner">
+                                            <div class="overview-box clearfix">
+                                                <div class="text">
+                                                    <h2>누적 수익률 10%</h2>
+                                                    <span>일평균수익률 : 0.07%<br>
+                                                    연환산수익률 : 300%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="overview-item overview-item--c3">
+                                        <div class="overview__inner">
+                                            <div class="overview-box clearfix">
+                                                <div class="text">
+                                                    <h2>거래 승률 61%</h2>
+                                                    <span>승 : 120건<br>
+                                                    패 : 100건</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="overview-item overview-item--c4">
+                                        <div class="overview__inner">
+                                            <div class="overview-box clearfix">
+                                                <div class="text">
+                                                    <h2>테스트 기간 </h2>
+                                                    <span>2019/05/23~2020/05/22</span><br>
+                                                    <h2>거래 횟수 250건 </h2>
+                                                 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="au-card recent-report ">
+                                        <!-- 차트는 여기에 넣어주세용  -->
+                                        <div id="chart_div" style="width:100%; height:95%"></div>
+                                        <div class="row justify-content-center">
+                                            <button id="b1">prev</button>
+                                                <div>    &nbsp</div>
+                                             <button id="b2">next</button>
+                                                <div>    &nbsp</div><div>    &nbsp</div>
+                                             <button id="b3">zoom</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-12">
+                                <div class="row m-t-25">
+                                    <div class="transaction-item">
+                                        <div class="text">
+                                                    <h2>거래내역 </h2>
+                                                </div>
+                                    <!-- 거래내역은 여기에 넣어주세용  -->
+                                        <div id="table_div" style="height:85%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </a>
         </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/3.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/3.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/4.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/4.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/5.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/5.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/6.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/6.jpg'%}" alt="">
-            <div class="portfolio-box-caption p-3">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
     </div>
-  </section>
-
-  <!-- Call to Action Section -->
-  <section class="page-section bg-dark text-white">
-    <div class="container text-center">
-      <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-      <a class="btn btn-light btn-xl" href="https://startbootstrap.com/themes/creative/">Download Now!</a>
     </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section class="page-section" id="contact">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="mt-0">Let's Get In Touch!</h2>
-          <hr class="divider my-4">
-          <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
-          <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-          <div>+1 (202) 555-0149</div>
-        </div>
-        <div class="col-lg-4 mr-auto text-center">
-          <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
-          <!-- Make sure to change the email address in anchor text AND the link below! -->
-          <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
-        </div>
-      </div>
     </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-light py-5">
-    <div class="container">
-      <div class="small text-center text-muted">Copyright &copy; 2019 - Start Bootstrap</div>
+    <!-- END MAIN CONTENT-->
+    <!-- END PAGE CONTAINER-->
     </div>
-  </footer>
 
-  <!-- Bootstrap core JavaScript -->
-  {% load staticfiles %}
-  <script src="{% static 'garage/vendor/jquery/jquery.min.js'%}"></script>
-  <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+    </div>
 
-  <!-- Plugin JavaScript -->
-  <script src="{% static 'garage/vendor/jquery-easing/jquery.easing.min.js'%}"></script>
-  <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="{% static 'garage/js/creative.min.js'%}"></script>
 
 
 </body>
 
 </html>
+<!-- end document-->
