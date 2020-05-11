@@ -256,7 +256,8 @@ class BacktestAPI:
                    quantity=1,
                    target_date="2018-10-11",
                    krw_balance=0.0,
-                   btc_balance=0.0):
+                   btc_balance=0.0,
+                   average_price=0.0):
         """
         과거데이터에 주문을 실행하는 함수
 
@@ -276,6 +277,9 @@ class BacktestAPI:
 
         dt_index = 0
 
+        old_btc_bal = btc_balance
+        old_total = old_btc_bal * average_price
+
         for index, bitcoin in bitcoin_dt.iterrows():
             temp = datetime.strptime(bitcoin['timestamp'][:10], "%Y-%m-%d")
             if temp == target_date:
@@ -287,12 +291,14 @@ class BacktestAPI:
             if (price * quantity) <= krw_balance:
                 krw_balance = krw_balance - (price * quantity)
                 btc_balance = btc_balance + quantity
-                print("주문 성공 : 구매 ({}) -  btckrw:{} 수량:{} 원화잔고:{} 비트코인잔고:{} 평가금액 :{}".
+                average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
+                print("주문 성공 : 구매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
                       format(bitcoin_dt['timestamp'][dt_index],
                              float(bitcoin['close']),
                              quantity,
                              krw_balance,
                              btc_balance,
+                             average_price,
                              krw_balance + (btc_balance) * float(bitcoin['close'])))
             else:
                 print("주문실패 : 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
@@ -301,16 +307,18 @@ class BacktestAPI:
             if quantity <= btc_balance:
                 krw_balance = krw_balance + (price * quantity)
                 btc_balance = btc_balance - quantity
-                print("주문 성공 : 판매 ({}) -  btckrw:{} 수량:{} 원화잔고:{} 비트코인잔고:{} 평가금액: {}".
+                average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
+                print("주문 성공 : 판매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
                       format(bitcoin_dt['timestamp'][dt_index],
                              float(bitcoin['close']),
                              quantity, krw_balance,
                              btc_balance,
+                             average_price,
                              krw_balance + (btc_balance) * float(bitcoin['close'])))
             else:
                 print("주문실패 : 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
 
-        return krw_balance, btc_balance
+        return krw_balance, btc_balance, average_price
 
     def execute_backtest(self, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
                          date_list=['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20'],
@@ -328,26 +336,40 @@ class BacktestAPI:
 
         krw_bal = init_krw_bal
         btc_bal = init_btc_bal
+        avg_prc = 0
         order_quantity = order_quantity
 
         date_list = date_list
         type_list = type_list
         list_len = len(date_list)
 
-        print("현재 원화잔고 : {}\\".format(krw_bal))
-        print("현재 비트코인잔고 : {}".format(btc_bal))
+        print("현재 원화잔고 : {}원".format(krw_bal))
+        print("현재 비트코인잔고 : {}BTC".format(btc_bal))
 
         for i in range(list_len):
-            krw_bal, btc_bal = self.send_order(market='upbit',
+            krw_bal, btc_bal, avg_prc = self.send_order(market='upbit',
                                                order_type=type_list[i],
                                                quantity=order_quantity,
                                                target_date=date_list[i],
                                                krw_balance=krw_bal,
-                                               btc_balance=btc_bal)
+                                               btc_balance=btc_bal,
+                                               average_price=avg_prc)
 
-        print("현재 원화잔고 : {}\\".format(krw_bal))
-        print("현재 비트코인잔고 : {}".format(btc_bal))
-        print("수익률 : {}%".format((krw_bal - init_krw_bal) / init_krw_bal * 100))
+        df = self.get_price_data()
+
+        print("")
+        print("초기 원화자본 : {}원".format(init_krw_bal))
+        print("초기 비트코인자본 : {}BTC".format(init_btc_bal))
+        print("")
+        print("현재 원화잔고 : {}원".format(krw_bal))
+        print("현재 비트코인잔고 : {}BTC".format(btc_bal))
+        print("나의 비트코인 평균단가: {}원".format(avg_prc))
+        print("")
+        print("{}일 현재 비트코인 시세 : {} 원/BTC".format(df['timestamp'][len(df)-1][:10], df['close'][len(df)-1]))
+        print("수익률 : {}%".format( (df['close'][len(df)-1]-avg_prc)/avg_prc*100    ))
+        print("")
+        print("총 평가잔고 : {}원".format(krw_bal + (btc_bal * df['close'][len(df)-1])))
+        print("자산증감률 : {}%".format((krw_bal + (btc_bal * df['close'][len(df)-1]) - init_krw_bal) / init_krw_bal * 100))
 
 
 
