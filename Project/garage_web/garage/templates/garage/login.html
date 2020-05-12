@@ -17,24 +17,17 @@
 	<meta name="theme-color" content="#ffffff">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/bootstrap/css/bootstrap.min.css'%}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'garage/fonts/font-awesome-4.7.0/css/font-awesome.min.css'%}">
+
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'garage/fonts/Linearicons-Free-v1.0.0/icon-font.min.css'%}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/animate/animate.css'%}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/css-hamburgers/hamburgers.min.css'%}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/animsition/css/animsition.min.css'%}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/select2/select2.min.css'%}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/daterangepicker/daterangepicker.css'%}">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'garage/css/util.css'%}">
 	<link rel="stylesheet" type="text/css" href="{% static 'garage/css/main.css'%}">
 <!--===============================================================================================-->
+    <!-- Google Fonts -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-scrolled" id="login">
@@ -62,6 +55,7 @@
 					<span class="login100-form-title p-b-51">
 						로그인
 					</span>
+					
 					{% block error %}
 					{% if error %}
 
