@@ -81,7 +81,7 @@ export default class CAnimation extends cc.Component {
         this.callbackEvent.push(f);
     }
 
-    update (dt) {/*
+    /*update (dt) {
         if(this.isPlaying === false){
             return;
 

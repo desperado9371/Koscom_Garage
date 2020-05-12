@@ -318,7 +318,7 @@ class BacktestAPI:
             else:
                 print("주문실패 : 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
 
-        return krw_balance, btc_balance, average_price
+        return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, (bitcoin['close']-average_price)/average_price*100, 
 
     def execute_backtest(self, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
                          date_list=['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20'],
@@ -346,14 +346,29 @@ class BacktestAPI:
         print("현재 원화잔고 : {}원".format(krw_bal))
         print("현재 비트코인잔고 : {}BTC".format(btc_bal))
 
+        trade_list = []
+
         for i in range(list_len):
-            krw_bal, btc_bal, avg_prc = self.send_order(market='upbit',
+            old_krw = krw_bal
+            target_date, order_type, price, krw_bal, btc_bal, avg_prc, profit = self.send_order(market='upbit',
                                                order_type=type_list[i],
                                                quantity=order_quantity,
                                                target_date=date_list[i],
                                                krw_balance=krw_bal,
                                                btc_balance=btc_bal,
                                                average_price=avg_prc)
+            if old_krw == krw_bal:
+                continue;
+            temp = []
+            temp.append(target_date.strftime("%Y-%m-%d"))
+            temp.append(order_type)
+            temp.append(price)
+            temp.append(order_quantity)
+            temp.append(profit)
+            temp.append( (krw_bal + (btc_bal * price)) / init_krw_bal * 100)
+            temp.append( (krw_bal + (btc_bal * price)) )
+            trade_list.append(temp)
+
 
         df = self.get_price_data()
 
@@ -366,10 +381,12 @@ class BacktestAPI:
         print("나의 비트코인 평균단가: {}원".format(avg_prc))
         print("")
         print("{}일 현재 비트코인 시세 : {} 원/BTC".format(df['timestamp'][len(df)-1][:10], df['close'][len(df)-1]))
-        print("수익률 : {}%".format( (df['close'][len(df)-1]-avg_prc)/avg_prc*100    ))
+        fin_profit = (df['close'][len(df)-1]-avg_prc)/avg_prc*100
+        print("수익률 : {}%".format( fin_profit   ))
         print("")
         print("총 평가잔고 : {}원".format(krw_bal + (btc_bal * df['close'][len(df)-1])))
-        print("자산증감률 : {}%".format((krw_bal + (btc_bal * df['close'][len(df)-1]) - init_krw_bal) / init_krw_bal * 100))
+        fin_increase = (krw_bal + (btc_bal * df['close'][len(df)-1]) - init_krw_bal) / init_krw_bal * 100
+        print("자산증감률 : {}%".format(fin_increase))
 
-
-
+        #print(trade_list)
+        return trade_list, krw_bal + (btc_bal * df['close'][len(df)-1]), fin_increase, fin_profit
