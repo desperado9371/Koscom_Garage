@@ -7,16 +7,11 @@
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
 {% load staticfiles %}
-@font-face {
-  font-family: NanumSquareR;
-  src: url("/static/fonts/nanumsquare/NanumSquareR.ttf");
-}
 
-@font-face {
-  font-family: NanumSquareB;
-  src: url('../fonts/NanumSquare/NanumSquareR.ttf');
-}
-
+body{
+font-family: "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    
+}    
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
@@ -28,14 +23,14 @@
 
 body, html {
 	height: 100%;
-	font-family: NanumSquareR, sans-serif;
+	font-family: NanumSquare, sans-serif;
 }
 
 /*---------------------------------------------*/
 a {
-	font-family: NanumSquareR;
+	font-family: NanumSquare;
 	font-size: 14px;
-  font-weight: 400;
+  font-weight: 510;
 	line-height: 1.7;
 	color: #666666;
 	margin: 0px;
@@ -51,7 +46,7 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
-    color: #666666;
+    color: #24E1E8;
   }
 
 /*---------------------------------------------*/
@@ -72,7 +67,9 @@ ul, li {
 	list-style-type: none;
 }
 
-
+#mainNav:hover{
+     color: #24E1E8;
+}
 /*---------------------------------------------*/
 input {
 	outline: none;
@@ -122,14 +119,15 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {
-  font-family: NanumSquareR;
-  font-size: 14px;
-  line-height: 1.4;
+  font-family: NanumSquare;
+  font-size: 15px;
+  line-height: ;
 }
 
 .txt2 {
-  font-family: NanumSquareR;
-  font-size: 14px;
+  font-family: NanumSquare;
+  font-size: 15px;
+  font-size: 15px;
   color: #6C63FF;
   line-height: 1.4;
 }
@@ -185,8 +183,8 @@ iframe {
 }
 
 .login100-form-title {
-  font-family: NanumSquareB;
-  font-size: 30px;
+  font-family: NanumSquare;
+  font-size: 35px;
   color: #403866;
   line-height: 1.2;
   text-align: center;
@@ -209,7 +207,7 @@ iframe {
 
 /*---------------------------------------------*/
 .input100 {
-  font-family: NanumSquareB;
+  font-family: NanumSquare;
   color: #666666;
   line-height: 1.2;
   font-size: 14px;
@@ -281,7 +279,7 @@ iframe {
 }
 
 .label-checkbox100 {
-  font-family: NanumSquareR;
+  font-family: NanumSquare;
   font-size: 14px;
   color: #666666;
   line-height: 1.2;
@@ -338,8 +336,8 @@ iframe {
 }
 
 .login100-form-btn {
-  font-family: NanumSquareB;
-  font-size: 16px;
+  font-family: NanumSquare;
+  font-size: 17px;
   color: #fff;
   line-height: 1.2;
   text-transform: uppercase;
@@ -389,7 +387,7 @@ iframe {
   right: 12px;
   pointer-events: none;
 
-  font-family: NanumSquareR;
+  font-family: NanumSquare;
   color: #EB3330;
   font-size: 14px;
   line-height: 1.4;

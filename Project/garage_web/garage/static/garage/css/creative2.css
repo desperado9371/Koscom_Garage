@@ -9593,7 +9593,7 @@ hr.light {
 
 #mainNav {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  background-color: #fff;
+  background-color: black;
   transition: background-color 0.2s ease;
 }
 
@@ -9659,15 +9659,22 @@ body{
     background-color: #F5F7FB;
 }
 section{
-    height: 1000px;
+    height: 90%;
     
 }
+
 .page-section {
-    padding: 1rem 0;
+    padding-top: 70px;
+
+}
+
+.page-section-small {
+    padding: 2rem 0;
+
 }
 
 .mt-5 > h3{
     height: ; 150px;
     width: 270px;
-    background-color: whute;
+    background-color: white;
 }
