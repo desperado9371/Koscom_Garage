@@ -3,291 +3,288 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <title>auto</title>
+    <title>auto</title>
 
-  <!-- Font Awesome Icons -->
-  {% load staticfiles %}
-  <link href="{% static 'garage/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    {% load staticfiles %}
 
-  <!-- Google Fonts -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
-  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
-  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 
-  <!-- Plugin CSS -->
-  <link href="{% static 'garage/vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
+    <!-- Plugin CSS -->
+    <link href="{% static 'garage/vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
 
-  <!-- Theme CSS - Includes Bootstrap -->
-  <link href="{% static 'garage/css/creative.css' %}" rel="stylesheet">
+    <!-- Theme CSS - Includes Bootstrap -->
+    <link href="{% static 'garage/css/creative.css' %}" rel="stylesheet">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
+
 </head>
 
 <body id="page-top">
 
 
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-    <div class="container">
-      <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top"><font size=4.5><B>&nbsp Algorithm Trading</B></font>
-        </a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto my-2 my-lg-0">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">소개</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#services">알고리즘 만들기</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/test">알고리즘 관리</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#contact">마켓플레이스</a>
-          </li>
-          {% if user.is_authenticated %}
-          <li class="nav-item">
-             <a class="nav-link js-scroll-trigger"> {{ user.username }} </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="logout">로그아웃</a>
-          </li>
-          {% else %}
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="login">로그인</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="signup">회원가입</a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container">
+            <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <font size=4.5><B>&nbsp Algorithm Trading</B></font>
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#services">소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/test">알고리즘 관리</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="">마켓플레이스</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger"> {{ user.username }} </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="logout">로그아웃</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="login">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="signup">회원가입</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Masthead -->
+    <header class="masthead">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-center text-center">
+                <div class="col-lg-10 align-self-end">
+                    <h1 class="text-uppercase text-white font-weight-bold">쉽고, 편하게<br>알고리즘 트레이딩</h1>
+                    <hr class="divider my-4">
+                </div>
+                <div class="col-lg-8 align-self-baseline">
+                    <p class="text-white-75 font-weight-light mb-5">알고리즘 모듈을 활용해 투자전략을 알고리즘으로 만들어보세요</p>
+                    <a class="btn btn-primary btn-xl js-scroll-trigger" href="#services">더 알아보기</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Services Section -->
+    <section class="page-section-small" id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-5">
+                        <h3 class="mb-3">Make</h3>
+                        <h5 class="text-muted">지표 카드를 활용하여 <br>알고리즘 투자전략을 손쉽게 <br>만들 수 있습니다</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-5">
+                        <h3 class="mb-3">Test</h3>
+                        <h5 class="text-muted">과거 데이터를 통한 백테스트로 투자 전략의 수익률을 알아볼 수 있습니다</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-5">
+                        <h3 class="mb-3">Trading</h3>
+                        <h5 class="text-muted mb-0">실제 주문으로 연결하기</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-5">
+                        <h3 class="mb-3">Marketplace</h3>
+                        <h5 class="text-muted mb-0">실제 주문으로 연결하기</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- divider -->
+    <div class="row" id="divider">
     </div>
-  </nav>
 
-  <!-- Masthead -->
-  <header class="masthead">
-    <div class="container h-100">
-      <div class="row h-100 align-items-center justify-content-center text-center">
-        <div class="col-lg-10 align-self-end">
-          <h1 class="text-uppercase text-white font-weight-bold">쉽고, 편하게<br>알고리즘 트레이딩</br></h1>
-          <hr class="divider my-4">
+
+    <!-- about : make Section-->
+    <section class="page-section bg-primary" id="about">
+        <div class="container">
+            <div data-wow-duration="1.3s" class="wow fadeInUp">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 text-center">
+                        <img class="img" href="/" src="{% static 'garage/images/make_sample2.png'%}" alt="">
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <p><b>01</b></p>
+                        <h1 class="text-black"><b>코딩 없이 간편하게,<br>다양한 지표카드로 만드는<br>알고리즘 투자전략</b></h1>
+                        <h3 class="text-black">드래그앤드랍으로 지표카드를 설정하여<br>다양한 알고리즘을 만들 수 있습니다.<br><br>자신만의 투자전략을 만들어보세요</h3>
+
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-8 align-self-baseline">
-          <p class="text-white-75 font-weight-light mb-5">알고리즘 모듈을 활용해 투자전략을 알고리즘으로 만들어보세요</p>
-          <a class="btn btn-primary btn-xl js-scroll-trigger" href="#services">더 알아보기</a>
-        </div>
-      </div>
+    </section>
+
+
+
+    <!-- divider -->
+    <div class="row" id="divider">
     </div>
-  </header>
 
+    <!-- about2 : test Section-->
+    <section class="page-section bg-primary" id="about2">
+        <div class="container">
 
-  <!-- Services Section -->
-  <section class="page-section" id="services">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-gem text-primary mb-4"></i>
-            <h3 class="h4 mb-2">STEP1</h3>
-            <p class="text-muted mb-0">알고리즘 만들기</p>
-          </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <p><b>02</b></p>
+                    <h1 class="text-black"><b>제작한 알고리즘을<br>과거데이터로 검증하여 <br>전략의 질을 향상시키세요</b></h1>
+                    <h3 class="text-black">클릭 한번으로 투자전략의 수익률을 <br>확인할 수 있습니다.<br><br>여러번의 테스트를 통해 더욱 완벽한 <br>투자전략을 만들어 보세요
+                    </h3>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div data-wow-duration="2s" class="wow fadeInRight">
+                        <img class="img" href="/" src="{% static 'garage/images/test_sample.png'%}" alt="">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
-            <h3 class="h4 mb-2">STEP2</h3>
-            <p class="text-muted mb-0">과거 데이터, 모의투자로 검증해보기</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-            <h3 class="h4 mb-2">STEP3</h3>
-            <p class="text-muted mb-0">실제 주문으로 연결하기</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-            <h3 class="h4 mb-2">RSTEP4</h3>
-            <p class="text-muted mb-0">마켓플레이스에서 투자전략 매매</p>
-          </div>
-        </div>
-      </div>
+    </section>
+
+    <!-- divider -->
+    <div class="row" id="divider">
     </div>
-  </section>
 
-  <!-- About Section -->
-  <section class="page-section bg-primary" id="about">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="text-black mt-0">STEP1. 알고리즘 만들기</h2>
-          <hr class="divider light my-4">
-          <p class="text-black-50 mb-4">카드 게임 형태로 쉽게 알고리즘 제작</p>
-          <a class="btn btn-light btn-xl js-scroll-trigger" href="algomaker">만들러가기!</a>
+    <!-- about3 : test Section-->
+    <section class="page-section bg-primary" id="about3">
+        <div class="container">
+
+            <div class="row justify content-center">
+                <div class="col-lg-6">
+                    <div data-wow-duration="1.3s" class="wow fadeIn">
+                        <img class="img" href="/" src="{% static 'garage/images/logo_exchange.png'%}" alt="">
+                    </div>
+                    <div data-wow-duration="1.3s" data-wow-delay="0.2s" class="wow fadeInRight">
+                        <img class="img" href="/" src="{% static 'garage/images/logo_exchange2.png'%}" alt="">
+                    </div>
+                    <div data-wow-duration="1.3s" data-wow-delay="0.4s" class="wow fadeInRight">
+                        <img class="img" href="/" src="{% static 'garage/images/logo_exchange3.png'%}" alt="">
+                    </div>
+                    <div data-wow-duration="1.3s" data-wow-delay="0.6s" class="wow fadeInRight">
+                        <img class="img" href="/" src="{% static 'garage/images/logo_exchange4.png'%}" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <p><b>03</b></p>
+                    <h1 class="text-black"><b>다양한 거래소와<br>자동 주문을 연결하고,<br>전략을 실행해보세요</b></h1>
+                    <h3 class="text-black">복잡한 시스템 설정없이 거래소와<br> 계좌 및 주문을 연결할 수 있습니다.<br><br>알고리즘 트레이딩을 시작해보세요</h3>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
+    <!-- divider -->
+    <div class="row" id="divider">
     </div>
-  </section>
 
-  <section class="page-section bg-primary" id="about2">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="text-black mt-0">STEP2. 알고리즘 테스트</h2>
-          <hr class="divider light my-4">
-          <p class="text-black-50 mb-4"> 백테스트를 진행하여 직접 제작한 알고리즘의 성능을 측정 및 평가 </p>
-          <a class="btn btn-light btn-xl js-scroll-trigger" href="backtest">테스트하러가기!</a>
+
+    <!-- about4 : market Section-->
+    <section class="page-section-small bg-primary" id="about4">
+        <div class="container">
+            <div class="row justify content-center">
+                <div class="col-lg-12">
+<div class="swiper-container">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide">Slide 1</div>
+        <div class="swiper-slide">Slide 2</div>
+        <div class="swiper-slide">Slide 3</div>
+        ...
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+    <!-- If we need scrollbar -->
+    <div class="swiper-scrollbar"></div>
+</div>
+                </div>
+
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+        <!-- Slider main container -->
 
-    <!-- Portfolio Section -->
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-10">
+                    <div class="text-muted">
+                        <p><br><br>서울시 영등포구 여의나루로 76 ㈜코스콤<br>
+                            대표전화 : 02-767-7114<br><br>
+                            © KOSCOM CORP. ALL RIGHTS RESERVED.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
     {% load staticfiles %}
-  <section id="portfolio">
-    <div class="container-fluid p-0">
-      <div class="row no-gutters">
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/1.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/1.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                test1
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/2.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/2.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/3.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/3.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/4.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/4.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/5.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/5.jpg'%}" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="{% static 'garage/img/portfolio/fullsize/6.jpg'%}">
-            <img class="img-fluid" src="{% static 'garage/img/portfolio/thumbnails/6.jpg'%}" alt="">
-            <div class="portfolio-box-caption p-3">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+    <script src="{% static 'garage/vendor/jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
 
-  <!-- Contact Section -->
-  <section class="page-section" id="contact">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="mt-0">연락처</h2>
-          <hr class="divider my-4">
-          <p class="text-muted mb-5"></p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
-          <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-          <div>02-767-7626</div>
-        </div>
-        <div class="col-lg-4 mr-auto text-center">
-          <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
-          <!-- Make sure to change the email address in anchor text AND the link below! -->
-          <a class="d-block" href="mailto:contact@yourwebsite.com">sungsoo@koscom-future.biz</a>
-        </div>
-      </div>
-    </div>
-  </section>
+    <!-- Plugin JavaScript -->
+    <script src="{% static 'garage/vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+    <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
 
-  <!-- Footer -->
-  <footer class="bg-light py-5">
-    <div class="container">
-      <div class="small text-center text-muted">Copyright &copy; 2020 - Koscom Garage</div>
-    </div>
-  </footer>
+    <!-- Custom scripts for this template -->
+    <script src="{% static 'garage/js/creative.min.js'%}"></script>
 
-  <!-- Bootstrap core JavaScript -->
-  {% load staticfiles %}
-  <script src="{% static 'garage/vendor/jquery/jquery.min.js'%}"></script>
-  <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+    <!-- scroll -->
+    <link rel="stylesheet" href="{% static 'garage/css/animate.css'%}">
+    <script src="https://wowjs.uk/dist/wow.min.js"></script>
+    <script>
+        new WOW().init();
 
-  <!-- Plugin JavaScript -->
-  <script src="{% static 'garage/vendor/jquery-easing/jquery.easing.min.js'%}"></script>
-  <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
+    </script>
 
-  <!-- Custom scripts for this template -->
-  <script src="{% static 'garage/js/creative.min.js'%}"></script>
-
-
+    <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
 </body>
 
 </html>

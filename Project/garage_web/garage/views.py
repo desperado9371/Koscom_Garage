@@ -7,12 +7,16 @@ from django.http import HttpResponse
 from datetime import datetime
 import numpy as np
 import pandas as pd
+from backtestAPI import BacktestAPI
+
 # Create your views here.
 
 
 def test(request):
 
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
+    upbit_min = upbit_min[-365:]
+    upbit_min.reset_index(drop=True, inplace=True)
 
     timestamps = upbit_min['timestamp']
     opens = upbit_min['open']
@@ -48,6 +52,15 @@ def test(request):
     print( data[:4])
     # print( upbit_min['close'][-30:].tolist())
 
+
+################################################################
+    #백테스트 수행 관련
+    backtestapi = BacktestAPI()
+    init_krw_bal = 20000000
+    order_quantity = 0.05
+    final_balance = 0
+    final_profit = 0
+
     result = []
     with open('Define_Algo.json', 'r') as f:
         json_data = json.load(f)
@@ -57,47 +70,63 @@ def test(request):
     bns_tp = json_data['algo']['buysell']
     # Prc_history = Get_DtPrc(market,str_date,end_date)
     Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
-
+    Prc_history = Prc_history[-365:]
+    Prc_history.reset_index(drop=True, inplace=True)
     # 시세데이터 get
     #     df = get_price_data('upbit','1d')
     #     print(df)
     # df = Set_Indicator(df,json_data)
+
     result = Fet_Algo(Prc_history, json_data)
+    trade_list = []
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
     else:
         date_list = np.array(result).T[0]
         type_list = np.array(result).T[1]
-        print(date_list)
-        # backtest.execute_backtest
+        trade_list, final_balance, final_increase, final_profit = backtestapi.execute_backtest(init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list)
+        final_increase = "%.2f" % final_increase
+        final_profit = "%.2f" % final_profit
 
 
+#########################################################
 
 
-    date_list = ['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20']
-    type_list = ['buy', 'buy', 'buy', 'sell', 'sell', 'sell']
-    wl_list = ['', '', '', 'win', 'lose', 'win']
-    daily_prof_list = ['0.1%', '0.3%', '1.0%', '0.5%', '0.6%', '1.2%']
-    accum_prof_list = ['1.1%', '2.1%', '2.0%', '1.1%', '2.2%', '3.3%']
-    balance_list = ['12345', '12346', '12345', '12344', '12346', '12347']
-    trade_list = []
+    # date_list = ['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20']
+    # type_list = ['buy', 'buy', 'buy', 'sell', 'sell', 'sell']
+    # wl_list = ['', '', '', 'win', 'lose', 'win']
+    # daily_prof_list = ['0.1%', '0.3%', '1.0%', '0.5%', '0.6%', '1.2%']
+    # accum_prof_list = ['1.1%', '2.1%', '2.0%', '1.1%', '2.2%', '3.3%']
+    # balance_list = ['12345', '12346', '12345', '12344', '12346', '12347']
+    # trade_list = []
+    #
+    # for i in range(len(date_list)):
+    #     tmp = []
+    #     tmp.append(date_list[i])
+    #     tmp.append(type_list[i])
+    #     tmp.append(wl_list[i])
+    #     tmp.append(daily_prof_list[i])
+    #     tmp.append(accum_prof_list[i])
+    #     tmp.append(balance_list[i])
+    #     trade_list.append(tmp)
+    # print(trade_list)
 
-    for i in range(len(date_list)):
-        tmp = []
-        tmp.append(date_list[i])
-        tmp.append(type_list[i])
-        tmp.append(wl_list[i])
-        tmp.append(daily_prof_list[i])
-        tmp.append(accum_prof_list[i])
-        tmp.append(balance_list[i])
-        trade_list.append(tmp)
-    print(trade_list)
+    start_date = Prc_history['timestamp'][0][:10]
+    end_date = Prc_history['timestamp'][len(Prc_history)-1][:10]
+    trade_num = len(trade_list)
 
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
                                                 'trades': trade_list,
-                                                'datas': data[-100:]})
-
+                                                'datas': data,
+                                                'init_bal': init_krw_bal,
+                                                'fin_bal': int(final_balance),
+                                                'bal_diff': int(final_balance-init_krw_bal),
+                                                'fin_prf': final_profit,
+                                                'fin_inc': final_increase,
+                                                'st_date': start_date,
+                                                'end_date': end_date,
+                                                'trade_num': trade_num})
 
 def home(request):
     """
