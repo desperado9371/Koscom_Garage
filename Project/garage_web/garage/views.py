@@ -15,6 +15,8 @@ from backtestAPI import BacktestAPI
 def test(request):
 
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
+    upbit_min = upbit_min[-365:]
+    upbit_min.reset_index(drop=True, inplace=True)
 
     timestamps = upbit_min['timestamp']
     opens = upbit_min['open']
