@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[120]:
+# In[128]:
 
 
 import asyncio
@@ -138,7 +138,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
         
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo):
+def Fet_Algo(Prc_history, algo,bns_tp,json_data):
     result_datelist = []
     #for row in range(60, 70):
     for row in range(len(Prc_history)):
@@ -180,7 +180,7 @@ def Fet_Algo(Prc_history, algo):
         if block_meet_condtion == 1:
             # 충족시 일자를 리스트에 추가
             print("이날 알고리즘은 완벽하게 충족")
-            result_datelist.append([Prc_history['timestamp'][row][0:10], "buy"])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
+            result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
 
     print(result_datelist)
     return result_datelist
@@ -222,14 +222,14 @@ if __name__ == '__main__':
 #     df = get_price_data('upbit','1d')
 #     print(df)
     #df = Set_Indicator(df,json_data)
-    result= Fet_Algo(Prc_history,json_data)
+    result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
     else:
         date_list = np.array(result).T[0]
         type_list = np.array(result).T[1]
         print(date_list)
-        #backtest.execute_backtest(date_list=date_list,type_list=type_list)
+        backtest.execute_backtest(date_list=date_list,type_list=type_list)
 
 
         
