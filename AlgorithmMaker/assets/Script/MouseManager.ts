@@ -11,18 +11,28 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class MouseManager extends cc.Component {
+    static instance : MouseManager = null;
+    static getInstance() : MouseManager{
+
+        return MouseManager.instance;
+
+    }
 
     mouseEvent : cc.Event.EventMouse;
     mousePos : cc.Vec2 = new cc.Vec2();
     downObject : EventHandler = null;
     // LIFE-CYCLE CALLBACKS:
-
+    isMouseUp = false;
     physicsManager : cc.PhysicsManager = null;
     init(){
+        if(MouseManager.instance === null){
+            MouseManager.instance = this;
+        }
         cc.director.getCollisionManager().enabled = true;
         this.physicsManager = cc.director.getPhysicsManager();
         this.physicsManager.enabled = true;
         this.node.on(cc.Node.EventType.MOUSE_MOVE, this.mouseMoveEventHandler, this);
+        this.node.on(cc.Node.EventType.MOUSE_UP, this.mouseUpEventHandler, this);
 
     }
     start () {
@@ -47,7 +57,7 @@ export default class MouseManager extends cc.Component {
     }
 
     mouseUpEventHandler(event : cc.Event.EventTouch){
-        var touchLoc = event.getLocation();
+        /*var touchLoc = event.getLocation();
         var collider = this.physicsManager.testPoint(touchLoc);
         if(collider != null){
             var handler = collider.node.getComponent(EventHandler);
@@ -55,7 +65,8 @@ export default class MouseManager extends cc.Component {
             if(this.downObject != null){
                 this.downObject.touchUpHandler(event);
             }
-        }
+        }*/
+        
     }
 
     getMousePos() : cc.Vec2{

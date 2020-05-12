@@ -21,15 +21,18 @@ export default class WebSocketConnect extends cc.Component {
     // onLoad () {}
 
     start () {
-      this.ws = new WebSocket("ws://54.180.86.151:80/Cocos");
+      this.ws = new WebSocket("ws://15.164.231.112:80/Cocos");
       this.ws.onopen = this.onOpen;
       this.ws.onmessage = this.onRecieve;
       this.ws.onclose = this.onClose;
       WebSocketConnect.sock = this;
+      
     }
 
     onOpen(event){
+      
       this.isOpen = true;
+      this.send("Indicators");
     }
 
     onClose(event){

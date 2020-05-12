@@ -61,7 +61,7 @@ export default class Block extends cc.Component {
             cc.director.getCollisionManager().enabled = true;
         }
 
-        this.node.width = width;
+        //this.node.width = width;
         this.color = color;
         //this.title.getComponent(cc.Label).string = titleText;
         //this.body.getComponent(cc.Label).string = bodyText;
@@ -137,7 +137,7 @@ export default class Block extends cc.Component {
 
 
     update (dt) {
-        
+ 
         //포지션 이동 설정
         if(this.isDown === true){
             var mousePos = this.mouseManager.getMousePos();
@@ -159,6 +159,9 @@ export default class Block extends cc.Component {
                 this.dPos.y = this.startPos.y - mousePos.y;
                 this.node.setPosition(this.nodePos.x - this.dPos.x, 
                                      this.nodePos.y - this.dPos.y);
+                /*console.log(new cc.Vec2(this.nodePos.x - this.dPos.x, 
+                    this.nodePos.y - this.dPos.y).toString());*/
+                
 
             }
             
@@ -200,6 +203,26 @@ export default class Block extends cc.Component {
             this.startPos = this.mouseManager.getMousePos();
             this.nodePos = this.node.position;
             this.isDown = true;
+        }
+
+
+        console.debug("mouse down called");
+    }
+
+    mouseRemoteDownEventHandler(event, x, y){
+        if(this.isDown == false){
+            this.stuckPos.x = this.mouseManager.getMousePos().x;
+            this.stuckPos.y = this.mouseManager.getMousePos().y;
+            this.startPos = this.mouseManager.getMousePos();
+            this.isDown = true;
+            
+            var eventLoc = event.getLocation();
+            
+            
+            var loc = this.node.convertToNodeSpaceAR(new cc.Vec2(this.stuckPos.x, this.stuckPos.y));
+            this.nodePos = new cc.Vec3(loc.x, loc.y, 0);
+
+            this.node.setPosition(this.nodePos);
         }
 
 

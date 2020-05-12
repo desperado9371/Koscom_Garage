@@ -19,6 +19,15 @@ export default class BlockGroup extends cc.Component {
     @property(Block)
     targetBlock : Block;
 
+    @property(cc.Node)
+    blankGroup : cc.Node = null;
+    
+    @property(cc.Node)
+    filledGroup : cc.Node = null;
+
+    
+
+
     list : LinkedList<Block> = new LinkedList();
     // LIFE-CYCLE CALLBACKS:
     /**
