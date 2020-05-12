@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[24]:
+# In[ ]:
 
 
 #!/usr/bin/env python
@@ -43,11 +43,10 @@ def FetAlgoFromDB(user_id,request_seq):
     finally:
         db_connection.close()
 
-    
+#     print(data)
     return str(data)
 
-
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 #    print("start")
 #    FetAlgoFromDB('User_ID','all')
 
