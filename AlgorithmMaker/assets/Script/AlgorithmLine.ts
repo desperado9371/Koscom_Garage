@@ -50,7 +50,7 @@ export default class AlgorithmLine extends cc.Component {
     onPlusButtonClick(){
         this.group.active = true;
         this.plusButton.active = false;
-        this.startBlock.node.active = true;
+        //this.startBlock.node.active = true;
         //this.minusButton.active = true;
     }
     onMinusButtonClick(){
@@ -110,8 +110,8 @@ export default class AlgorithmLine extends cc.Component {
     init(lineParent:cc.Node, blockParent:cc.Node){
         this.group.active = false;
         this.plusButton.active = true;
-        this.startBlock.node.active = false;
-        this.startBlock.init(150, 1, '시작블록', '', true);
+        //this.startBlock.node.active = false;
+        //this.startBlock.init(150, 1, '시작블록', '', true);
 
         /*var onMinusClick = new cc.Component.EventHandler();
         onMinusClick.target = lineParent;
@@ -124,11 +124,11 @@ export default class AlgorithmLine extends cc.Component {
         onPlusClick.component = 'LineList';
         onPlusClick.handler = 'addLine';
 
-        this.plusButton.getComponent(cc.Button).clickEvents.push(onPlusClick);
+    this.plusButton.getComponent(cc.Button).clickEvents.push(onPlusClick);
         //this.minusButton.getComponent(cc.Button).clickEvents.push(onMinusClick);
         
 
-        this.startBlock.node.setParent(blockParent);
+        //this.startBlock.node.setParent(blockParent);
         
     }
     // LIFE-CYCLE CALLBACKS:
