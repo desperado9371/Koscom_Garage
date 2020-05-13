@@ -28,7 +28,6 @@ def test(request):
         timestamps[i] = timestamps[i][:10]
 
     data = list()
-    temp = list()
     tooltips = list()
     for i in range(len(timestamps)):
         if i % 3 == 0:
@@ -41,15 +40,20 @@ def test(request):
             tooltips.append('')
 
     for i in range(len(timestamps)):
-        temp.append(timestamps[i])
+        temp = list()
+        year = timestamps[i][:4]
+        month = timestamps[i][5:7]
+        day = timestamps[i][8:10]
+        temp.append(year)
+        temp.append(month)
+        temp.append(day)
+        temp.append(timestamps[i][:10])
         temp.append(lows[i])
         temp.append(opens[i])
         temp.append(closes[i])
         temp.append(highs[i])
         #temp.append(tooltips[i])
         data.append(temp)
-        temp = list()
-    print( data[:4])
     # print( upbit_min['close'][-30:].tolist())
 
 
@@ -214,6 +218,43 @@ def algomaker(request):
     """
     return render(request, 'garage/cocos_algo.html', {})
 
+def charttest(request):
+    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
+    backtestapi = BacktestAPI()
+    upbit_min = backtestapi.macd(upbit_min)
+    upbit_min = backtestapi.rsi(upbit_min)
+    upbit_min = upbit_min[-400:]
+    upbit_min.reset_index(drop=True, inplace=True)
+
+    timestamps = upbit_min['timestamp']
+    closes = upbit_min['close']
+    macds = upbit_min['macd']
+    rsis = upbit_min['rsi']
+
+    for i in range(len(timestamps)):
+        timestamps[i] = timestamps[i][:10]
+
+    data = list()
+
+    for i in range(len(timestamps)):
+        temp=[]
+        year = timestamps[i][:4]
+        month = timestamps[i][5:7]
+        day = timestamps[i][8:10]
+        temp.append(year)
+        temp.append(month)
+        temp.append(day)
+        temp.append(closes[i])
+        if i % 3 == 0:
+            temp.append("buy")
+        else:
+            temp.append("null")
+        # temp.append(macds[i])
+        # temp.append(rsis[i])
+        data.append(temp)
+
+
+    return render(request, 'garage/chart_test.html', {'data':data})
 
 def backtest(request):
 
