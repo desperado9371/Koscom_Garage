@@ -2,20 +2,20 @@
 	"algo": {
 		"market": "upbit",
 		"srt_date": "20200102",
-		"end_date": "20200110",
-		"buysell": "Buy",
+		"end_date": "20200130",
+		"buysell": "sell",
 		"block1": {
-			"min": "2",
+			"min": "1",
 			"max": "2",
 			"total_count": "2",
 			"group1": [
 				{
 					"name": "macd",
 					"val": {
-						"input_close": "50000",
-						"input_n_fast": "60",
-						"input_n_slow": "30",
-						"input_n_sign": "5"
+						"close": "50000",
+						"n_fast": "10",
+						"n_slow": "3",
+						"n_sign": "5"
 					}
 				},
 				{
@@ -33,10 +33,10 @@
 				{
 					"name": "macd",
 					"val": {
-						"input_close": "50000",
-						"input_n_fast": "60",
-						"input_n_slow": "30",
-						"input_n_sign": "5"
+						"close": "50000",
+						"n_fast": "6",
+						"n_slow": "2",
+						"n_sign": "5"
 					}
 				},
 				{
