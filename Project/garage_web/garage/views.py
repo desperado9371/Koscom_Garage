@@ -498,7 +498,7 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999'):
 
     ws = websocket.create_connection('ws://15.164.231.112:80/BackServer')
     order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date
-    # print(order_packet)
+    # print(order_packet)d
     if ws.connected:
         ws.send(order_packet)
         # print()

@@ -365,7 +365,7 @@ class BacktestAPI:
             temp.append(price)
             temp.append(order_quantity)
             temp.append(profit)
-            temp.append( (krw_bal + (btc_bal * price)) / init_krw_bal * 100)
+            temp.append( (krw_bal + (btc_bal * price) - init_krw_bal ) / init_krw_bal * 100)
             temp.append( (krw_bal + (btc_bal * price)) )
             trade_list.append(temp)
 
