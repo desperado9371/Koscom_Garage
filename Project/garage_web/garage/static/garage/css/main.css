@@ -183,12 +183,10 @@ iframe {
 }
 
 .login100-form-title {
-  font-family: NanumSquare;
   font-size: 35px;
   color: #403866;
   line-height: 1.2;
   text-align: center;
-
   width: 100%;
   display: block;
 }
@@ -197,6 +195,7 @@ iframe {
 [ Input ]*/
 
 .wrap-input100 {
+  font-family: "Roboto";
   width: 100%;
   position: relative;
   background-color: #e6e6e6;
@@ -207,7 +206,7 @@ iframe {
 
 /*---------------------------------------------*/
 .input100 {
-  font-family: NanumSquare;
+  font-family: "Roboto";
   color: #666666;
   line-height: 1.2;
   font-size: 14px;
