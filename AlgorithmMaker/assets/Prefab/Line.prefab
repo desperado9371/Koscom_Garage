@@ -49,7 +49,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 996,
+      "width": 1280,
       "height": 240
     },
     "_anchorPoint": {
@@ -126,7 +126,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 996,
+      "width": 1280,
       "height": 240
     },
     "_anchorPoint": {
@@ -481,7 +481,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 996,
+      "width": 1280,
       "height": 240
     },
     "_anchorPoint": {
@@ -493,7 +493,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        498,
+        640,
         -120,
         0,
         0,
@@ -1047,7 +1047,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 996,
+      "width": 1280,
       "height": 240
     },
     "_anchorPoint": {
@@ -2090,7 +2090,6 @@
     "minusButton": {
       "__id__": 19
     },
-    "startBlock": null,
     "emptyGroup": {
       "__id__": 37
     },
