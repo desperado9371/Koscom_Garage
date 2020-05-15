@@ -22,7 +22,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Block extends cc.Component {
 
-    
+    static offset = 157;
     @property(MouseManager)
     mouseManager : MouseManager = null;
 
@@ -41,6 +41,62 @@ export default class Block extends cc.Component {
     @property
     initOnLoad = false;
 
+    hideRelation(){
+        if(this.relationSymbol.active == true){
+            
+            this.relationSymbol.active = false;
+        }
+    }
+    showRelation(){
+        if(this.relationSymbol.active == false){
+
+            this.relationSymbol.active= true;
+        }
+    }
+
+    toJson(){
+        var json :any = {};
+        var val : any = {};
+        var cardName = this.title.getComponentInChildren(cc.Label).string.toLowerCase();
+
+        json.name = cardName;
+        if(cardName == 'macd'){
+            val.close = "50000";
+            val.n_fast = "5";
+            val.n_slow = "3";
+            val.n_sign = "5";
+        }
+        else if(cardName == 'rsi'){
+
+            val.input_period = "14";
+        }
+        else if(cardName == 'obv'){
+            val.input_volume = "10";
+
+        }
+        if(cardName == 'num'){
+            
+            json.val = this.body.getComponentInChildren(cc.Label).string;
+            
+        }
+        else{
+
+            json.val = val;
+        }
+
+        return json;
+
+    }
+
+    sigToJson(){
+        var json :any = {};
+        var symbol = this.relationSymbol.getComponent(cc.Label).string;
+
+        json.name = "sig";
+        json.val = symbol;
+
+        return json;
+    }
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -189,7 +245,7 @@ export default class Block extends cc.Component {
     updatePos(){
         if(this.connectedSlot != null  && this.connedtedMode == 'slot'){
             var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
-            this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
+            this.node.setPosition(otherBlock.position.x + Block.offset, otherBlock.position.y);
                        
         }
         else if(this.connectedSlot != null  && this.connedtedMode == 'firstSlot'){
@@ -267,9 +323,11 @@ export default class Block extends cc.Component {
                 this.connectedSlot = other;
                 this.stuckPos.x = this.mouseManager.getMousePos().x;
                 this.stuckPos.y = this.mouseManager.getMousePos().y;
+                comp.parentLine.addEmptyGroup();
+                
             }
             
-            console.log("here");
+            
             
         }
         else{

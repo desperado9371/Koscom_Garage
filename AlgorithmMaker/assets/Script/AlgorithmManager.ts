@@ -1,4 +1,5 @@
 import WebSocketConnect from "./WebSocket/WebSocketConnect";
+import AlgorithmLine from "./AlgorithmLine";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -29,13 +30,25 @@ export default class AlgorithmManager extends cc.Component {
     }
 
     SaveAlgorithm(){
-        var testJson : JSON ;
-        testJson = JSON.parse('{\"algo\": {\"min\": \"1\",\"max\": \"1\",\"numCondition\": \"1\",\"conditions\": [{\"blocks\": [{\"name\": \"MACD\",\"candleDuration\": \"1\",\"shortMA\": \"5\",\"longMA\": \"12\",\"calcSymbol\": \"\"},{\"name\": \"CCI\",\"candleDuration\": \"1\",\"value\": \"3\",\"calcSymbol\": \">\"},{\"name\": \"number\",\"value\": \"10\",\"calcSymbol\": \"*\"}]}]}}');
-        console.log(JSON.stringify(testJson));
+        var json : any = {} ;
+        var jsonIn : any = {}
+        jsonIn.market = "upbit";
+        jsonIn.srt_date = "20200102";
+        jsonIn.end_date = "20200110";
+        jsonIn.buysell = "buy";
         
-        //WebSocketConnect.getSock().send('save|test_user|test_algo_name|'+JSON.stringify(testJson));
-        this.requestIndicators();
+        var algoLines = this.lineParent.getComponentsInChildren(AlgorithmLine);
+        for(var k = 0; k < algoLines.length; k++){
+            var j = algoLines[k].toJson();
+            if(j != null){
+                jsonIn["block" + (k+1)] = j;
+            }
+        }
+        json.algo =jsonIn;
         
+        console.log(JSON.stringify(json));
+        
+        WebSocketConnect.getSock().send('save|test_user|test_algo_name|'+JSON.stringify(json)+'|');
 
     }
     requestIndicators(){

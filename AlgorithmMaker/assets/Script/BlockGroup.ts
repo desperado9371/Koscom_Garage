@@ -1,5 +1,6 @@
 import LinkedList from "./Collections/LinkedList"
 import Block from "./Block";
+import AlgorithmLine from "./AlgorithmLine";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -25,10 +26,45 @@ export default class BlockGroup extends cc.Component {
     @property(cc.Node)
     filledGroup : cc.Node = null;
 
-    
+    parentLine : AlgorithmLine;
 
 
-    list : LinkedList<Block> = new LinkedList();
+    getBlockCount(){
+        var count = 0;
+        var temp = this.targetBlock;
+        var sizeX = 30;
+        while(temp!= null){
+            count++;
+            sizeX += Block.offset; // oneBlock size
+            temp = temp.nextBlock;
+        }
+
+        return count;
+    }
+
+    toJson(){
+        var json : any = [];
+        var temp = this.targetBlock;
+        var index = 0;
+        //first block
+        if(temp == null){
+            return null;
+        }
+        json[index] = temp.toJson();
+        index++;
+        temp = temp.nextBlock;
+        while(temp!= null){
+            json[index] = temp.sigToJson();
+            index++;
+            json[index] = temp.toJson();
+            index++;
+
+            temp = temp.nextBlock;
+        }
+
+        return json;
+    }
+
     // LIFE-CYCLE CALLBACKS:
     /**
      *
@@ -46,15 +82,8 @@ export default class BlockGroup extends cc.Component {
         
     }
 
-    addBlockHead(block : Block){
-        if(!this.list.contains(block)){
-            this.list.add(block);
-        }
-    }
-    removeBlockHead(block : Block){
-        if(this.list.contains(block)){
-            this.list.remove(block);
-        }
+    setNumber(number : string){
+        this.lblNumber.string = number;
     }
 
     disableGroup(){
@@ -80,14 +109,15 @@ export default class BlockGroup extends cc.Component {
         }
         this.targetBlock = startingBlock;
         var count = 0;
-        var gPos = startingBlock.node.convertToWorldSpaceAR(startingBlock.node.position);
+        /*var gPos = startingBlock.node.convertToWorldSpaceAR(startingBlock.node.position);
         var lPos = this.filledGroup.parent.convertToNodeSpaceAR(gPos);
-        this.filledGroup.setPosition(lPos.x - 80, lPos.y + 55);
+        this.filledGroup.setPosition(lPos.x - 80, lPos.y + 55);*/
+        //this.filledGroup.setPosition(-30, 0);
         var temp = startingBlock;
         var sizeX = 30;
         while(temp!= null){
             count++;
-            sizeX += 160; // oneBlock size
+            sizeX += Block.offset; // oneBlock size
             temp = temp.nextBlock;
         }
         //sizeX += 30; // maybe extra margin

@@ -12,12 +12,18 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class PropertyBox extends cc.Component {
+    
+    @property(cc.EditBox)
+    relationBox: cc.EditBox = null;
 
     @property(cc.EditBox)
     title: cc.EditBox = null;
 
     @property(cc.EditBox)
     body: cc.EditBox = null;
+
+    @property(cc.Node)
+    workplz:cc.Node = null;
 
 
     block : Block = null;
@@ -29,6 +35,7 @@ export default class PropertyBox extends cc.Component {
         this.block = block;
         this.title.string = block.title.getComponentInChildren(cc.Label).string;
         this.body.string = block.body.getComponentInChildren(cc.Label).string;
+        this.relationBox.string = block.relationSymbol.getComponent(cc.Label).string;
     }
     onSaveButton(){
         if(this.block != null){
@@ -38,6 +45,7 @@ export default class PropertyBox extends cc.Component {
             var bodyComp = this.block.body.getComponentInChildren(cc.Label);
             bodyComp.string = this.body.string;
             
+            this.block.relationSymbol.getComponent(cc.Label).string = this.relationBox.string;
         }
         else if (this.group != null){
 

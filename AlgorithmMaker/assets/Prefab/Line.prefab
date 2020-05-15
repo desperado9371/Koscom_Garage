@@ -978,8 +978,10 @@
       "__id__": 2
     },
     "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
+    "alignMode": 2,
+    "_target": {
+      "__id__": 1
+    },
     "_alignFlags": 45,
     "_left": 0,
     "_right": 0,
@@ -1148,7 +1150,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "lblAdd<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 29
@@ -1358,7 +1360,7 @@
         "__id__": 45
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 55
@@ -1612,7 +1614,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "BlankGroup<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 38
@@ -1696,8 +1698,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
-        0,
+        -14.898,
+        18.871,
         0,
         0,
         0,
@@ -1858,7 +1860,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "number<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 47
@@ -1903,7 +1905,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Head<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 46
@@ -1973,7 +1975,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "FilledGroup<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 45
@@ -2089,6 +2091,9 @@
       "__id__": 19
     },
     "startBlock": null,
+    "emptyGroup": {
+      "__id__": 37
+    },
     "_id": ""
   },
   {

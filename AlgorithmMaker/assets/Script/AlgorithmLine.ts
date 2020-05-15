@@ -7,6 +7,9 @@
 
 import Block from "./Block";
 import LineList from "./LineList";
+import { LinkedList } from "./Collections";
+import BlockGroup from "./BlockGroup";
+
 
 const {ccclass, property} = cc._decorator;
 
@@ -24,86 +27,124 @@ export default class AlgorithmLine extends cc.Component {
     @property(cc.Node)
     minusButton: cc.Node = null;
 
-    @property(Block)
-    startBlock: Block = null;
-
-    getAlgorithmString(){
-        let ret : string = '';
+    @property(cc.Node)
+    emptyGroup: cc.Node = null;
 
 
-        var block = this.startBlock;
-        while(true){
-            var nextBlock = block.nextBlock;
-            ret += nextBlock.title + ', ';
-            if(nextBlock === null){
-                break;
-            }
-            block = nextBlock;
+
+    static ySpacing = 240;
+    static xSpacing = 50;
+    static xThreshold = 500;
+    static baseHeight = 240;
+
+    groupList : LinkedList<BlockGroup> = null;
+    toJson(){
+        var json : any = {};
+
+        if(this.groupList.size() == 0){
+            return null;
         }
 
-        return ret;
+        json.min = (this.groupList.size()-1).toString();
+        json.max = (this.groupList.size()-1).toString();
+        json.total_count = (this.groupList.size()-1).toString();
+        for(var k = 1; k <= this.groupList.size(); k++){
+            var j = this.groupList.elementAtIndex(k-1).toJson();
+            if(j != null){
+                
+                json["group"+k] = j;
+            }
+        }
+
+
+        return json;
+
+    }
+    addEmptyGroup(){
+        var newNode = cc.instantiate(this.emptyGroup);
+        var comp = newNode.getComponent(BlockGroup);
+        comp.parentLine = this;
+        newNode.setParent(this.node);
+        
+        var lastGroup = this.groupList.last();
+        
+        //first to add
+        var xPos = 0;
+        var yPos = 0;
+        
+        //first group position
+        /*if(lastGroup == null){
+            xPos = 20;
+            yPos = -34;
+        }
+        else{
+            
+            xPos = lastGroup.node.position.x + lastGroup.filledGroup.width + AlgorithmLine.xSpacing;
+            yPos = lastGroup.node.position.y;
+            
+            if(xPos > AlgorithmLine.xThreshold){
+                yPos -= AlgorithmLine.ySpacing;
+                xPos = 20;
+            }
+        }*/
+        
+        this.groupList.add(comp);
+        newNode.setPosition(xPos, yPos);
+        newNode.active = true;
+        this.repositionGroups();
+        this.resizeLine();
+        
+    }
+    resizeLine(){
+        var firstGroup = this.groupList.first();
+        var lastGroup = this.groupList.last();
+
+        var yDiff = (firstGroup.node.position.y - lastGroup.node.position.y) /  AlgorithmLine.ySpacing;
+        this.node.height = AlgorithmLine.baseHeight + AlgorithmLine.ySpacing * yDiff;
+
+
     }
 
+    repositionGroups(){
+        
+        var prevGroup : BlockGroup = null;
+        var xPos = 0;
+        var yPos = 0;
+        for(var k = 0; k < this.groupList.size(); k++){
+            var elem = this.groupList.elementAtIndex(k);
+            if(prevGroup == null){
+                xPos = 20;
+                yPos = -34;
+            }
+            else{
+                
+                xPos = prevGroup.node.position.x + prevGroup.filledGroup.width + AlgorithmLine.xSpacing;
+                yPos = prevGroup.node.position.y;
+                
+                if(xPos > AlgorithmLine.xThreshold){
+                    
+                    yPos -= AlgorithmLine.ySpacing;
+                    xPos = 20;
+                }
+            }
+            elem.node.setPosition(xPos, yPos);
+            prevGroup = elem;
+            
+        }
+    }
+    removeGroup(group : BlockGroup){
+        this.groupList.remove(group);
+        group.node.destroy();
+    }
     repositionStartBlock(){
 
     }
     onPlusButtonClick(){
         this.group.active = true;
         this.plusButton.active = false;
-        //this.startBlock.node.active = true;
-        //this.minusButton.active = true;
+        this.addEmptyGroup();
     }
-    onMinusButtonClick(){
-        //한개 이상인경우엔 그냥 기존 라인 삭제
-        if(this.node.parent.childrenCount > 1){
-            var block = this.startBlock;
-            while(true){
-                var nextBlock = block.nextBlock;
-                block.node.destroy();
-                if(nextBlock === null){
-                    break;
-                }
-                block = nextBlock;
-            }
-
-            this.node.destroy();
-        }
-        //남은 그룹이 한개인경우엔 내용을 지우지 않고 줄인다.
-        else{
-
-            //첫라인을 지울경우 start block 제외하고 지워줌
-            var block = this.startBlock.nextBlock;
-            while(block != null){
-                var nextBlock = block.nextBlock;
-                block.node.destroy();
-                if(nextBlock === null){
-                    break;
-                }
-                block = nextBlock;
-            }
-            this.node.destroy();
-
-
-            this.group.active = false;
-            this.plusButton.active = true;
-            this.startBlock.node.active = false;
-
-        }
-        //this.minusButton.active = false;
-    }
-    /*
-    lateUpdate(){
-        var block = this.startBlock;
-
-        var pos = block.node.position;
-        var tmpBlock = block;
-            
-        while(tmpBlock != null){
-            tmpBlock.node.setPosition(pos);
-            pos.x += tmpBlock.node.getContentSize().width;
-            tmpBlock = tmpBlock.nextBlock;
-        }
-    }*/
+   
     
 
 
@@ -133,11 +174,29 @@ export default class AlgorithmLine extends cc.Component {
     }
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
-
-    start () {
-
+    onLoad () {
+        if(this.groupList == null){
+            this.groupList = new LinkedList<BlockGroup>();
+        }
     }
 
-    // update (dt) {}
+    start () {
+        
+    }
+
+    
+    update (dt) {
+        var cnt = 0;
+        this.repositionGroups();
+        for(var k = 0; k < this.groupList.size(); k++){
+            var elem = this.groupList.elementAtIndex(k);
+            if(elem.targetBlock == null){
+                cnt++;
+            }
+            if(cnt > 1){
+                this.removeGroup(elem);
+                return;
+            }
+        }
+    }
 }
