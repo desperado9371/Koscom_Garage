@@ -68,10 +68,10 @@ export default class Block extends cc.Component {
         }
         else if(cardName == 'rsi'){
 
-            val.input_period = "14";
+            val.period = "14";
         }
         else if(cardName == 'obv'){
-            val.input_volume = "10";
+            val.volume = "10";
 
         }
         if(cardName == 'num'){

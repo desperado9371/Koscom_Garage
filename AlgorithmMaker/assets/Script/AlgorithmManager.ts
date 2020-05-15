@@ -33,8 +33,8 @@ export default class AlgorithmManager extends cc.Component {
         var json : any = {} ;
         var jsonIn : any = {}
         jsonIn.market = "upbit";
-        jsonIn.srt_date = "20200102";
-        jsonIn.end_date = "20200110";
+        jsonIn.srt_date = "20190101";
+        jsonIn.end_date = "20200415";
         jsonIn.buysell = "buy";
         
         var algoLines = this.lineParent.getComponentsInChildren(AlgorithmLine);
