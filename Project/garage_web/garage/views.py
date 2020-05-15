@@ -8,8 +8,17 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from backtestAPI import BacktestAPI
+import asyncio
+from websocket import create_connection
 
 # Create your views here.
+
+
+# async def my_connect():
+#     async with websockets.connect("ws://52.79.241.205:80/Cocos") as websocket:
+#         await websocket.send("load|test_user|all")
+#         data_rcv = await websocket.recv()
+#         return data_rcv
 
 
 def test(request):
@@ -66,23 +75,34 @@ def test(request):
     final_profit = 0
 
     result = []
-    with open('Define_Algo.json', 'r') as f:
-        json_data = json.load(f)
+    # with open('Define_Algo2.json', 'r') as f:
+    #     json_data = json.load(f)
+
+    ws = create_connection("ws://52.79.241.205:80/Cocos")
+    ws.send("load|test_user|all")
+    json_data = ws.recv()
+    json_data = eval(json_data)
+    json_data = eval(json_data['items'][0]['buy_algo'])
+
     market = json_data['algo']['market']
     str_date = json_data['algo']['srt_date']
     end_date = json_data['algo']['end_date']
     bns_tp = json_data['algo']['buysell']
-    # Prc_history = Get_DtPrc(market,str_date,end_date)
-    Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
-    Prc_history = Prc_history[-365:]
-    Prc_history.reset_index(drop=True, inplace=True)
+    Prc_history = Get_DtPrc(market,str_date,end_date)
+    # Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
+    # Prc_history = Prc_history[-365:]
+    # Prc_history.reset_index(drop=True, inplace=True)
+
     # 시세데이터 get
     #     df = get_price_data('upbit','1d')
     #     print(df)
     # df = Set_Indicator(df,json_data)
 
-    result = Fet_Algo(Prc_history, json_data)
+    result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
     trade_list = []
+    final_balance = init_krw_bal
+    final_increase = 0
+    final_profit = 0
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
     else:
@@ -92,7 +112,12 @@ def test(request):
         final_increase = "%.2f" % final_increase
         final_profit = "%.2f" % final_profit
 
-
+    bal_diff = int(final_balance-init_krw_bal)
+    bal_diff = str(bal_diff)
+    if len(bal_diff) > 6:
+        bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
+    else:
+        bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
 #########################################################
 
 
@@ -125,7 +150,7 @@ def test(request):
                                                 'datas': data,
                                                 'init_bal': init_krw_bal,
                                                 'fin_bal': int(final_balance),
-                                                'bal_diff': int(final_balance-init_krw_bal),
+                                                'bal_diff': bal_diff,
                                                 'fin_prf': final_profit,
                                                 'fin_inc': final_increase,
                                                 'st_date': start_date,
@@ -141,6 +166,11 @@ def home(request):
     """
     return render(request, 'garage/index.html', {})
 
+
+def mypage(request):
+
+
+    return render(request, 'garage/mypage.html',{})
 
 @csrf_exempt
 def login(request):
@@ -300,7 +330,6 @@ def backtest(request):
 
 
 import asyncio
-import websockets
 # from websocket import create_connection
 import math
 import json
@@ -329,9 +358,9 @@ class block:
 def Make_indicat(indi, prc_lst):
     if indi['name'] == 'macd':
         prc_lst = macd(prc_lst,
-                       int(indi['val']['input_n_slow']),
-                       int(indi['val']['input_n_fast']),
-                       int(indi['val']['input_n_sign']))
+                       int(indi['val']['n_slow']),
+                       int(indi['val']['n_fast']),
+                       int(indi['val']['n_sign']))
     elif indi['name'] == 'obv':
         prc_lst = obv(prc_lst)
     elif indi['name'] == 'rsi':
@@ -436,7 +465,7 @@ def Chk_Meet_Condition(Prc_history, group_algo, row, meet_condtion):
         if math.isnan(int(group_algo[0]['val'])) != True and math.isnan(
                 Prc_history[group_algo[2]['name']][row]) != True:
             chk = str(group_algo[0]['val']) + str(group_algo[1]['val']) + str(Prc_history[group_algo[2]['name']][row])
-           # print(chk)
+            #print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     return meet_condtion
@@ -444,8 +473,7 @@ def Chk_Meet_Condition(Prc_history, group_algo, row, meet_condtion):
 
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo):
-    json_data = json.load(open('Define_Algo.json','r'))
+def Fet_Algo(Prc_history, algo, bns_tp, json_data):
     result_datelist = []
     # for row in range(60, 70):
     for row in range(len(Prc_history)):
@@ -458,52 +486,52 @@ def Fet_Algo(Prc_history, algo):
                 for search_group in json_data['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
-                        # print(pars + "/" + search_group + " 시작!")
+                        #print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
                         for group_algo in json_data['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
                             Prc_history = Make_indicat(group_algo, Prc_history)
-                        # print("사용할 지표")
-                        # print(Prc_history)
+                        #print("사용할 지표")
+                        #print(Prc_history)
                         group_meet_condtion = Chk_Meet_Condition(Prc_history, json_data['algo'][pars][search_group],
                                                                  row,
                                                                  group_meet_condtion)
 
-                # print("순회 완료 Min: " + str(json_data['algo'][pars]['min']) + " Mix: " + str(json_data['algo'][pars]['max']))
-                # print("group 충족수:" + str(group_meet_condtion))
+                #print("순회 완료 Min: " + str(json_data['algo'][pars]['min']) + " Mix: " + str(json_data['algo'][pars]['max']))
+                #print("group 충족수:" + str(group_meet_condtion))
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
                 if int(json_data['algo'][pars]['min']) <= int(group_meet_condtion) and int(
                         json_data['algo'][pars]['max']) >= int(group_meet_condtion):
-                    # print("충족!")
+                    #print("충족!")
                     block_meet_condtion = 1
                 else:
-                    # print("미충족!")
+                    #print("미충족!")
                     block_meet_condtion = 0
 
                 # 이미 블록중에 미충족된 블록이 있는경우 더이상 순회할 필요가 없으므로 break
                 if block_meet_condtion == 0:
-                    # print("미충족 block 존재 다음 알고리즘으로 PASS")
+                    #print("미충족 block 존재 다음 알고리즘으로 PASS")
                     break
         if block_meet_condtion == 1:
             # 충족시 일자를 리스트에 추가
-            # print("이날 알고리즘은 완벽하게 충족")
-            result_datelist.append([Prc_history['timestamp'][row][0:10], "buy"])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
+            #print("이날 알고리즘은 완벽하게 충족")
+            result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
 
-    # print(result_datelist)
+    #print(result_datelist)
     return result_datelist
 
 
 def Get_DtPrc(market='upbit', str_date='0', end_date='99999999'):
-    # print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
+    print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
 
-    ws = websocket.create_connection('ws://15.164.231.112:80/BackServer')
+    ws = create_connection('ws://52.79.241.205:80/BackServer')
     order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date
-    # print(order_packet)d
+    print(order_packet)
     if ws.connected:
         ws.send(order_packet)
-        # print()
+        print()
         result = ws.recv()
-        # print(f"client received:{result}")
+        print(f"client received:{result}")
         ws.close()
     if not result:
         print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
@@ -513,3 +541,6 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999'):
                                         columns=['timestamp', 'open', 'close', 'high', 'low', 'volume'])
 
     return dataframe_result
+
+
+
