@@ -167,6 +167,11 @@ def home(request):
     return render(request, 'garage/index.html', {})
 
 
+def mypage(request):
+
+
+    return render(request, 'garage/mypage.html',{})
+
 @csrf_exempt
 def login(request):
     """
