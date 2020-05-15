@@ -10,5 +10,6 @@ urlpatterns = [
     path('backtest/', views.backtest, name='backtest'),
     path('algomaker/', views.algomaker, name='algomaker'),
     path('test/', views.test, name='test'),
+    path('charttest/', views.charttest, name='test'),
     path('', views.home, name='home'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

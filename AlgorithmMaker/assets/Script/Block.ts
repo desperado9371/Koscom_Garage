@@ -1,6 +1,7 @@
 import MouseManager from "./MouseManager";
 import DockingSlot from "./DockingSlot"
 import PropertyBox from "./PropertyBox";
+import BlockGroup from "./BlockGroup";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -21,7 +22,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Block extends cc.Component {
 
-    
+    static offset = 157;
     @property(MouseManager)
     mouseManager : MouseManager = null;
 
@@ -40,6 +41,62 @@ export default class Block extends cc.Component {
     @property
     initOnLoad = false;
 
+    hideRelation(){
+        if(this.relationSymbol.active == true){
+            
+            this.relationSymbol.active = false;
+        }
+    }
+    showRelation(){
+        if(this.relationSymbol.active == false){
+
+            this.relationSymbol.active= true;
+        }
+    }
+
+    toJson(){
+        var json :any = {};
+        var val : any = {};
+        var cardName = this.title.getComponentInChildren(cc.Label).string.toLowerCase();
+
+        json.name = cardName;
+        if(cardName == 'macd'){
+            val.close = "50000";
+            val.n_fast = "5";
+            val.n_slow = "3";
+            val.n_sign = "5";
+        }
+        else if(cardName == 'rsi'){
+
+            val.input_period = "14";
+        }
+        else if(cardName == 'obv'){
+            val.input_volume = "10";
+
+        }
+        if(cardName == 'num'){
+            
+            json.val = this.body.getComponentInChildren(cc.Label).string;
+            
+        }
+        else{
+
+            json.val = val;
+        }
+
+        return json;
+
+    }
+
+    sigToJson(){
+        var json :any = {};
+        var symbol = this.relationSymbol.getComponent(cc.Label).string;
+
+        json.name = "sig";
+        json.val = symbol;
+
+        return json;
+    }
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -146,12 +203,20 @@ export default class Block extends cc.Component {
                 this.dPos.x = this.stuckPos.x - mousePos.x;
                 this.dPos.y = this.stuckPos.y - mousePos.y;
                 if(this.dPos.len() > this.unstickThreshold){
-                    this.connectedSlot.getComponent(DockingSlot).block.getComponent(Block).nextBlock = null;
-                    this.connectedSlot = null;
+                    if(this.connedtedMode == 'slot'){
+                        this.connectedSlot.getComponent(DockingSlot).block.getComponent(Block).nextBlock = null;
+                        this.connectedSlot = null;
+                    }
+                    else{
+                        var comp = this.connectedSlot.node.parent.parent.getComponent(BlockGroup);
+                        this.connectedSlot = null;
+                        comp.disableGroup();
+                        
+                    }
+                    this.connedtedMode = '';
                 }
                 else{
-                    var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
-                    this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
+                    this.updatePos();
                 }
             }
             else{
@@ -170,22 +235,33 @@ export default class Block extends cc.Component {
         }
 
         //다른 블록에 끌려가는 것
-        if(this.connectedSlot != null && this.isDown === false){
-            var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
-            this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
-                       
-        }
+        if(this.isDown === false){
 
+            this.updatePos();
+        }
         
     }
 
-    lateUpdate(){
-        //다른 블록에 끌려가는 것
-        if(this.connectedSlot != null && this.isDown === false){
+    updatePos(){
+        if(this.connectedSlot != null  && this.connedtedMode == 'slot'){
             var otherBlock = this.connectedSlot.getComponent(DockingSlot).block;
-            this.node.setPosition(otherBlock.position.x + 138, otherBlock.position.y);
-                
+            this.node.setPosition(otherBlock.position.x + Block.offset, otherBlock.position.y);
+                       
         }
+        else if(this.connectedSlot != null  && this.connedtedMode == 'firstSlot'){
+            var comp = this.connectedSlot.node.parent.parent.getComponent(BlockGroup);
+            if(comp.targetBlock == null ){
+                return;
+            }
+            var otherSlot = this.connectedSlot.node.parent;
+            var gPos = otherSlot.convertToWorldSpaceAR(otherSlot.position);      
+            var lPos = this.node.parent.convertToNodeSpaceAR(gPos);
+            this.node.setPosition(lPos.x, lPos.y);
+        }
+    }
+
+    lateUpdate(){
+        this.updatePos();
     }
 
     mouseUpEventHandler(event){
@@ -221,14 +297,15 @@ export default class Block extends cc.Component {
             
             var loc = this.node.convertToNodeSpaceAR(new cc.Vec2(this.stuckPos.x, this.stuckPos.y));
             this.nodePos = new cc.Vec3(loc.x, loc.y, 0);
-
             this.node.setPosition(this.nodePos);
+
         }
 
 
         console.debug("mouse down called");
     }
 
+    connedtedMode = '';
     connectedSlot : cc.Collider = null;
     nextBlock : Block = null;
     stuckPos : cc.Vec3 = new cc.Vec3();
@@ -237,9 +314,26 @@ export default class Block extends cc.Component {
         {
             
         }
+        else if(other.node.group === 'firstSlot' && self.node.group === 'block'){
+           
+            if(this.connectedSlot === null){
+                this.connedtedMode = 'firstSlot';
+                var comp = other.node.parent.parent.getComponent(BlockGroup);
+                comp.activateGroup(this);
+                this.connectedSlot = other;
+                this.stuckPos.x = this.mouseManager.getMousePos().x;
+                this.stuckPos.y = this.mouseManager.getMousePos().y;
+                comp.parentLine.addEmptyGroup();
+                
+            }
+            
+            
+            
+        }
         else{
-            if(this.isDown === true && self.node.group === 'docker'){
+            if(this.isDown === true && self.node.group === 'docker' && other.node.group === 'slot'){
                 if(this.connectedSlot === null){
+                    this.connedtedMode = 'slot';
                     
                     this.connectedSlot = other;
                     other.getComponent(DockingSlot).block.getComponent(Block).nextBlock = this;

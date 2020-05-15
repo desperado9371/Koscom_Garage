@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type='text/javascript'>
+      google.charts.load('current', {'packages':['annotationchart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'KRW-BTC in Upbit');
+        data.addColumn('string', 'SEll/BUY');
+        data.addColumn('string', 'info');
+        // data.addColumn('number', 'MACD');
+        // data.addColumn('number', 'RSI');
+        // data.addRows([
+        //   [new Date(2314, 2, 15), 12400, undefined, undefined,
+        //                           ],
+        //   [new Date(2314, 2, 16), 24045, 'sell', 'First encounter',
+        //                           ],
+        //   [new Date(2314, 2, 17), 35022, 'Lalibertines', 'They are very tall',
+        //                           ],
+        //   [new Date(2314, 2, 18), 12284, 'Lalibertines', 'Attack on our crew!',
+        //                           ],
+        //   [new Date(2314, 2, 19), 8476, 'Lalibertines', 'Heavy casualties',
+        //                           ],
+        //   [new Date(2314, 2, 20), 0, 'Lalibertines', 'All crew lost',
+        //                           ],
+        // ]);
+        var i;
+        temp = {{data|safe}}
+        for ( i=0 ; i< temp.length  ;i++)
+        {
+            if( temp[i][4] == "null"){
+                data.addRows([[new Date(temp[i][0], temp[i][1], temp[i][2]), temp[i][3], undefined, undefined]]);
+            }
+            else{
+                data.addRows([[new Date(temp[i][0], temp[i][1], temp[i][2]), temp[i][3], temp[i][4], "yes",  ]]);
+            }
+        }
+
+        var chart = new google.visualization.AnnotationChart(document.getElementById('chart_div'));
+
+        var options = {
+          displayAnnotations: true,
+            displayAnnotationsFilter: true,
+            scaleColumns:[0,1,1],
+        };
+
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id='chart_div' style='width: 90%; height:90%;'></div>
+  </body>
+</html>

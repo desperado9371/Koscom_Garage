@@ -32,9 +32,9 @@ def Make_indicat(indi,prc_lst):
     
     if indi['name'] == 'macd':
         prc_lst = macd(prc_lst,
-                           int(indi['val']['input_n_slow']),
-                           int(indi['val']['input_n_fast']),
-                           int(indi['val']['input_n_sign']))    
+                           int(indi['val']['n_slow']),
+                           int(indi['val']['n_fast']),
+                           int(indi['val']['n_sign']))    
     elif indi['name'] == 'obv':
         prc_lst = obv(prc_lst)
     elif indi['name'] == 'rsi':

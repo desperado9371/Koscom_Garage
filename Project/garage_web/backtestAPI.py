@@ -254,7 +254,7 @@ class BacktestAPI:
     def send_order(self, market='upbit',
                    order_type='buy',
                    quantity=1,
-                   target_date="2018-10-11",
+                   target_date="20181011",
                    krw_balance=0.0,
                    btc_balance=0.0,
                    average_price=0.0):
@@ -271,7 +271,7 @@ class BacktestAPI:
         """
         bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
 
-        target_date = datetime.strptime(target_date, "%Y-%m-%d")
+        target_date = datetime.strptime(target_date, "%Y%m%d")
 
         price = -1
 
@@ -365,7 +365,7 @@ class BacktestAPI:
             temp.append(price)
             temp.append(order_quantity)
             temp.append(profit)
-            temp.append( (krw_bal + (btc_bal * price)) / init_krw_bal * 100)
+            temp.append( (krw_bal + (btc_bal * price) - init_krw_bal ) / init_krw_bal * 100)
             temp.append( (krw_bal + (btc_bal * price)) )
             trade_list.append(temp)
 
