@@ -35,7 +35,7 @@ input::-webkit-inner-spin-button {
 }
 
 canvas {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: black;
 }
 
 a:link, a:visited {
@@ -61,12 +61,12 @@ p.footer {
   width: 100%;
   height: 100%;
 
-  background: #171717 url(./splash.png) no-repeat center;
-  background-size: 350px;
+  background: white url() no-repeat center;
+  background-size: 10px;
 }
 
 .progress-bar {
-    background-color: #1a1a1a;
+    background-color: #F5F7FB;
     position: absolute;
     left: 50%;
     top: 80%;
@@ -83,7 +83,7 @@ p.footer {
     border-radius: 5px;
     box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
     transition: width .4s ease-in-out; 
-    background-color: #3dc5de;
+    background-color: #F5F7FB;
 }
 
 .stripes span {
@@ -92,7 +92,7 @@ p.footer {
                         transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,
                         transparent 75%, transparent);            
     
-    animation: animate-stripes 1s linear infinite;             
+                
 }
 
 @keyframes animate-stripes {
@@ -108,7 +108,7 @@ h1 {
     width: 800px;
     height: 450px;
     margin: 0 auto;
-    background: black;
+    background: #F5F7FB;
     position: relative;
     border: 3px solid black;
     border-radius: 6px;

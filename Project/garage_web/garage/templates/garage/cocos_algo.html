@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>Cocos Creator | AlgorithmMaker</title>
-  {% load staticfiles %}
-  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="full-screen" content="yes"/>
-  <meta name="screen-orientation" content="portrait"/>
-  <meta name="x5-fullscreen" content="true"/>
-  <meta name="360-fullscreen" content="true"/>
-  
-  <meta name="renderer" content="webkit"/>
-  <meta name="force-rendering" content="webkit"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Cocos Creator | AlgorithmMaker</title>
+    {% load staticfiles %}
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="yes" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
 
-  <link rel="stylesheet" type="text/css" href="{% static 'garage/cocos/style-desktop.css'%}"/>
-  <link rel="icon" href="favicon.ico"/>
-      <!-- Google Fonts -->
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'garage/cocos/style-desktop.css'%}" />
+    <link rel="icon" href="favicon.ico" />
+    <!-- Google Fonts -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
     <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
@@ -34,6 +35,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
 
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
@@ -42,6 +44,7 @@
             <a class="navbar-brand js-scroll-trigger" href="/index">
                 <font size=4.5><B>&nbsp Algorithm Trading</B></font>
             </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -78,61 +81,61 @@
             </div>
         </div>
     </nav>
-    
-<!-- section-->
-<section class="page-section" id="upper">
 
-           <div id="GameDiv" style="width:1280px; height: 720px;">
-  <canvas id="GameCanvas" width="1280" height="720"></canvas>
-  <div id="splash">
-    <div class="progress-bar stripes">
-      <span style="width: 0%"></span>
-    </div>
-  </div>
-</div>
+    <!-- section-->
+    <section class="page-section" id="upper">
+
+        <div id="GameDiv" style="width:1280px; height: 720px;">
+            <canvas id="GameCanvas" width="1280" height="720"></canvas>
+            <div id="splash">
+                <div class="progress-bar stripes">
+                    <span style="width: 0%"></span>
+                </div>
+            </div>
+        </div>
 
     </section>
 
-{% load staticfiles %}
-<script src="{% static 'garage/cocos/src/settings.js'%}" charset="utf-8"></script>
-<script src="{% static 'garage/cocos/main.js'%}" charset="utf-8"></script>
+    {% load staticfiles %}
+    <script src="{% static 'garage/cocos/src/settings.js'%}" charset="utf-8"></script>
+    <script src="{% static 'garage/cocos/main.js'%}" charset="utf-8"></script>
 
-<script type="text/javascript">
-(function () {
-    // open web debugger console
-    if (typeof VConsole !== 'undefined') {
-        window.vConsole = new VConsole();
-    }
+    <script type="text/javascript">
+        (function() {
+            // open web debugger console
+            if (typeof VConsole !== 'undefined') {
+                window.vConsole = new VConsole();
+            }
 
-    var debug = window._CCSettings.debug;
-    var splash = document.getElementById('splash');
-    splash.style.display = 'block';
+            var debug = window._CCSettings.debug;
+            var splash = document.getElementById('splash');
+            splash.style.display = 'block';
 
-    function loadScript (moduleName, cb) {
-      function scriptLoaded () {
-          document.body.removeChild(domScript);
-          domScript.removeEventListener('load', scriptLoaded, false);
-          cb && cb();
-      };
-      var domScript = document.createElement('script');
-      domScript.async = true;
-      domScript.src = moduleName;
-      domScript.addEventListener('load', scriptLoaded, false);
-      document.body.appendChild(domScript);
-    }
+            function loadScript(moduleName, cb) {
+                function scriptLoaded() {
+                    document.body.removeChild(domScript);
+                    domScript.removeEventListener('load', scriptLoaded, false);
+                    cb && cb();
+                };
+                var domScript = document.createElement('script');
+                domScript.async = true;
+                domScript.src = moduleName;
+                domScript.addEventListener('load', scriptLoaded, false);
+                document.body.appendChild(domScript);
+            }
 
-    loadScript(debug ? 'cocos2d-js.js' : '/static/garage/cocos/cocos2d-js-min.js', function () {
-      if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
-        loadScript(debug ? 'physics.js' : '/static/garage/cocos/physics-min.js', window.boot);
-      }
-      else {
-        window.boot();
-      }
-    });
-})();
-</script>
-          {% load staticfiles %}
-       <!-- Plugin JavaScript -->
+            loadScript(debug ? 'cocos2d-js.js' : '/static/garage/cocos/cocos2d-js-min.js', function() {
+                if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
+                    loadScript(debug ? 'physics.js' : '/static/garage/cocos/physics-min.js', window.boot);
+                } else {
+                    window.boot();
+                }
+            });
+        })();
+
+    </script>
+    {% load staticfiles %}
+    <!-- Plugin JavaScript -->
     <script src="{% static 'garage/vendor/jquery-easing/jquery.easing.min.js'%}"></script>
     <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
     <!-- Bootstrap core JavaScript -->
@@ -141,4 +144,5 @@
     <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
 
 </body>
+
 </html>
