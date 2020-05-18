@@ -334,7 +334,7 @@ section {
 }
 
 .main-content {
-    padding-top: 116px;
+    padding-top: 60px;
     min-height: 100vh;
 }
 
@@ -14665,6 +14665,14 @@ section {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     background-color: #fff;
     transition: background-color 0.2s ease;
+}
+.navbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.5rem;
 }
 
 #mainNav .navbar-brand {
