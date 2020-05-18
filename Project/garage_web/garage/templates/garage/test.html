@@ -211,11 +211,11 @@
         for ( i=0 ; i< temp.length  ;i++)
         {
             if( trade_index < trade_length && temp[i][3] == trade_list[trade_index][0]){
-                data.addRows([[new Date(temp[i][0], temp[i][1], temp[i][2]), temp[i][6], trade_list[trade_index][1], trade_list[trade_index][3]+"btc",  ]]);
+                data.addRows([[new Date(temp[i][0], temp[i][1]-1, temp[i][2]), temp[i][6], trade_list[trade_index][1], trade_list[trade_index][3]+"btc",  ]]);
                 trade_index = trade_index + 1
             }
             else{
-                data.addRows([[new Date(temp[i][0], temp[i][1], temp[i][2]), temp[i][6], undefined, undefined]]);
+                data.addRows([[new Date(temp[i][0], temp[i][1]-1, temp[i][2]), temp[i][6], undefined, undefined]]);
             }
         }
 

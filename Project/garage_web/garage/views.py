@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from datetime import datetime
 import numpy as np
@@ -20,18 +21,25 @@ from websocket import create_connection
 #         data_rcv = await websocket.recv()
 #         return data_rcv
 
-
+@login_required
 def test(request):
+    backtestapi = BacktestAPI()
 
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-    upbit_min = upbit_min[-365:]
+    upbit_min = upbit_min[-150:]
     upbit_min.reset_index(drop=True, inplace=True)
+    upbit_min = backtestapi.macd(upbit_min)
+    upbit_min = backtestapi.rsi(upbit_min)
+    upbit_min = backtestapi.obv(upbit_min)
 
     timestamps = upbit_min['timestamp']
     opens = upbit_min['open']
     closes = upbit_min['close']
     highs = upbit_min['high']
     lows = upbit_min['low']
+
+
+
 
     for i in range(len(timestamps)):
         timestamps[i] = timestamps[i][:10]
@@ -68,7 +76,7 @@ def test(request):
 
 ################################################################
     #백테스트 수행 관련
-    backtestapi = BacktestAPI()
+
     init_krw_bal = 20000000
     order_quantity = 0.05
     final_balance = 0
@@ -78,27 +86,35 @@ def test(request):
     # with open('Define_Algo2.json', 'r') as f:
     #     json_data = json.load(f)
 
-    ws = create_connection("ws://52.79.241.205:80/Cocos")
-    ws.send("load|test_user|all")
-    json_data = ws.recv()
-    json_data = eval(json_data)
-    json_data = eval(json_data['items'][0]['buy_algo'])
+    # ws = create_connection("ws://52.79.241.205:80/Cocos")
+    # ws.send("load|test_user|all")
+    # json_data = ws.recv()
+    # json_data = eval(json_data)
+    # json_data = eval(json_data['items'][0]['buy_algo'])
 
-    market = json_data['algo']['market']
-    str_date = json_data['algo']['srt_date']
-    end_date = json_data['algo']['end_date']
-    bns_tp = json_data['algo']['buysell']
-    Prc_history = Get_DtPrc(market,str_date,end_date)
-    # Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
-    # Prc_history = Prc_history[-365:]
-    # Prc_history.reset_index(drop=True, inplace=True)
+    with open('Define_Algo.json', 'r') as f:
+        json_data_b = json.load(f)
+    with open('Define_Algo2.json', 'r') as f:
+        json_data_s = json.load(f)
+
+    # json_data = json_data_b
+    # market = json_data['algo']['market']
+    # str_date = json_data['algo']['srt_date']
+    # end_date = json_data['algo']['end_date']
+    # bns_tp = json_data['algo']['buysell']
+    # Prc_history = Get_DtPrc(market,str_date,end_date)
+
+    Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
+    Prc_history = Prc_history[-150:]
+    Prc_history.reset_index(drop=True, inplace=True)
 
     # 시세데이터 get
     #     df = get_price_data('upbit','1d')
     #     print(df)
     # df = Set_Indicator(df,json_data)
 
-    result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
+    # result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
+    result = Parsing_Main(Prc_history, json_data_b, json_data_s)
     trade_list = []
     final_balance = init_krw_bal
     final_increase = 0
@@ -115,7 +131,10 @@ def test(request):
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
     if len(bal_diff) > 6:
-        bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
+        if bal_diff[0] == '-':
+            bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
+        else:
+            bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
     else:
         bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
 #########################################################
@@ -220,7 +239,10 @@ def signup(request):
                 username=request.POST["username"], password=request.POST["password1"])
             # 해당 유저로 로그인 처리
             auth.login(request, user)
-            return redirect('/')
+            response = redirect('/')
+            response.set_cookie('username', request.POST["username"])
+            # print("login as "+username)
+            return response
         return render(request, 'garage/signup.html', {})
 
     # 첫 로드시 바로 페이지 반환
@@ -239,14 +261,25 @@ def logout(request):
     auth.logout(request)
     return response
 
-
+@login_required
 def algomaker(request):
     """
     알고리즘 제작(cocos) 페이지 로드
     :param request:
     return:
     """
-    return render(request, 'garage/cocos_algo.html', {})
+    username = ""
+    if request.COOKIES.get('username') is not None:
+        print("cookie found!")
+        print(request.COOKIES.get('username'))
+        username = request.COOKIES.get('username')
+    return render(request, 'garage/cocos_algo.html', {'username': username})
+
+
+def loading(request):
+    check = 1;
+    return render(request, 'garage/loading.html',{'check': check})
+
 
 def charttest(request):
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
@@ -437,35 +470,35 @@ def obv(df):
 #  ----- Chk_Meet_Condition 함수
 #  ----- input 으로 들어온 값들의
 def Chk_Meet_Condition(Prc_history, group_algo, row, meet_condtion):
-    #print("Chk_Meet_Condition 시작:")
+    # print("Chk_Meet_Condition 시작:")
     # print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
     meet_condtion = int(meet_condtion)
     # (case1 지표끼리 비교시)
     if group_algo[0]['name'] != 'num' and group_algo[2]['name'] != 'num':
         if math.isnan(Prc_history[group_algo[0]['name']][row]) != True and math.isnan(
                 Prc_history[group_algo[2]['name']][row]) != True:
-            #print('case1 지표끼리 비교시')
+            # print('case1 지표끼리 비교시')
             chk = str(Prc_history[group_algo[0]['name']][row]) + str(group_algo[1]['val']) + str(
                 Prc_history[group_algo[2]['name']][row])
-            #print(chk)
+            # print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     elif group_algo[0]['name'] != 'num' and group_algo[2]['name'] == 'num':
-        #print('case2 지표랑 뒷부분의 상수랑 비교시')
+        # print('case2 지표랑 뒷부분의 상수랑 비교시')
         # (case2 지표랑 뒷부분의 상수랑 비교시)
         if math.isnan(Prc_history[group_algo[0]['name']][row]) != True and math.isnan(
                 int(group_algo[2]['val'])) != True:
             chk = str(Prc_history[group_algo[0]['name']][row]) + str(group_algo[1]['val']) + str(group_algo[2]['val'])
-            #print(chk)
+            # print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     elif group_algo[0]['name'] == 'num' and group_algo[2]['name'] != 'num':
-        #print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
+        # print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
         if math.isnan(int(group_algo[0]['val'])) != True and math.isnan(
                 Prc_history[group_algo[2]['name']][row]) != True:
             chk = str(group_algo[0]['val']) + str(group_algo[1]['val']) + str(Prc_history[group_algo[2]['name']][row])
-            #print(chk)
+            # print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     return meet_condtion
@@ -473,65 +506,62 @@ def Chk_Meet_Condition(Prc_history, group_algo, row, meet_condtion):
 
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo, bns_tp, json_data):
+def Fet_Algo(Prc_history, algo, bns_tp):
     result_datelist = []
     # for row in range(60, 70):
     for row in range(len(Prc_history)):
         group_meet_condtion = 0  # 각 그룹의 충족갯수
         block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
         # 알고리즘 확인후 각 일자별로 충족하는지 확인
-        for pars in json_data['algo']:
+        for pars in algo['algo']:
             if pars[0:5] == 'block':
                 group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                for search_group in json_data['algo'][pars]:
+                for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
-                        #print(pars + "/" + search_group + " 시작!")
+                        # print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
-                        for group_algo in json_data['algo'][pars][search_group]:
+                        for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
                             Prc_history = Make_indicat(group_algo, Prc_history)
-                        #print("사용할 지표")
-                        #print(Prc_history)
-                        group_meet_condtion = Chk_Meet_Condition(Prc_history, json_data['algo'][pars][search_group],
-                                                                 row,
+                        group_meet_condtion = Chk_Meet_Condition(Prc_history, algo['algo'][pars][search_group], row,
                                                                  group_meet_condtion)
 
-                #print("순회 완료 Min: " + str(json_data['algo'][pars]['min']) + " Mix: " + str(json_data['algo'][pars]['max']))
-                #print("group 충족수:" + str(group_meet_condtion))
+                # print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(algo['algo'][pars]['max']))
+                # print("group 충족수:" + str(group_meet_condtion))
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
-                if int(json_data['algo'][pars]['min']) <= int(group_meet_condtion) and int(
-                        json_data['algo'][pars]['max']) >= int(group_meet_condtion):
-                    #print("충족!")
+                if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
+                        algo['algo'][pars]['max']) >= int(group_meet_condtion):
+                    # print("충족!")
                     block_meet_condtion = 1
                 else:
-                    #print("미충족!")
+                    # print("미충족!")
                     block_meet_condtion = 0
 
                 # 이미 블록중에 미충족된 블록이 있는경우 더이상 순회할 필요가 없으므로 break
                 if block_meet_condtion == 0:
-                    #print("미충족 block 존재 다음 알고리즘으로 PASS")
+                    # print("미충족 block 존재 다음 알고리즘으로 PASS")
                     break
         if block_meet_condtion == 1:
             # 충족시 일자를 리스트에 추가
-            #print("이날 알고리즘은 완벽하게 충족")
+            # print("이날 알고리즘은 완벽하게 충족")
             result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
 
-    #print(result_datelist)
+    # print(result_datelist)
     return result_datelist
 
 
 def Get_DtPrc(market='upbit', str_date='0', end_date='99999999'):
-    print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
+    # print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
 
     ws = create_connection('ws://52.79.241.205:80/BackServer')
     order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date
-    print(order_packet)
+    # print(order_packet)
     if ws.connected:
         ws.send(order_packet)
-        print()
+        # print()
         result = ws.recv()
-        print(f"client received:{result}")
+        # print(f"client received:{result}")
         ws.close()
     if not result:
         print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
@@ -542,5 +572,30 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999'):
 
     return dataframe_result
 
+
+def Parsing_Main(Prc_history, buy_strategy='', sell_strategy=''):
+    buy_result = []
+    sell_result = []
+    final_result = []
+    # print('매수전략 시작')
+    if buy_strategy == '':
+        print("매수전략 없음")
+    else:
+        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy')
+
+    if sell_strategy == '':
+        print("매도전략 없음")
+    else:
+        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell')
+
+    # print('매수리스트')
+    # print(buy_result)
+    # print('매도리스트')
+    # print(sell_result)
+    # print('최종리스트')
+    buy_result.extend(sell_result)
+    final_result = sorted(buy_result)
+    # print(final_result)
+    return final_result
 
 

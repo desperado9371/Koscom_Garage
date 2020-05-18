@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[128]:
+# In[13]:
 
 
 import asyncio
@@ -138,35 +138,33 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
         
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo,bns_tp,json_data):
+def Fet_Algo(Prc_history, algo,bns_tp):
     result_datelist = []
     #for row in range(60, 70):
     for row in range(len(Prc_history)):
         group_meet_condtion = 0  # 각 그룹의 충족갯수
         block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
         # 알고리즘 확인후 각 일자별로 충족하는지 확인
-        for pars in json_data['algo']:
+        for pars in algo['algo']:
             if pars[0:5] == 'block':
                 group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                for search_group in json_data['algo'][pars]:
+                for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
                         print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
-                        for group_algo in json_data['algo'][pars][search_group]:
+                        for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
                             Prc_history = Make_indicat(group_algo, Prc_history)
-                        print("사용할 지표")
-                        print(Prc_history)
-                        group_meet_condtion = Chk_Meet_Condition(Prc_history, json_data['algo'][pars][search_group], row,
+                        group_meet_condtion = Chk_Meet_Condition(Prc_history, algo['algo'][pars][search_group], row,
                                                                  group_meet_condtion)
 
-                print("순회 완료 Min: " + str(json_data['algo'][pars]['min']) + " Mix: " + str(
-                    json_data['algo'][pars]['max']))
+                print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(
+                    algo['algo'][pars]['max']))
                 print("group 충족수:" + str(group_meet_condtion))
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
-                if int(json_data['algo'][pars]['min']) <= int(group_meet_condtion) and int(
-                        json_data['algo'][pars]['max']) >= int(group_meet_condtion):
+                if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
+                        algo['algo'][pars]['max']) >= int(group_meet_condtion):
                     print("충족!")
                     block_meet_condtion = 1
                 else:
@@ -189,7 +187,7 @@ def Fet_Algo(Prc_history, algo,bns_tp,json_data):
 def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
     print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     
-    ws = websocket.create_connection('ws://15.164.231.112:80/BackServer')
+    ws = create_connection('ws://52.79.241.205:80/BackServer')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date
     print(order_packet)
     if ws.connected:
@@ -205,7 +203,33 @@ def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
         dataframe_result = pd.DataFrame(list(json_data),columns=['timestamp','open','close','high','low','volume'])
 
     return dataframe_result
-                
+
+def Parsing_Main(Prc_history, buy_strategy='',sell_strategy = ''):  
+    buy_result = []
+    sell_result = []
+    final_result= []
+    print('매수전략 시작')
+    if buy_strategy =='':
+        print("매수전략 없음")
+    else :
+        buy_result = Fet_Algo(Prc_history,buy_strategy,'buy')
+    
+    if sell_strategy =='':
+        print("매도전략 없음")
+    else :
+        sell_result = Fet_Algo(Prc_history,sell_strategy,'sell')
+    
+    print('매수리스트')
+    print(buy_result)
+    print('매도리스트')
+    print(sell_result)
+    print('최종리스트')
+    buy_result.extend(sell_result)
+    final_result=sorted(buy_result)
+    print(final_result)
+    return final_result
+    
+    
 if __name__ == '__main__':
     #backtest = BacktestAPI()
     data = []
@@ -217,19 +241,28 @@ if __name__ == '__main__':
     end_date = json_data['algo']['end_date']
     bns_tp = json_data['algo']['buysell']
     Prc_history = Get_DtPrc(market,str_date,end_date)
-        
+    
+    # Parsing 함수
+    # 첫번째 파라미터 = Prc_history: 기간동안시세데이터
+    # 두번째 파라미터 = buy_strategy: 매수전략
+    # 세번째 파라미터 = sell_strategy: 매도전략
+    result = Parsing_Main(Prc_history,json_data,json_data)
+    
+    
     #시세데이터 get
 #     df = get_price_data('upbit','1d')
 #     print(df)
     #df = Set_Indicator(df,json_data)
-    result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
-    if not result:
-        print("해당 조건에 충족하는 주문일이 없습니다.")
-    else:
-        date_list = np.array(result).T[0]
-        type_list = np.array(result).T[1]
-        print(date_list)
-        backtest.execute_backtest(date_list=date_list,type_list=type_list)
+    
+    
+#     result= Fet_Algo(Prc_history,json_data,bns_tp)
+#     if not result:
+#         print("해당 조건에 충족하는 주문일이 없습니다.")
+#     else:
+#         date_list = np.array(result).T[0]
+#         type_list = np.array(result).T[1]
+#         print(date_list)
+#         backtest.execute_backtest(date_list=date_list,type_list=type_list)
 
 
         
