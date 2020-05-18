@@ -317,8 +317,10 @@ class BacktestAPI:
                              krw_balance + (btc_balance) * float(bitcoin['close'])))
             else:
                 print("주문실패 : 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
-
-        return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, (bitcoin['close']-average_price)/average_price*100, 
+        if average_price ==0:
+            return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, 0
+        else:
+            return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, (bitcoin['close']-average_price)/average_price*100,
 
     def execute_backtest(self, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
                          date_list=['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20'],

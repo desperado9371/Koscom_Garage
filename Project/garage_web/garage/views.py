@@ -26,7 +26,7 @@ def test(request):
     backtestapi = BacktestAPI()
 
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-    upbit_min = upbit_min[-365:]
+    upbit_min = upbit_min[-150:]
     upbit_min.reset_index(drop=True, inplace=True)
     upbit_min = backtestapi.macd(upbit_min)
     upbit_min = backtestapi.rsi(upbit_min)
@@ -105,7 +105,7 @@ def test(request):
     # Prc_history = Get_DtPrc(market,str_date,end_date)
 
     Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
-    Prc_history = Prc_history[-365:]
+    Prc_history = Prc_history[-150:]
     Prc_history.reset_index(drop=True, inplace=True)
 
     # 시세데이터 get
@@ -131,7 +131,10 @@ def test(request):
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
     if len(bal_diff) > 6:
-        bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
+        if bal_diff[0] == '-':
+            bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
+        else:
+            bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
     else:
         bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
 #########################################################
@@ -271,6 +274,11 @@ def algomaker(request):
         print(request.COOKIES.get('username'))
         username = request.COOKIES.get('username')
     return render(request, 'garage/cocos_algo.html', {'username': username})
+
+
+def loading(request):
+    check = 1;
+    return render(request, 'garage/loading.html',{'check': check})
 
 
 def charttest(request):

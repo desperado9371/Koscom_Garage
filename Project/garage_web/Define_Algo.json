@@ -2,7 +2,7 @@
 	"algo": {
 		"market": "upbit",
 		"end_date": "20200510",
-		"srt_date": "20190302",
+		"srt_date": "20200301",
 		"buysell": "Buy",
 		"block1": {
 			"min": "1",
