@@ -207,7 +207,7 @@ def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
 def Parsing_Main(Prc_history, buy_strategy='',sell_strategy = ''):  
     buy_result = []
     sell_result = []
-    final_result = []
+    final_result= []
     print('매수전략 시작')
     if buy_strategy =='':
         print("매수전략 없음")
@@ -217,7 +217,7 @@ def Parsing_Main(Prc_history, buy_strategy='',sell_strategy = ''):
     if sell_strategy =='':
         print("매도전략 없음")
     else :
-        sell_result = Fet_Algo(Prc_history,buy_strategy,'sell')
+        sell_result = Fet_Algo(Prc_history,sell_strategy,'sell')
     
     print('매수리스트')
     print(buy_result)
