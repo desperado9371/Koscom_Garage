@@ -271,7 +271,7 @@ class BacktestAPI:
         """
         bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
 
-        target_date = datetime.strptime(target_date, "%Y%m%d")
+        target_date = datetime.strptime(target_date, "%Y-%m-%d")
 
         price = -1
 
