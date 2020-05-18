@@ -23,6 +23,11 @@
     <!-- Theme CSS - Includes Bootstrap -->
     <link href="{% static 'garage/css/creative_mypage.css' %}" rel="stylesheet">
 
+    <!-- slider -->
+
+    <link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/slick/slick.css'%}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/slick/slick-theme.css'%}" />
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
@@ -76,28 +81,104 @@
             </div>
         </div>
     </nav>
-
-   
-    <!-- Footer -->
-    <footer class="bg-light py-5">
+    <!-- section customer-->
+    <section class="page-section-small" id="customer">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                </div>
-            </div>
-            <div class="row">
-
-                <div class="col-lg-10">
-                    <div class="text-muted">
-                        <p><br><br>서울시 영등포구 여의나루로 76 ㈜코스콤<br>
-                            대표전화 : 02-767-7114<br><br>
-                            © KOSCOM CORP. ALL RIGHTS RESERVED.</p>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-5 pt-5 text-center">
+                        <img class="img" href="/" src="{% static 'garage/images/user.png'%}" alt="">
                     </div>
                 </div>
-
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-1 pt-3 text-center">
+                        <h5 class="mb-2">홍길동</h5>
+                        <h5 class="mb-3">asd123@gmail.com</h5>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+    </section>
+    <!-- section algorithm-->
+    <section class="page-section-small" id="algorithm">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-1 pt-3">
+                        <h4 class="menu">내 알고리즘</h4>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:20px 30px;">
+                <div id="slider-div">
+                    <div>
+                            <div class="slider_box">
+                               <div class="wrap">
+                                <h4>알고리즘1</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                    </div>
+                    <div>
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘2</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+             
+                    </div>
+                    <div>
+                
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘3</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                    </div>
+                    <div>
+                    
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘4</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                     
+                    </div>
+                    <div>
+                 
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘5</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                       
+                    </div>
+                    <div>
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘6</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
 
     <!-- Bootstrap core JavaScript -->
     {% load staticfiles %}
@@ -105,16 +186,56 @@
     <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
 
     <!-- Plugin JavaScript -->
-    <script src="{% static 'garage/vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+
     <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
 
     <!-- Custom scripts for this template -->
     <script src="{% static 'garage/js/creative.min.js'%}"></script>
 
-    <!-- scroll -->
-
 
     <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
+    <!-- jquery:slick -->
+    <script type="text/javascript" src="{% static 'garage/vendor/slick/slick.js'%}"></script>
+    <script>
+        $(function() {
+            $('#slider-div').slick({
+                slide: 'div', //슬라이드 되어야 할 태그 ex) div, li 
+                infinite: true, //무한 반복 옵션	 
+                slidesToShow: 5, // 한 화면에 보여질 컨텐츠 개수
+                slidesToScroll: 1, //스크롤 한번에 움직일 컨텐츠 개수
+                speed: 120, // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+                arrows: true, // 옆으로 이동하는 화살표 표시 여부
+                dots: false, // 스크롤바 아래 점으로 페이지네이션 여부
+                autoplay: false, // 자동 스크롤 사용 여부
+                autoplaySpeed: 10000, // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
+                pauseOnHover: true, // 슬라이드 이동	시 마우스 호버하면 슬라이더 멈추게 설정
+                vertical: false, // 세로 방향 슬라이드 옵션
+                prevArrow: "<button type='button' class='slick-prev'>Previous</button>", // 이전 화살표 모양 설정
+                nextArrow: "<button type='button' class='slick-next'>Next</button>", // 다음 화살표 모양 설정
+                dotsClass: "slick-dots", //아래 나오는 페이지네이션(점) css class 지정
+                draggable: true, //드래그 가능 여부 
+
+                responsive: [ // 반응형 웹 구현 옵션
+                    {
+                        breakpoint: 300, //화면 사이즈 960px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 768, //화면 사이즈 768px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow: 2
+                        }
+                    }
+                ]
+
+            });
+        })
+
+    </script>
 </body>
 
 </html>
