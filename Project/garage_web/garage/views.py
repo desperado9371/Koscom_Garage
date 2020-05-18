@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from datetime import datetime
 import numpy as np
@@ -20,18 +21,25 @@ from websocket import create_connection
 #         data_rcv = await websocket.recv()
 #         return data_rcv
 
-
+@login_required
 def test(request):
+    backtestapi = BacktestAPI()
 
     upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
     upbit_min = upbit_min[-365:]
     upbit_min.reset_index(drop=True, inplace=True)
+    upbit_min = backtestapi.macd(upbit_min)
+    upbit_min = backtestapi.rsi(upbit_min)
+    upbit_min = backtestapi.obv(upbit_min)
 
     timestamps = upbit_min['timestamp']
     opens = upbit_min['open']
     closes = upbit_min['close']
     highs = upbit_min['high']
     lows = upbit_min['low']
+
+
+
 
     for i in range(len(timestamps)):
         timestamps[i] = timestamps[i][:10]
@@ -68,7 +76,7 @@ def test(request):
 
 ################################################################
     #백테스트 수행 관련
-    backtestapi = BacktestAPI()
+
     init_krw_bal = 20000000
     order_quantity = 0.05
     final_balance = 0
@@ -239,7 +247,7 @@ def logout(request):
     auth.logout(request)
     return response
 
-
+@login_required
 def algomaker(request):
     """
     알고리즘 제작(cocos) 페이지 로드
