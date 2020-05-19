@@ -14,7 +14,6 @@ from websocket import create_connection
 
 # Create your views here.
 
-
 # async def my_connect():
 #     async with websockets.connect("ws://52.79.241.205:80/Cocos") as websocket:
 #         await websocket.send("load|test_user|all")
@@ -37,9 +36,6 @@ def test(request):
     closes = upbit_min['close']
     highs = upbit_min['high']
     lows = upbit_min['low']
-
-
-
 
     for i in range(len(timestamps)):
         timestamps[i] = timestamps[i][:10]
@@ -69,13 +65,13 @@ def test(request):
         temp.append(opens[i])
         temp.append(closes[i])
         temp.append(highs[i])
-        #temp.append(tooltips[i])
+        # temp.append(tooltips[i])
         data.append(temp)
     # print( upbit_min['close'][-30:].tolist())
 
 
 ################################################################
-    #백테스트 수행 관련
+    # 백테스트 수행 관련
 
     init_krw_bal = 500000000
     order_quantity = 1
@@ -131,14 +127,13 @@ def test(request):
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
     if len(bal_diff) > 6:
-        if len(bal_diff)== 7 and bal_diff[0] == '-':
+        if len(bal_diff) == 7 and bal_diff[0] == '-':
             bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
         else:
             bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
     else:
         bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
 #########################################################
-
 
     # date_list = ['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20']
     # type_list = ['buy', 'buy', 'buy', 'sell', 'sell', 'sell']
@@ -236,7 +231,7 @@ def signup(request):
         if request.POST["password1"] == request.POST["password2"]:
             # DB에 신규유저 추가
             user = User.objects.create_user(
-                username=request.POST["username"], password=request.POST["password1"])
+                username=request.POST["username"], password=request.POST["password1"], email=request.POST["email"])
             # 해당 유저로 로그인 처리
             auth.login(request, user)
             response = redirect('/')
