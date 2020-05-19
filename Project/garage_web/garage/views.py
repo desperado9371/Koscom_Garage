@@ -77,8 +77,8 @@ def test(request):
 ################################################################
     #백테스트 수행 관련
 
-    init_krw_bal = 20000000
-    order_quantity = 0.05
+    init_krw_bal = 500000000
+    order_quantity = 1
     final_balance = 0
     final_profit = 0
 
@@ -131,7 +131,7 @@ def test(request):
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
     if len(bal_diff) > 6:
-        if bal_diff[0] == '-':
+        if len(bal_diff)== 7 and bal_diff[0] == '-':
             bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
         else:
             bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]

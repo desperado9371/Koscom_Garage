@@ -42,7 +42,7 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
         <div class="container">
             <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+            <a class="navbar-brand js-scroll-trigger" href="/">
                 <font size=4.5><B>&nbsp Algorithm Trading</B></font>
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,23 +51,23 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto my-2 my-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#services">소개</a>
+                        <a class="nav-link js-scroll-trigger" href="/#services">소개</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/test">알고리즘 관리</a>
+                        <a class="nav-link js-scroll-trigger" href="/loading">알고리즘 관리</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="">마켓플레이스</a>
+                        <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="mypage"> 마이페이지 </a>
+                        <a class="nav-link js-scroll-trigger" href="/mypage"> 마이페이지 </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="logout">로그아웃</a>
+                        <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -94,7 +94,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-3 col-md-6">
                     <div class="mt-1 pt-3 text-center">
-                        <h5 class="mb-2">홍길동</h5>
+                        <h5 class="mb-2">{{ user.username }}</h5>
                         <h5 class="mb-3">asd123@gmail.com</h5>
                     </div>
                 </div>
