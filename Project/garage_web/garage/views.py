@@ -82,12 +82,21 @@ def test(request):
     # with open('Define_Algo2.json', 'r') as f:
     #     json_data = json.load(f)
 
-    # ws = create_connection("ws://52.79.241.205:80/Cocos")
-    # ws.send("load|test_user|all")
-    # json_data = ws.recv()
-    # json_data = eval(json_data)
-    # json_data = eval(json_data['items'][0]['buy_algo'])
-
+    username = request.COOKIES.get('username')
+    ws = create_connection("ws://52.79.241.205:80/Cocos")
+    ws.send("load|{}|all".format(username))
+    json_data = ws.recv()
+    json_data = eval(json_data)
+    if json_data['items'][-1]['buy_algo'] == None:
+        json_data1 = ''
+    else:
+        json_data1 = eval(json_data['items'][-1]['buy_algo'])
+    if json_data['items'][-1]['sell_algo'] == None:
+        json_data2 = ''
+    else:
+        json_data2 = eval(json_data['items'][-1]['sell_algo'])
+    print(json_data1)
+    print(json_data2)
     with open('Define_Algo.json', 'r') as f:
         json_data_b = json.load(f)
     with open('Define_Algo2.json', 'r') as f:
@@ -110,7 +119,7 @@ def test(request):
     # df = Set_Indicator(df,json_data)
 
     # result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
-    result = Parsing_Main(Prc_history, json_data_b, json_data_s)
+    result = Parsing_Main(Prc_history, json_data1, json_data2)
     trade_list = []
     final_balance = init_krw_bal
     final_increase = 0
