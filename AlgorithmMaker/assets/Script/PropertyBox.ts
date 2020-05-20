@@ -43,9 +43,13 @@ export default class PropertyBox extends cc.Component {
     // onLoad () {}
     onBlockClick(block : Block){
         var cardName = block.getCardName();
+        if(cardName.toLowerCase() == 'num'){
+            return;
+        }
         if(this.cardData == null){
             this.cardData =  FileManager.getInstance().cardData;
         }
+
 
         this.lblCategory.string = this.cardData[cardName].category;
         this.lblSummary.string = this.cardData[cardName].summary;

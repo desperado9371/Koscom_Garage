@@ -100,7 +100,18 @@ export default class AlgorithmManager extends cc.Component {
         //console.log(blk.position);
         return comp;
     }
-
+    getCookie(name: string): string {
+        const nameLenPlus = (name.length + 1);
+        return document.cookie
+            .split(';')
+            .map(c => c.trim())
+            .filter(cookie => {
+                return cookie.substring(0, nameLenPlus) === `${name}=`;
+            })
+            .map(cookie => {
+                return decodeURIComponent(cookie.substring(nameLenPlus));
+            })[0] || null;
+    }
     SaveAlgorithm(){
         var json : any = {} ;
         var jsonIn : any = {}
@@ -134,7 +145,12 @@ export default class AlgorithmManager extends cc.Component {
         }
         sellJson.algo =sellJsonIn;
         
-        WebSocketConnect.getSock().send('save|test_user|test_algo_name|'+JSON.stringify(json)+'|'+JSON.stringify(sellJson));
+        var user_id = this.getCookie('username');
+        if(user_id == null){
+            user_id = 'test_user';
+        }
+
+        WebSocketConnect.getSock().send('save|'+user_id+'|test_algo_name|'+JSON.stringify(json)+'|'+JSON.stringify(sellJson));
 
     }
     requestIndicators(){
@@ -151,6 +167,7 @@ export default class AlgorithmManager extends cc.Component {
         var jsonRoot = Object.getOwnPropertyNames(indicators);
         
     }
+
 
     // update (dt) {}
 }
