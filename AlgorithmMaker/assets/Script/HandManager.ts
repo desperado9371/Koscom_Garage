@@ -62,8 +62,6 @@ export default class HandManager extends cc.Component {
         var d = new Deck();
         d.testInit();
         h.push(d);
-        h.push(d);
-        h.push(d);
 
         this.hands.push(h);
 
@@ -157,12 +155,14 @@ export default class HandManager extends cc.Component {
             if(item.getType() === 'Card'){
                 obj = cc.instantiate(this.cardPrefab);
                 var card = obj.getComponent(Card);
-                card.testInit();
+                var original = item as Card;
+                card.init(original.cardName);
             }
             else if(item.getType() === 'Deck'){
                 obj = cc.instantiate(this.deckPrefab);
                 var deck = obj.getComponent(Deck);
-                deck.testInit();
+                var originalDeck = item as Deck;
+                deck.init(originalDeck.package);
             }
             else{
                 console.log("type error"); 

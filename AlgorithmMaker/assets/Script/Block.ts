@@ -36,24 +36,23 @@ export default class Block extends cc.Component {
     @property(cc.Node)
     relationSymbol: cc.Node = null;
 
+    @property(cc.Node)
+    relationCircle: cc.Node = null;
+
+    @property(cc.Node)
+    alterRelationParent:cc.Node = null;
+
     propertyBox : PropertyBox = null;
 
     @property
     initOnLoad = false;
 
-    hideRelation(){
-        if(this.relationSymbol.active == true){
-            
-            this.relationSymbol.active = false;
-        }
+    getBodyString(){
+        return this.body.getComponentInChildren(cc.EditBox).string;
     }
-    showRelation(){
-        if(this.relationSymbol.active == false){
-
-            this.relationSymbol.active= true;
-        }
+    setBodyString(str){
+        this.body.getComponentInChildren(cc.EditBox).string = str;
     }
-
     toJson(){
         var json :any = {};
         var val : any = {};
@@ -68,7 +67,7 @@ export default class Block extends cc.Component {
         }
         else if(cardName == 'rsi'){
 
-            val.period = "14";
+            val.period = this.getBodyString();
         }
         else if(cardName == 'obv'){
             val.volume = "10";
@@ -76,7 +75,7 @@ export default class Block extends cc.Component {
         }
         if(cardName == 'num'){
             
-            json.val = this.body.getComponentInChildren(cc.Label).string;
+            json.val = this.getBodyString();
             
         }
         else{
@@ -108,8 +107,14 @@ export default class Block extends cc.Component {
         this.init(150, this.getRandomArbitrary(0,5), 'Title' + this.getRandomArbitrary(0,500), 'Body');
     }
 
-    init(width:number, color:number, titleText:string, bodyText:string, isStuck:boolean = false){
-        
+    getCardName(){
+        return this.title.getComponentInChildren(cc.Label).string;
+    }
+
+    init(width:number, color:number, cardName:string, bodyText:string, isStuck:boolean = false){
+        if(this.mouseManager == null){
+            this.mouseManager = MouseManager.getInstance();
+        }
         if(this.title == null){
             this.title = this.node.getChildByName("title");
         }
@@ -118,41 +123,36 @@ export default class Block extends cc.Component {
             cc.director.getCollisionManager().enabled = true;
         }
 
-        //this.node.width = width;
-        this.color = color;
-        //this.title.getComponent(cc.Label).string = titleText;
-        //this.body.getComponent(cc.Label).string = bodyText;
+        cardName = cardName.toLowerCase();
+        if(cardName == 'macd'){
+            this.body.active = false;
+        }
+        else if(cardName == 'rsi'){
 
+            this.setBodyString('14');
+        }
+        else if(cardName == 'obv'){
+            this.setBodyString('10');
 
-        //색상 설정
-        if(this.title != null){
-            switch(this.color){
-                case BlockColor.Brown:
-                    this.title.color = new cc.Color(140,71,3,235);
-                break;
-                case BlockColor.Blue:
-                    this.title.color = new cc.Color(26,95,186,235);
-                break;
-                case BlockColor.Red:
-                    this.title.color = new cc.Color(175,26,26,235);
-                break;
-                case BlockColor.Gray:
-                    this.title.color = new cc.Color(71,71,71,235);
-                break;
-                case BlockColor.LightGold:
-                    this.title.color = new cc.Color(140,140,71,235);
-                break;
-                case BlockColor.DarkPurple:
-                    this.title.color = new cc.Color(71,71,95,235);
-                break;
-            }
+        }
+        if(cardName == 'num'){
+            
+            this.setBodyString('50');
             
         }
+        
+
+
+        //this.node.width = width;
+        this.color = color;
+        this.title.getComponentInChildren(cc.Label).string = cardName;
+        //this.body.getComponent(cc.Label).string = bodyText;
+        
 
 
         //마우스 이벤트 코드 설정
         //property box로 연동위해 준비
-        if(this.mouseManager == null || this.propertyBox == null){
+        if(this.propertyBox == null){
             var parent = this.node;
             while(true){
                 if(parent.parent.name === "Canvas"){
@@ -161,7 +161,6 @@ export default class Block extends cc.Component {
                 }
                 parent = parent.parent;
             }
-            this.mouseManager = parent.getComponentInChildren(MouseManager);
             this.propertyBox = parent.getComponentInChildren(PropertyBox);
         }
 
@@ -187,12 +186,18 @@ export default class Block extends cc.Component {
     startPos : cc.Vec2 = new cc.Vec2();
     dPos: cc.Vec2 = new cc.Vec2();
     nodePos : cc.Vec3 = new cc.Vec3();
-    unstickThreshold = 40;
+    unstickThreshold = 100;
     start () {
 
     }
+    
+    setRelationActive(active){
+        if(this.relationSymbol.active == !active){
 
-
+            this.relationSymbol.active = active;
+            this.relationCircle.active = active;
+        }
+    }
     update (dt) {
  
         //포지션 이동 설정
@@ -206,11 +211,13 @@ export default class Block extends cc.Component {
                     if(this.connedtedMode == 'slot'){
                         this.connectedSlot.getComponent(DockingSlot).block.getComponent(Block).nextBlock = null;
                         this.connectedSlot = null;
+
                     }
-                    else{
+                    else if(this.connedtedMode == 'firstSlot'){
                         var comp = this.connectedSlot.node.parent.parent.getComponent(BlockGroup);
                         this.connectedSlot = null;
                         comp.disableGroup();
+
                         
                     }
                     this.connedtedMode = '';
@@ -218,8 +225,11 @@ export default class Block extends cc.Component {
                 else{
                     this.updatePos();
                 }
+
+
             }
             else{
+
                 this.dPos.x = this.startPos.x - mousePos.x;
                 this.dPos.y = this.startPos.y - mousePos.y;
                 this.node.setPosition(this.nodePos.x - this.dPos.x, 
@@ -239,7 +249,28 @@ export default class Block extends cc.Component {
 
             this.updatePos();
         }
+
+
+        if(this.connedtedMode == 'slot'){
+            this.setRelationActive(true);
+        }
+        else if(this.connedtedMode == 'firstSlot'){
+            this.setRelationActive(false);
+        }
+        else{//nothing attached
+            this.setRelationActive(false);
+        }
+
         
+    }
+    onRelationChangeButton(){
+        this.alterRelationParent.active = true;
+    }
+    onRelationChangeClick(sender){
+        var send = sender.currentTarget as cc.Node;
+        var comp = send.getComponentInChildren(cc.Label);
+        this.relationSymbol.getComponent(cc.Label).string = comp.string;
+        this.alterRelationParent.active = false;
     }
 
     updatePos(){
@@ -273,6 +304,9 @@ export default class Block extends cc.Component {
     }
 
     mouseDownEventHandler(event){
+        if(this.mouseManager == null){
+            this.mouseManager = MouseManager.getInstance();
+        }
         if(this.isDown == false){
             this.stuckPos.x = this.mouseManager.getMousePos().x;
             this.stuckPos.y = this.mouseManager.getMousePos().y;
@@ -286,6 +320,9 @@ export default class Block extends cc.Component {
     }
 
     mouseRemoteDownEventHandler(event, x, y){
+        if(this.mouseManager == null){
+            this.mouseManager = MouseManager.getInstance();
+        }
         if(this.isDown == false){
             this.stuckPos.x = this.mouseManager.getMousePos().x;
             this.stuckPos.y = this.mouseManager.getMousePos().y;
@@ -315,10 +352,13 @@ export default class Block extends cc.Component {
             
         }
         else if(other.node.group === 'firstSlot' && self.node.group === 'block'){
-           
+            
             if(this.connectedSlot === null){
-                this.connedtedMode = 'firstSlot';
                 var comp = other.node.parent.parent.getComponent(BlockGroup);
+                if(comp.targetBlock != null){
+                    return;
+                }
+                this.connedtedMode = 'firstSlot';
                 comp.activateGroup(this);
                 this.connectedSlot = other;
                 this.stuckPos.x = this.mouseManager.getMousePos().x;
@@ -333,9 +373,14 @@ export default class Block extends cc.Component {
         else{
             if(this.isDown === true && self.node.group === 'docker' && other.node.group === 'slot'){
                 if(this.connectedSlot === null){
+                    var nextBlock = other.getComponent(DockingSlot).block.getComponent(Block).nextBlock;
+                    if(nextBlock != null){
+                        return;
+                    }
                     this.connedtedMode = 'slot';
                     
                     this.connectedSlot = other;
+
                     other.getComponent(DockingSlot).block.getComponent(Block).nextBlock = this;
                     this.stuckPos.x = this.mouseManager.getMousePos().x;
                     this.stuckPos.y = this.mouseManager.getMousePos().y;

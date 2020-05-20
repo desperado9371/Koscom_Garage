@@ -7,49 +7,56 @@
 
 import Block from "./Block";
 import BlockGroup from "./BlockGroup";
+import FileManager from "./FileManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class PropertyBox extends cc.Component {
     
-    @property(cc.EditBox)
-    relationBox: cc.EditBox = null;
+    @property(cc.Label)
+    lblCategory : cc.Label = null;
+    
+    @property(cc.Label)
+    lblSummary : cc.Label = null;
 
-    @property(cc.EditBox)
-    title: cc.EditBox = null;
+    
+    @property(cc.Label)
+    lblCalc : cc.Label = null;
 
-    @property(cc.EditBox)
-    body: cc.EditBox = null;
+    
+    @property(cc.Label)
+    lblDetail : cc.Label = null;
 
-    @property(cc.Node)
-    workplz:cc.Node = null;
+    
+    @property(cc.Label)
+    lblExplanation : cc.Label = null;
 
+    
+    @property(cc.Label)
+    lblHowToUse : cc.Label = null;
 
     block : Block = null;
     group : BlockGroup = null;
     // LIFE-CYCLE CALLBACKS:
-
+    cardData : {} = null;
     // onLoad () {}
     onBlockClick(block : Block){
-        this.block = block;
-        this.title.string = block.title.getComponentInChildren(cc.Label).string;
-        this.body.string = block.body.getComponentInChildren(cc.Label).string;
-        this.relationBox.string = block.relationSymbol.getComponent(cc.Label).string;
+        var cardName = block.getCardName();
+        if(this.cardData == null){
+            this.cardData =  FileManager.getInstance().cardData;
+        }
+
+        this.lblCategory.string = this.cardData[cardName].category;
+        this.lblSummary.string = this.cardData[cardName].summary;
+        this.lblCalc.string = this.cardData[cardName].calc;
+        this.lblDetail.string = this.cardData[cardName].detail;
+        this.lblExplanation.string = this.cardData[cardName].explanation;
+        this.lblHowToUse.string = this.cardData[cardName].how_to_use;
+
     }
     onSaveButton(){
-        if(this.block != null){
-            var comp =  this.block.title.getComponentInChildren(cc.Label);
-            comp.string = this.title.string;
 
-            var bodyComp = this.block.body.getComponentInChildren(cc.Label);
-            bodyComp.string = this.body.string;
-            
-            this.block.relationSymbol.getComponent(cc.Label).string = this.relationBox.string;
-        }
-        else if (this.group != null){
-
-        }
     }
     start () {
 

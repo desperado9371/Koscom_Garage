@@ -31,15 +31,28 @@ export default class Deck extends HandItem {
         
     }
 
-    init(nextItems: [HandItem]){
+    init(nextItems: HandItem[]){
         this.package = nextItems;
     }
     testInit(){
         this.package = new Array<HandItem>();
-        this.package.push(new Deck);
-        this.package.push(new Card);
-        this.package.push(new Card);
-        this.package.push(new Card);
+        var card = new Card();
+        card.init("RSI");
+        this.package.push(card);
+        
+        card = new Card();
+        card.init("MACD");
+        this.package.push(card);
+
+        card = new Card();
+        card.init("OBV");
+        this.package.push(card);
+
+        card = new Card();
+        card.init("Num");
+        this.package.push(card);
+
+
     }
 
     start () {

@@ -9,6 +9,7 @@ import HandItem from "./HandItem";
 import HandMAnager from "./HandManager";
 import BlockList from "./BlockList";
 import Block from "./Block";
+import AlgorithmManager from "./AlgorithmManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -19,6 +20,7 @@ export default class Card extends HandItem {
     lblCardName : cc.Label = null;
 
     blockList : BlockList = null;
+    cardName = "";
     
     getType(): string {
         return 'Card';
@@ -38,7 +40,11 @@ export default class Card extends HandItem {
     }
 
     init(name){
-        this.lblCardName = name;
+        this.cardName = name;
+        if(this.lblCardName!= null){
+            this.lblCardName.string = name;
+
+        }
     }
     testInit(){
         this.description = 'z';
@@ -73,21 +79,21 @@ export default class Card extends HandItem {
         this.createThreshold += delta.y;
         //console.log(this.createThreshold);
         
-        if(this.createThreshold > 50 && this.createdBlock == null){
-            this.createdBlock = this.createdBlock = BlockList.getInstance().addBlockWithEvent(event);
+        if(this.createThreshold > 25 && this.createdBlock == null){
+            this.createdBlock = this.createdBlock = AlgorithmManager.getInstance().addBlockWithEvent(event, this);
 
             //this.createThreshold = 0;
             //mouseDown = false;
             this.draggedUp = true;
             console.log("block created");
         }
-        else if(this.draggedUp && this.createThreshold < 50 && this.createdBlock != null){
+        else if(this.draggedUp && this.createThreshold < 25 && this.createdBlock != null){
             this.createdBlock.node.destroy();
             this.createdBlock = null;
             this.draggedUp = false;
             console.log("block destroied");
         }
-        else if(this.createThreshold < 50){
+        else if(this.createThreshold < 25){
             this.draggedUp = false;
         }
 
