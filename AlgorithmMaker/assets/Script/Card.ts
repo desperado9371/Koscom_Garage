@@ -10,6 +10,7 @@ import HandMAnager from "./HandManager";
 import BlockList from "./BlockList";
 import Block from "./Block";
 import AlgorithmManager from "./AlgorithmManager";
+import PropertyBox from "./PropertyBox";
 
 const {ccclass, property} = cc._decorator;
 
@@ -50,7 +51,9 @@ export default class Card extends HandItem {
         this.description = 'z';
     }
 
-
+    getCardName(){
+        return this.cardName;
+    }
 
 
     // LIFE-CYCLE CALLBACKS:
@@ -61,6 +64,7 @@ export default class Card extends HandItem {
     let mouseDown = false;
     //Record mouse click status when user clicks
     this.node.on(cc.Node.EventType.MOUSE_DOWN, (event)=>{
+        PropertyBox.getInstance().onCardClick(this);
         mouseDown = true;
     });
 

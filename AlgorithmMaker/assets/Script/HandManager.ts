@@ -78,8 +78,11 @@ export default class HandManager extends cc.Component {
     }
 
     displayPreviousHand(){
-        this.handIndex--;
-        this.displayHand();
+        if(this.handIndex > 0){
+            this.handIndex--;
+            this.displayHand();
+
+        }
     }
 
     displayNextHand(){

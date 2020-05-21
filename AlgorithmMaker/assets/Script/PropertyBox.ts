@@ -8,6 +8,7 @@
 import Block from "./Block";
 import BlockGroup from "./BlockGroup";
 import FileManager from "./FileManager";
+import Card from "./Card";
 
 const {ccclass, property} = cc._decorator;
 
@@ -40,10 +41,38 @@ export default class PropertyBox extends cc.Component {
     group : BlockGroup = null;
     // LIFE-CYCLE CALLBACKS:
     cardData : {} = null;
-    // onLoad () {}
+
+    static instance : PropertyBox = null;
+    static getInstance() : PropertyBox{
+
+        return PropertyBox.instance;
+    }
+    onLoad () {
+        PropertyBox.instance = this;
+    }
     onBlockClick(block : Block){
-        var cardName = block.getCardName();
-        if(cardName.toLowerCase() == 'num'){
+        this.lblCategory.node.parent.active = true;
+        var cardName = block.getCardName().toLowerCase();
+        if(cardName == 'num'){
+            return;
+        }
+        if(this.cardData == null){
+            this.cardData =  FileManager.getInstance().cardData;
+        }
+
+
+        this.lblCategory.string = this.cardData[cardName].category;
+        this.lblSummary.string = this.cardData[cardName].summary;
+        this.lblCalc.string = this.cardData[cardName].calc;
+        this.lblDetail.string = this.cardData[cardName].detail;
+        this.lblExplanation.string = this.cardData[cardName].explanation;
+        this.lblHowToUse.string = this.cardData[cardName].how_to_use;
+
+    }
+    onCardClick(card : Card){
+        this.lblCategory.node.parent.active = true;
+        var cardName = card.getCardName().toLowerCase();
+        if(cardName == 'num'){
             return;
         }
         if(this.cardData == null){
@@ -63,7 +92,7 @@ export default class PropertyBox extends cc.Component {
 
     }
     start () {
-
+        this.lblCategory.node.parent.active = false;
     }
 
     // update (dt) {}
