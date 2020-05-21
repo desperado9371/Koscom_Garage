@@ -37,19 +37,19 @@ export default class Deck extends HandItem {
     testInit(){
         this.package = new Array<HandItem>();
         var card = new Card();
-        card.init("RSI");
+        card.dataInit("RSI");
         this.package.push(card);
         
         card = new Card();
-        card.init("MACD");
+        card.dataInit("MACD");
         this.package.push(card);
 
         card = new Card();
-        card.init("OBV");
+        card.dataInit("OBV");
         this.package.push(card);
 
         card = new Card();
-        card.init("Num");
+        card.dataInit("Num");
         this.package.push(card);
 
 
