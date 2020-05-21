@@ -11,12 +11,15 @@ import BlockList from "./BlockList";
 import Block from "./Block";
 import AlgorithmManager from "./AlgorithmManager";
 import PropertyBox from "./PropertyBox";
+import FileManager from "./FileManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Card extends HandItem {
 
+    @property(cc.Sprite)
+    imgCardImage : cc.Sprite = null;
     @property(cc.Label)
     lblCardName : cc.Label = null;
 
@@ -39,13 +42,38 @@ export default class Card extends HandItem {
         
         return;
     }
-
+    dataInit(name){
+        this.cardName = name;
+    }
     init(name){
+        
         this.cardName = name;
         if(this.lblCardName!= null){
             this.lblCardName.string = name;
 
         }
+
+        var cardData = FileManager.getInstance().getCardData(this.cardName.toLowerCase());
+        if(cardData == null){
+            this.imgCardImage.node.active = false;
+            return;
+        }
+        this.imgCardImage.node.active = true;
+        var category : string = cardData.category;
+        if(category.includes('거래량')){
+            this.imgCardImage.spriteFrame = FileManager.getInstance().cardVolume;
+        }
+        else if(category.includes('추세')){
+            this.imgCardImage.spriteFrame = FileManager.getInstance().cardTrend;
+            
+        }
+        else if(category.includes('거래량')){
+            
+        }
+        else if(category.includes('거래량')){
+            
+        }
+        
     }
     testInit(){
         this.description = 'z';

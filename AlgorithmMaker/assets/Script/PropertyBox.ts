@@ -14,7 +14,8 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class PropertyBox extends cc.Component {
-    
+    @property(Card)
+    insideCard : Card = null;
     @property(cc.Label)
     lblCategory : cc.Label = null;
     
@@ -61,6 +62,8 @@ export default class PropertyBox extends cc.Component {
         }
 
 
+
+        this.insideCard.init(cardName);
         this.lblCategory.string = this.cardData[cardName].category;
         this.lblSummary.string = this.cardData[cardName].summary;
         this.lblCalc.string = this.cardData[cardName].calc;
@@ -79,7 +82,7 @@ export default class PropertyBox extends cc.Component {
             this.cardData =  FileManager.getInstance().cardData;
         }
 
-
+        this.insideCard.init(cardName);
         this.lblCategory.string = this.cardData[cardName].category;
         this.lblSummary.string = this.cardData[cardName].summary;
         this.lblCalc.string = this.cardData[cardName].calc;
