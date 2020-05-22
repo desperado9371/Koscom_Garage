@@ -18,9 +18,22 @@ export default class FileManager extends cc.Component {
     @property(cc.TextAsset)
     cardDataFile : cc.TextAsset = null;
     // LIFE-CYCLE CALLBACKS:
-    cardData : {} = {};
-    getCardData(){
+    
+    @property(cc.SpriteFrame)
+    cardMomentum : cc.SpriteFrame = null;
 
+    @property(cc.SpriteFrame)
+    cardPrice : cc.SpriteFrame = null;
+
+    @property(cc.SpriteFrame)
+    cardTrend : cc.SpriteFrame = null;
+    
+    @property(cc.SpriteFrame)
+    cardVolume : cc.SpriteFrame = null;
+
+    cardData : {} = {};
+    getCardData(cardName : string){
+        return this.cardData[cardName];
     }
     onLoad () {
         if(FileManager.instance === null){

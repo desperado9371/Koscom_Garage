@@ -7,7 +7,7 @@
 
 import Block from "./Block";
 import LineList from "./LineList";
-import { LinkedList } from "./Collections";
+import LinkedList from "./Collections/LinkedList"
 import BlockGroup from "./BlockGroup";
 
 
