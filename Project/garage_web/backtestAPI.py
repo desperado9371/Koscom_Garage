@@ -301,13 +301,16 @@ class BacktestAPI:
                              average_price,
                              krw_balance + (btc_balance) * float(bitcoin['close'])))
             else:
-                print("주문실패 : 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
+                print("주문실패(매수) : KRW 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
 
         elif order_type == 'sell':
             if quantity <= btc_balance:
                 krw_balance = krw_balance + (price * quantity)
                 btc_balance = btc_balance - quantity
-                average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
+                if btc_balance == 0:
+                    average_price = 0
+                else:
+                    average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
                 print("주문 성공 : 판매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
                       format(bitcoin_dt['timestamp'][dt_index],
                              float(bitcoin['close']),
@@ -316,7 +319,7 @@ class BacktestAPI:
                              average_price,
                              krw_balance + (btc_balance) * float(bitcoin['close'])))
             else:
-                print("주문실패 : 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
+                print("주문실패(매도) : BTC 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
         if average_price ==0:
             return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, 0
         else:
@@ -383,7 +386,10 @@ class BacktestAPI:
         print("나의 비트코인 평균단가: {}원".format(avg_prc))
         print("")
         print("{}일 현재 비트코인 시세 : {} 원/BTC".format(df['timestamp'][len(df)-1][:10], df['close'][len(df)-1]))
-        fin_profit = (df['close'][len(df)-1]-avg_prc)/avg_prc*100
+        if avg_prc == 0 :
+            fin_profit = 0
+        else:
+            fin_profit = (df['close'][len(df)-1]-avg_prc)/avg_prc*100
         print("수익률 : {}%".format( fin_profit   ))
         print("")
         print("총 평가잔고 : {}원".format(krw_bal + (btc_bal * df['close'][len(df)-1])))
