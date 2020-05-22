@@ -142,7 +142,7 @@ h1 {
 }
 
 h2 {
-    font-size: 30px;
+    font-size: 28px;
 }
 
 h3 {
@@ -3211,9 +3211,13 @@ section {
 .overview-box .text h2 {
     font-weight: 400;
     color: #6C63FF;
-    font-size: 27px;
+    font-size: 25px;
     line-height: 1;
     margin-bottom: 5px;
+}
+.overview-box .text h4 {
+    font-weight: 400;
+    color: #6C63FF;
 }
 
 .overview-box .text span {

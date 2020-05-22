@@ -312,19 +312,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="overview-item overview-item--c3">
-                                        <div class="overview__inner">
-                                            <div class="overview-box clearfix">
-                                                <div class="text">
-                                                    <h2>거래 승률 -%</h2>
-                                                    <span>승 : -건<br>
-                                                    패 : -건</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="overview-item overview-item--c4">
                                         <div class="overview__inner">
@@ -334,6 +322,24 @@
                                                     <span>{{st_date|safe}}~{{end_date|safe}}</span><br>
                                                     <h2>거래 횟수 {{trade_num|safe}}건 </h2>
                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="overview-item overview-item--c3">
+                                        <div class="overview__inner">
+                                            <div class="overview-box clearfix">
+                                                <div class="text">
+<!--                                                    <h2>거래 승률 -%</h2>-->
+<!--                                                    <span>승 : -건<br>-->
+<!--                                                    패 : -건</span>-->
+                                                    <h4>원화 잔고: {{krw_bal|safe}}원</h4>
+                                                    <h4>BTC 잔고: {{btc_bal|safe}}BTC</h4>
+                                                    <h4>평가 잔고: {{fin_bal|safe}}원</h4>
+                                                    <h4>평균 단가: {{avg_prc|safe}}원</h4>
+                                                    <h4>금일 종가: {{cur_prc|safe}}원</h4>
                                                 </div>
                                             </div>
                                         </div>

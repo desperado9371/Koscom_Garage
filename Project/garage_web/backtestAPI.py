@@ -391,4 +391,4 @@ class BacktestAPI:
         print("자산증감률 : {}%".format(fin_increase))
 
         #print(trade_list)
-        return trade_list, krw_bal + (btc_bal * df['close'][len(df)-1]), fin_increase, fin_profit
+        return trade_list, krw_bal + (btc_bal * df['close'][len(df)-1]), fin_increase, fin_profit, krw_bal, btc_bal, avg_prc
