@@ -62,7 +62,7 @@ def Cocos(ws):
         if msg:
             time.sleep(1)
 
-@sockets.route('/BackServer')
+@sockets.route('/BackServer_Day')
 def BackServer(ws):
     while not ws.closed:
         msg = ws.receive()
@@ -77,6 +77,31 @@ def BackServer(ws):
             print("srt_date: "+Key[2])
             print("end_date: "+Key[3])
             Result = FetDtPrc.FetDtPrc(Key[1],Key[2],Key[3])
+            print("[FET]result:"+Result)
+            ws.send(Result)
+        else :
+            ws.send("잘못된 패킷입니다")
+        #Echo
+        if msg:
+            time.sleep(1)
+
+@sockets.route('/BackServer_Hr')
+def BackServer(ws):
+    while not ws.closed:
+        msg = ws.receive()
+        print(f'i received:{msg}')
+        Key = str(msg).split('|')
+        print("key: "+Key[0])
+        
+        #Indicators 수신시 지표정보 Json 전송
+        if Key[0] == 'load':
+            print("Start load!!!!")
+            print("market: "+Key[1])
+            print("srt_date: "+Key[2])
+            print("end_date: "+Key[3])
+            print("srt_time: "+Key[4])
+            print("end_time: "+Key[5])
+            Result = FetDtPrc.FetDtPrc(Key[1],Key[2],Key[3],Key[4],Key[5])
             print("[FET]result:"+Result)
             ws.send(Result)
         else :
