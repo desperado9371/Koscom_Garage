@@ -82,12 +82,23 @@ def test(request):
     # with open('Define_Algo2.json', 'r') as f:
     #     json_data = json.load(f)
 
-    # ws = create_connection("ws://52.79.241.205:80/Cocos")
-    # ws.send("load|test_user|all")
-    # json_data = ws.recv()
-    # json_data = eval(json_data)
-    # json_data = eval(json_data['items'][0]['buy_algo'])
-
+    username = request.COOKIES.get('username')
+    ws = create_connection("ws://52.79.241.205:80/Cocos")
+    ws.send("load|{}|all".format(username))
+    json_data = ws.recv()
+    json_data = eval(json_data)
+    print("session: {}".format(request.user))
+    print("cookies: {}".format(username))
+    if json_data['items'][-1]['buy_algo'] == None:
+        json_data1 = ''
+    else:
+        json_data1 = eval(json_data['items'][-1]['buy_algo'])
+    if json_data['items'][-1]['sell_algo'] == None:
+        json_data2 = ''
+    else:
+        json_data2 = eval(json_data['items'][-1]['sell_algo'])
+    print(json_data1)
+    print(json_data2)
     with open('Define_Algo.json', 'r') as f:
         json_data_b = json.load(f)
     with open('Define_Algo2.json', 'r') as f:
@@ -110,17 +121,20 @@ def test(request):
     # df = Set_Indicator(df,json_data)
 
     # result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
-    result = Parsing_Main(Prc_history, json_data_b, json_data_s)
+    result = Parsing_Main(Prc_history, json_data1, json_data2)
     trade_list = []
     final_balance = init_krw_bal
     final_increase = 0
     final_profit = 0
+    krw_bal = 0;
+    btc_bal = 0;
+    avg_prc = 0;
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
     else:
         date_list = np.array(result).T[0]
         type_list = np.array(result).T[1]
-        trade_list, final_balance, final_increase, final_profit = backtestapi.execute_backtest(init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list)
+        trade_list, final_balance, final_increase, final_profit, krw_bal, btc_bal, avg_prc = backtestapi.execute_backtest(init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list)
         final_increase = "%.2f" % final_increase
         final_profit = "%.2f" % final_profit
 
@@ -133,6 +147,41 @@ def test(request):
             bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
     else:
         bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
+
+    krw_bal = int(krw_bal)
+    krw_bal = str(krw_bal)
+    if len(krw_bal) > 6:
+        krw_bal = krw_bal[0:-6]+','+krw_bal[-6:-3] + ',' + krw_bal[-3:]
+    elif len(krw_bal) > 3:
+        krw_bal = krw_bal[0:-3] + ',' + krw_bal[-3:]
+
+    avg_prc = int(avg_prc)
+    avg_prc = str(avg_prc)
+    if len(avg_prc) > 6:
+        avg_prc = avg_prc[0:-6] + ',' + avg_prc[-6:-3] + ',' + avg_prc[-3:]
+    elif len(avg_prc) > 3:
+        avg_prc = avg_prc[0:-3] + ',' + avg_prc[-3:]
+
+    cur_prc = int(closes[len(closes)-1])
+    cur_prc = str(cur_prc)
+    if len(cur_prc) > 6:
+        cur_prc = cur_prc[0:-6] + ',' + cur_prc[-6:-3] + ',' + cur_prc[-3:]
+    elif len(cur_prc) > 3:
+        cur_prc = cur_prc[0:-3] + ',' + cur_prc[-3:]
+
+    fin_bal = int(final_balance)
+    fin_bal = str(fin_bal)
+    if len(fin_bal) > 6:
+        fin_bal = fin_bal[0:-6] + ',' + fin_bal[-6:-3] + ',' + fin_bal[-3:]
+    elif len(fin_bal) > 3:
+        fin_bal = fin_bal[0:-3] + ',' + fin_bal[-3:]
+
+    init_bal = int(init_krw_bal)
+    init_bal = str(init_bal)
+    if len(init_bal) > 6:
+        init_bal = init_bal[0:-6] + ',' + init_bal[-6:-3] + ',' + init_bal[-3:]
+    elif len(init_bal) > 3:
+        init_bal = init_bal[0:-3] + ',' + init_bal[-3:]
 #########################################################
 
     # date_list = ['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20']
@@ -162,14 +211,18 @@ def test(request):
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
                                                 'trades': trade_list,
                                                 'datas': data,
-                                                'init_bal': init_krw_bal,
-                                                'fin_bal': int(final_balance),
+                                                'init_bal': init_bal,
+                                                'fin_bal': fin_bal,
                                                 'bal_diff': bal_diff,
                                                 'fin_prf': final_profit,
                                                 'fin_inc': final_increase,
                                                 'st_date': start_date,
                                                 'end_date': end_date,
-                                                'trade_num': trade_num})
+                                                'trade_num': trade_num,
+                                                'krw_bal': krw_bal,
+                                                'btc_bal': btc_bal,
+                                                'avg_prc': avg_prc,
+                                                'cur_prc': cur_prc})
 
 def home(request):
     """

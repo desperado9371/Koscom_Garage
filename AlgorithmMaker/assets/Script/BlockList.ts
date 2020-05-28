@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import Block from "./Block";
+import Card from "./Card";
 
 const {ccclass, property} = cc._decorator;
 
@@ -47,7 +48,7 @@ export default class BlockList extends cc.Component {
         
     }
 
-    addBlockWithEvent(event): Block{
+    addBlockWithEvent(event, cardInfo :Card): Block{
         var blk = cc.instantiate(this.block);
         var comp = blk.getComponent(Block);
         var eventLoc = event.getLocation();
@@ -56,7 +57,7 @@ export default class BlockList extends cc.Component {
         var loc = this.node.convertToNodeSpaceAR(new cc.Vec2(eventLoc.x, eventLoc.y));
         blk.setParent(this.node);
         console.log("NodeSpace " + loc+ blk.position);
-        comp.initWithRand();
+        comp.init(0, 1, cardInfo.lblCardName.string, "0", false);
         comp.mouseRemoteDownEventHandler(event, loc.x, loc.y);
         //blk.setPosition(loc.x, loc.y, 0);
         //console.log(blk.position);

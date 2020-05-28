@@ -1,0 +1,4 @@
+id	card_name	category	summary	detail	calc	explanation	how_to_use
+1	OBV	거래량지표	"계산 방법 가격이 오른 날의 거래량은 더하고, 가격이 떨어진 날의 거래량은 뺀 지표"				
+2	MACD	추세지표	"계산 방법 단기, 장기 EMA의 차이(단기-장기)|(일반적 기준 : 단기:12일, 장기: 26일)"				
+3	RSI	추세지표	계산 방법 주가상승폭 n일 평균이 주가변화폭의 n일 평균에서 차지하는 비율|(일반적 기준 : 14일)				

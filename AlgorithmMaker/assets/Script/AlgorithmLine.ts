@@ -7,7 +7,7 @@
 
 import Block from "./Block";
 import LineList from "./LineList";
-import { LinkedList } from "./Collections";
+import LinkedList from "./Collections/LinkedList"
 import BlockGroup from "./BlockGroup";
 
 
@@ -30,12 +30,15 @@ export default class AlgorithmLine extends cc.Component {
     @property(cc.Node)
     emptyGroup: cc.Node = null;
 
+    @property(cc.Node)
+    bodyBackground : cc.Node = null;
+
 
 
     static ySpacing = 240;
     static xSpacing = 50;
-    static xThreshold = 500;
-    static baseHeight = 240;
+    static xThreshold = 800;
+    static baseHeight = 340;
 
     groupList : LinkedList<BlockGroup> = null;
     toJson(){
@@ -72,22 +75,6 @@ export default class AlgorithmLine extends cc.Component {
         var xPos = 0;
         var yPos = 0;
         
-        //first group position
-        /*if(lastGroup == null){
-            xPos = 20;
-            yPos = -34;
-        }
-        else{
-            
-            xPos = lastGroup.node.position.x + lastGroup.filledGroup.width + AlgorithmLine.xSpacing;
-            yPos = lastGroup.node.position.y;
-            
-            if(xPos > AlgorithmLine.xThreshold){
-                yPos -= AlgorithmLine.ySpacing;
-                xPos = 20;
-            }
-        }*/
-        
         this.groupList.add(comp);
         newNode.setPosition(xPos, yPos);
         newNode.active = true;
@@ -98,6 +85,10 @@ export default class AlgorithmLine extends cc.Component {
     resizeLine(){
         var firstGroup = this.groupList.first();
         var lastGroup = this.groupList.last();
+
+        if(firstGroup == null || lastGroup == null){
+            return;
+        }
 
         var yDiff = (firstGroup.node.position.y - lastGroup.node.position.y) /  AlgorithmLine.ySpacing;
         this.node.height = AlgorithmLine.baseHeight + AlgorithmLine.ySpacing * yDiff;
@@ -113,18 +104,18 @@ export default class AlgorithmLine extends cc.Component {
         for(var k = 0; k < this.groupList.size(); k++){
             var elem = this.groupList.elementAtIndex(k);
             if(prevGroup == null){
-                xPos = 20;
-                yPos = -34;
+                xPos = 110;
+                yPos = -103;
             }
             else{
                 
                 xPos = prevGroup.node.position.x + prevGroup.filledGroup.width + AlgorithmLine.xSpacing;
                 yPos = prevGroup.node.position.y;
-                
+                AlgorithmLine.xThreshold = this.group.width/2;
                 if(xPos > AlgorithmLine.xThreshold){
                     
                     yPos -= AlgorithmLine.ySpacing;
-                    xPos = 20;
+                    xPos = 110;
                 }
             }
             elem.node.setPosition(xPos, yPos);
@@ -141,6 +132,7 @@ export default class AlgorithmLine extends cc.Component {
     }
     onPlusButtonClick(){
         this.group.active = true;
+        this.bodyBackground.color = cc.color(255,255,255,255);
         this.plusButton.active = false;
         this.addEmptyGroup();
     }
@@ -188,6 +180,7 @@ export default class AlgorithmLine extends cc.Component {
     update (dt) {
         var cnt = 0;
         this.repositionGroups();
+        this.resizeLine();
         for(var k = 0; k < this.groupList.size(); k++){
             var elem = this.groupList.elementAtIndex(k);
             if(elem.targetBlock == null){

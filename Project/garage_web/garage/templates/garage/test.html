@@ -233,6 +233,35 @@
       }
     </script>
 
+<style>
+.tooltip2 {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip2 .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip2:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
+
 </head>
 
 <body class="animsition">
@@ -280,6 +309,17 @@
                         <div class="col-lg-12">
                             <div class="overview-wrap">
                                 <h2 class="title-2">백테스팅 결과</h2>
+                                <div class="tooltip2">추가 개발 진행 사항
+                                    <span class="tooltiptext">
+                                        기간 설정기능<br>
+                                        초기자본 설정기능<br>
+                                        거래 승률 계산<br>
+                                        알고리즘 선택기능<br>
+                                        사용한 지표 그래프<br>
+                                        수익률 및 자산 그래프<br>
+
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -312,19 +352,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="overview-item overview-item--c3">
-                                        <div class="overview__inner">
-                                            <div class="overview-box clearfix">
-                                                <div class="text">
-                                                    <h2>거래 승률 -%</h2>
-                                                    <span>승 : -건<br>
-                                                    패 : -건</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="overview-item overview-item--c4">
                                         <div class="overview__inner">
@@ -334,6 +362,24 @@
                                                     <span>{{st_date|safe}}~{{end_date|safe}}</span><br>
                                                     <h2>거래 횟수 {{trade_num|safe}}건 </h2>
                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="overview-item overview-item--c3">
+                                        <div class="overview__inner">
+                                            <div class="overview-box clearfix">
+                                                <div class="text">
+<!--                                                    <h2>거래 승률 -%</h2>-->
+<!--                                                    <span>승 : -건<br>-->
+<!--                                                    패 : -건</span>-->
+                                                    <h4>원화 잔고: {{krw_bal|safe}}원</h4>
+                                                    <h4>BTC 잔고: {{btc_bal|safe}}BTC</h4>
+                                                    <h4>평가 잔고: {{fin_bal|safe}}원</h4>
+                                                    <h4>평균 단가: {{avg_prc|safe}}원</h4>
+                                                    <h4>금일 종가: {{cur_prc|safe}}원</h4>
                                                 </div>
                                             </div>
                                         </div>
