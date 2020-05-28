@@ -3,6 +3,8 @@
 		"market": "upbit",
 		"srt_date": "20200102",
 		"end_date": "20200130",
+		"srt_time": "09",
+		"end_time": "23",
 		"buysell": "sell",
 		"block1": {
 			"min": "1",
