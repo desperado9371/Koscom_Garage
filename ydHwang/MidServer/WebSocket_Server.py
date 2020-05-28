@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 from flask import Flask
@@ -13,7 +13,7 @@ from geventwebsocket.handler import WebSocketHandler
 import json
 import InsAlgoJson
 import FetAlgoJson
-import FetDtPrc
+import FetPrc
 
 
 app = Flask(__name__)
@@ -76,7 +76,7 @@ def BackServer(ws):
             print("market: "+Key[1])
             print("srt_date: "+Key[2])
             print("end_date: "+Key[3])
-            Result = FetDtPrc.FetDtPrc(Key[1],Key[2],Key[3])
+            Result = FetPrc.FetDtPrc(Key[1],Key[2],Key[3])
             print("[FET]result:"+Result)
             ws.send(Result)
         else :
@@ -101,7 +101,7 @@ def BackServer(ws):
             print("end_date: "+Key[3])
             print("srt_time: "+Key[4])
             print("end_time: "+Key[5])
-            Result = FetDtPrc.FetDtPrc(Key[1],Key[2],Key[3],Key[4],Key[5])
+            Result = FetPrc.FetHrPrc(Key[1],Key[2],Key[3],Key[4],Key[5])
             print("[FET]result:"+Result)
             ws.send(Result)
         else :
@@ -114,4 +114,10 @@ if __name__ == "__main__":
     server = pywsgi.WSGIServer(('0.0.0.0',80),application=app,handler_class=WebSocketHandler)
     print('server started')
     server.serve_forever()
+
+
+# In[ ]:
+
+
+
 

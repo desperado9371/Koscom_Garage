@@ -1,6 +1,7 @@
 {
 	"algo": {
 		"market": "upbit",
+		"hourday": "hour",
 		"srt_date": "20200102",
 		"end_date": "20200130",
 		"srt_time": "09",
