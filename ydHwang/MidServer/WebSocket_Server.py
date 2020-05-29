@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 from flask import Flask
@@ -13,7 +13,8 @@ from geventwebsocket.handler import WebSocketHandler
 import json
 import InsAlgoJson
 import FetAlgoJson
-import FetDtPrc
+import FetPrc
+from SaveMem import Save_Mem
 
 
 app = Flask(__name__)
@@ -63,7 +64,7 @@ def Cocos(ws):
             time.sleep(1)
 
 @sockets.route('/BackServer_Day')
-def BackServer(ws):
+def BackServer_FetDay(ws):
     while not ws.closed:
         msg = ws.receive()
         print(f'i received:{msg}')
@@ -76,7 +77,7 @@ def BackServer(ws):
             print("market: "+Key[1])
             print("srt_date: "+Key[2])
             print("end_date: "+Key[3])
-            Result = FetDtPrc.FetDtPrc(Key[1],Key[2],Key[3])
+            Result = FetPrc.FetDtPrc(Key[1],Key[2],Key[3])
             print("[FET]result:"+Result)
             ws.send(Result)
         else :
@@ -84,9 +85,9 @@ def BackServer(ws):
         #Echo
         if msg:
             time.sleep(1)
-
+    
 @sockets.route('/BackServer_Hr')
-def BackServer(ws):
+def BackServer_FetHr(ws):
     while not ws.closed:
         msg = ws.receive()
         print(f'i received:{msg}')
@@ -101,7 +102,7 @@ def BackServer(ws):
             print("end_date: "+Key[3])
             print("srt_time: "+Key[4])
             print("end_time: "+Key[5])
-            Result = FetDtPrc.FetDtPrc(Key[1],Key[2],Key[3],Key[4],Key[5])
+            Result = FetPrc.FetHrPrc(Key[1],Key[2],Key[3],Key[4],Key[5])
             print("[FET]result:"+Result)
             ws.send(Result)
         else :
@@ -109,9 +110,43 @@ def BackServer(ws):
         #Echo
         if msg:
             time.sleep(1)
+
+@sockets.route('/JoinMem')
+def JoinMem(ws):
+    while not ws.closed:
+        msg = ws.receive()
+        print(f'i received:{msg}')
+        Key = str(msg).split('|')
+        print("key: "+Key[0])
         
+        #Indicators 수신시 지표정보 Json 전송
+        if Key[0] == 'save':
+            print("Start save!!!!")
+            print("id: "+Key[1])
+            print("email: "+Key[2])
+            Result = Save_Mem(Key[1],Key[2])
+            print("[Save]result:"+Result)
+            ws.send(Result)
+        else :
+            ws.send("잘못된 패킷입니다")
+        #Echo
+        if msg:
+            time.sleep(1)
+            
 if __name__ == "__main__":
     server = pywsgi.WSGIServer(('0.0.0.0',80),application=app,handler_class=WebSocketHandler)
     print('server started')
     server.serve_forever()
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 

@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[13]:
+# In[37]:
 
 
 import asyncio
@@ -138,7 +138,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
         
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo,bns_tp):
+def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
     result_datelist = []
     #for row in range(60, 70):
     for row in range(len(Prc_history)):
@@ -178,16 +178,19 @@ def Fet_Algo(Prc_history, algo,bns_tp):
         if block_meet_condtion == 1:
             # 충족시 일자를 리스트에 추가
             print("이날 알고리즘은 완벽하게 충족")
-            result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
+            if hourday_tp == 'day':#일봉인 경우
+                result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
+            else :#시간봉인경우
+                result_datelist.append([Prc_history['timestamp'][row], bns_tp])
 
     print(result_datelist)
     return result_datelist
 
-
+#일봉 기준 시세 가져오기
 def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
     print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     
-    ws = create_connection('ws://52.79.241.205:80/BackServer')
+    ws = create_connection('ws://52.79.241.205:80/BackServer_Day')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date
     print(order_packet)
     if ws.connected:
@@ -204,20 +207,54 @@ def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
 
     return dataframe_result
 
-def Parsing_Main(Prc_history, buy_strategy='',sell_strategy = ''):  
+#시간봉 기준 시세 가져오기
+def Get_HrPrc(market='upbit',str_date='0',end_date='99999999', srt_time = '00', end_time='24'):
+    print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
+    print('srt_time: '+srt_time+' end_time: '+end_time)
+    
+    ws = create_connection('ws://52.79.241.205:80/BackServer_Hr')
+    order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date+'|'+srt_time+'|'+end_time
+    print(order_packet)
+    if ws.connected:
+        ws.send(order_packet)
+        print()
+        result = ws.recv()
+        print(f"client received:{result}")
+        ws.close()
+    if not result :
+        print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
+    else:
+        json_data=json.loads(result)    
+        dataframe_result = pd.DataFrame(list(json_data),columns=['timestamp','time','open','close','high','low','volume'])
+
+    return dataframe_result
+
+# 1. 일봉/시간봉에 따라 시세 가져옴
+# 2. 매수전략 충족리스트 받아옴
+# 3. 매도전략 충족리스트 받아옴
+def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='00000000',end_date='99999999',srt_time='00',end_time='23',hourday_tp='day'):  
     buy_result = []
     sell_result = []
     final_result= []
+    
+    # 기간시세 가져옴
+    if hourday_tp =='day':#일봉일 경우    
+        Prc_history = Get_DtPrc(market,srt_date,end_date)
+    else : #시간봉일 경우 
+        Prc_history = Get_HrPrc(market,srt_date,end_date,srt_time,end_time)
+        Prc_history['timestamp'] = Prc_history[['timestamp','time']].apply(lambda x:'T'.join(x),axis=1)
+    
+    print(Prc_history)
     print('매수전략 시작')
     if buy_strategy =='':
         print("매수전략 없음")
     else :
-        buy_result = Fet_Algo(Prc_history,buy_strategy,'buy')
+        buy_result = Fet_Algo(Prc_history,buy_strategy,'buy',hourday_tp)
     
     if sell_strategy =='':
         print("매도전략 없음")
     else :
-        sell_result = Fet_Algo(Prc_history,sell_strategy,'sell')
+        sell_result = Fet_Algo(Prc_history,sell_strategy,'sell',hourday_tp)
     
     print('매수리스트')
     print(buy_result)
@@ -231,38 +268,31 @@ def Parsing_Main(Prc_history, buy_strategy='',sell_strategy = ''):
     
     
 if __name__ == '__main__':
-    #backtest = BacktestAPI()
     data = []
     result = []
     with open('Define_Algo.json', 'r') as f:
         json_data = json.load(f)
     market = json_data['algo']['market']
-    str_date = json_data['algo']['srt_date']
+    hourday_tp = json_data['algo']['hourday']
+    srt_date = json_data['algo']['srt_date']
     end_date = json_data['algo']['end_date']
+    srt_time = json_data['algo']['srt_time']
+    end_time = json_data['algo']['end_time']
     bns_tp = json_data['algo']['buysell']
-    Prc_history = Get_DtPrc(market,str_date,end_date)
     
+
     # Parsing 함수
-    # 첫번째 파라미터 = Prc_history: 기간동안시세데이터
-    # 두번째 파라미터 = buy_strategy: 매수전략
-    # 세번째 파라미터 = sell_strategy: 매도전략
-    result = Parsing_Main(Prc_history,json_data,json_data)
+    # 1번째 파라미터 = buy_strategy: 매수전략
+    # 2번째 파라미터 = sell_strategy: 매도전략
+    # 3번째 파라미터 = marcket 거래소
+    # 4번째 파라미터 = srt_date 시작일
+    # 5번째 파라미터 = end_date 종료일
+    # 6번째 파라미터 = srt_time 시작시간
+    # 6번째 파라미터 = srt_time 종료시간
+    # 6번째 파라미터 = srt_time 시간봉/일봉
+    result = Parsing_Main(json_data,json_data,market,srt_date,end_date,srt_time,end_time,hourday_tp)
     
     
-    #시세데이터 get
-#     df = get_price_data('upbit','1d')
-#     print(df)
-    #df = Set_Indicator(df,json_data)
-    
-    
-#     result= Fet_Algo(Prc_history,json_data,bns_tp)
-#     if not result:
-#         print("해당 조건에 충족하는 주문일이 없습니다.")
-#     else:
-#         date_list = np.array(result).T[0]
-#         type_list = np.array(result).T[1]
-#         print(date_list)
-#         backtest.execute_backtest(date_list=date_list,type_list=type_list)
 
 
         
