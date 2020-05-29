@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[24]:
+# In[25]:
 
 
 import glob
@@ -49,7 +49,7 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     
     try:
         if market == 'upbit' and srt_date != end_date:
-            query = 'SELECT * FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s                union SELECT * FROM history_hr_prc_upbit WHERE base_dt > %s and base_dt < %s                union SELECT * FROM history_hr_prc_upbit WHERE base_dt = %s and base_time <= %s'
+            query = 'SELECT base_dt,base_time,coin_type,open_price,close_price,high_price,low_price FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s                union SELECT base_dt,base_time,coin_type,open_price,close_price,high_price,low_price FROM history_hr_prc_upbit WHERE base_dt > %s and base_dt < %s                union SELECT base_dt,base_time,coin_type,open_price,close_price,high_price,low_price FROM history_hr_prc_upbit WHERE base_dt = %s and base_time <= %s'
             db_cursor.execute(query,(srt_date,srt_time,srt_date,end_date,end_date,end_time))
             data = db_cursor.fetchall()  
         elif market == 'upbit' and srt_date == end_date:
