@@ -287,6 +287,8 @@ def signup(request):
                 username=request.POST["username"], password=request.POST["password1"], email=request.POST["email"])
             # 해당 유저로 로그인 처리
             auth.login(request, user)
+            ws = create_connection("ws://52.79.241.205:80/JoinMem")
+            ws.send("save|{}|{}".format(user.username, user.email))
             response = redirect('/')
             response.set_cookie('username', request.POST["username"])
             # print("login as "+username)
@@ -494,6 +496,8 @@ def rsi(df, n=14):
                                              n=n)
     df['rsi'] = indicator_rsi.rsi()
     return df
+
+
 
 
 def bollinger_band(df, n=20, ndev=2):
