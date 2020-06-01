@@ -14,7 +14,7 @@ import json
 import InsAlgoJson
 import FetAlgoJson
 import FetPrc
-from SaveMem import Save_Mem
+from ControlMem import InsMem,SelMemTutorial,UpdTutorial
 
 
 app = Flask(__name__)
@@ -124,8 +124,35 @@ def JoinMem(ws):
             print("Start save!!!!")
             print("id: "+Key[1])
             print("email: "+Key[2])
-            Result = Save_Mem(Key[1],Key[2])
+            Result = InsMem(Key[1],Key[2])
             print("[Save]result:"+Result)
+            ws.send(Result)
+        else :
+            ws.send("잘못된 패킷입니다")
+        #Echo
+        if msg:
+            time.sleep(1)
+
+@sockets.route('/ControlMem')
+def ControlMem(ws):
+    while not ws.closed:
+        msg = ws.receive()
+        print(f'i received:{msg}')
+        Key = str(msg).split('|')
+        print("key: "+Key[0])
+        
+        #Indicators 수신시 지표정보 Json 전송
+        if Key[0] == 'load':
+            print("load!!!!")
+            print("id: "+Key[1])
+            Result = SelMemTutorial(Key[1])
+            print("[load]result:"+Result)
+            ws.send(Result)
+        elif Key[0] == 'Update':
+            print("Update!!!!")
+            print("id: "+Key[1])
+            Result = UpdTutorial(Key[1])
+            print("[Update]result:"+Result)
             ws.send(Result)
         else :
             ws.send("잘못된 패킷입니다")
