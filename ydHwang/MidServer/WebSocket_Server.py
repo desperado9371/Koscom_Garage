@@ -148,7 +148,7 @@ def ControlMem(ws):
             Result = SelMemTutorial(Key[1])
             print("[load]result:"+Result)
             ws.send(Result)
-        elif Key[0] == 'Update':
+        elif Key[0] == 'update':
             print("Update!!!!")
             print("id: "+Key[1])
             Result = UpdTutorial(Key[1])
