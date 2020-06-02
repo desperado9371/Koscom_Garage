@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[37]:
+# In[38]:
 
 
 import asyncio
@@ -287,9 +287,9 @@ if __name__ == '__main__':
     # 3번째 파라미터 = marcket 거래소
     # 4번째 파라미터 = srt_date 시작일
     # 5번째 파라미터 = end_date 종료일
-    # 6번째 파라미터 = srt_time 시작시간
-    # 6번째 파라미터 = srt_time 종료시간
-    # 6번째 파라미터 = srt_time 시간봉/일봉
+    # 6번째 파라미터 = srt_time시작시간
+    # 7번째 파라미터 = end_time종료시간
+    # 8번째 파라미터 = hourday_tp 시간봉/일봉
     result = Parsing_Main(json_data,json_data,market,srt_date,end_date,srt_time,end_time,hourday_tp)
     
     
