@@ -25,7 +25,7 @@ def InsAlgoToDB(user_id,algo_name,buy_algo ='',sell_algo=''):
 #     #query = "INSERT INTO algo() VALUES({},'{}','{}','{}')".format()
     try:
         print(user_id)
-        query = 'SELECT COUNT(*) FROM algo WHERE id = %s'
+        query = 'SELECT ifnull(max(algo_seq),0) FROM algo WHERE id = %s'
         db_cursor.execute(query,(user_id,))
         seq = db_cursor.fetchone()[0]
         seq = int(seq)+1
