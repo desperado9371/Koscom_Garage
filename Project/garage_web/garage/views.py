@@ -233,6 +233,14 @@ def home(request):
     """
     return render(request, 'garage/index.html', {})
 
+def intro(request):
+    """
+    intro페이지 로드
+
+    :param request:
+    :return:
+    """
+    return render(request, 'garage/intro.html', {})
 
 def mypage(request):
 
