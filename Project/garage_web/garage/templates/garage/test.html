@@ -18,10 +18,22 @@
 
     <!-- Bootstrap CSS-->
     <link href="{% static 'garage/test/vendor/test_bootstrap.min.css' %}" rel="stylesheet" media="all">
+<!-- Plugin CSS -->
+    <link href="{% static 'garage/vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
 
+    <!-- Theme CSS - Includes Bootstrap -->
+    <link href="{% static 'garage/test/css/theme_test.css' %}" rel="stylesheet">
+
+    <!-- slider -->
+
+    <link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/slick/slick.css'%}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'garage/vendor/slick/slick-theme.css'%}" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
     <!-- Main CSS-->
-    <link href="{% static 'garage/test/css/theme_test.css' %}" rel="stylesheet" media="all">
-
+    <link href="{% static 'garage/css/creative_mypage.css' %}" rel="stylesheet">
     <!-- Google Chart-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -266,45 +278,138 @@
 
 <body class="animsition">
     <div class="page-wrapper">
-        <!-- HEADER MOBILE-->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-            <div class="container">
-                <img class="img" href="/" src="{% static 'garage/test/images/logo_box.png' %}" alt="" width="50" height="25">
-                <a class="navbar-brand js-scroll-trigger" href="/">
-                    <font size=4.5><B>&nbsp Algorithm Trading</B></font>
-                </a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="/#about">소개</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" >알고리즘 관리</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
-                        </li>
-                        <li class="nav-item">
+     <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container">
+            <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
+            <a class="navbar-brand js-scroll-trigger" href="/">
+                <font size=4.5><B>&nbsp Algorithm Trading</B></font>
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/#services">소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/loading">알고리즘 관리</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/mypage"> 마이페이지 </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger"> </a>
-                        </li>
-                    </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="login">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="signup">회원가입</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+            <!-- section algorithm-->
+    <section class="page-section-small" id="algorithm">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-1 pt-5">
+                        <h4 class="menu">내 알고리즘</h4>
+                    </div>
                 </div>
             </div>
-        </nav>
+            <div style="padding:20px 30px;">
+                <div id="slider-div">
+                    <div>
+                            <div class="slider_box">
+                               <div class="wrap">
+                                <h4>알고리즘1</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                    </div>
+                    <div>
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘2</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+             
+                    </div>
+                    <div>
+                
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘3</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                    </div>
+                    <div>
+                    
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘4</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                     
+                    </div>
+                    <div>
+                 
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘5</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                       
+                    </div>
+                    <div>
+                            <div class="slider_box">
+                                  <div class="wrap">
+                                <h4>알고리즘6</h4>
+                                <h5><br>수익률 4.5%</h5>
+                                <h6><br>수정일 2020/05/18</h6>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
 
         <!-- MAIN CONTENT-->
         <div class="main-content">
-            <div class="section__content section__content--p30">
-                <div class="container-fluid">
+            <div class="container-fluid">
+                               <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-1 pt-5">
+                        <h4 class="menu">백테스트 결과</h4>
+                    </div>
+                </div>
+            </div>
+                   <!--
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="overview-wrap">
@@ -323,6 +428,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="row m-t-25">
@@ -331,7 +437,7 @@
                                         <div class="overview__inner">
                                             <div class="overview-box clearfix">
                                                 <div class="text">
-                                                    <h2>손익 {{bal_diff|safe}}원</h2>
+                                                    <h5>손익 {{bal_diff|safe}}원</h5>
                                                     <span>투자원금 : {{init_bal|safe}}원<br>
                                                     현재자산 : {{fin_bal|safe}}원</span>
                                                 </div>
@@ -344,7 +450,7 @@
                                         <div class="overview__inner">
                                             <div class="overview-box clearfix">
                                                 <div class="text">
-                                                    <h2>계좌수익률 {{fin_inc|safe}}%</h2>
+                                                    <h5>계좌수익률 {{fin_inc|safe}}%</h5>
                                                     <span>평가수익률 : {{fin_prf|safe}}%<br>
                                                     </span>
                                                 </div>
@@ -358,9 +464,9 @@
                                         <div class="overview__inner">
                                             <div class="overview-box clearfix">
                                                 <div class="text">
-                                                    <h2>테스트 기간 </h2>
+                                                    <h5>테스트 기간 </h5>
                                                     <span>{{st_date|safe}}~{{end_date|safe}}</span><br>
-                                                    <h2>거래 횟수 {{trade_num|safe}}건 </h2>
+                                                    <h5>거래 횟수 {{trade_num|safe}}건 </h5>
                                                  
                                                 </div>
                                             </div>
@@ -375,11 +481,11 @@
 <!--                                                    <h2>거래 승률 -%</h2>-->
 <!--                                                    <span>승 : -건<br>-->
 <!--                                                    패 : -건</span>-->
-                                                    <h4>원화 잔고: {{krw_bal|safe}}원</h4>
-                                                    <h4>BTC 잔고: {{btc_bal|safe}}BTC</h4>
-                                                    <h4>평가 잔고: {{fin_bal|safe}}원</h4>
-                                                    <h4>평균 단가: {{avg_prc|safe}}원</h4>
-                                                    <h4>금일 종가: {{cur_prc|safe}}원</h4>
+                                                    <h5>원화 잔고: {{krw_bal|safe}}원</h5>
+                                                    <h5>BTC 잔고: {{btc_bal|safe}}BTC</h5>
+                                                    <h5>평가 잔고: {{fin_bal|safe}}원</h5>
+                                                    <h5>평균 단가: {{avg_prc|safe}}원</h5>
+                                                    <h5>금일 종가: {{cur_prc|safe}}원</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -387,8 +493,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="au-card recent-report ">
+                                <div class="col-lg-12" id="chart">
+                                    <div class="au-card recent-report">
                                         <!-- 차트는 여기에 넣어주세용  -->
                                         <div id="chart_div2" style="width:100%; height:110%"></div>
 <!--                                        <div class="row justify-content-center">-->
@@ -403,7 +509,7 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="col-lg-12">
+
                                 <div class="row m-t-25">
                                     <div class="transaction-item">
                                         <div>
@@ -415,7 +521,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -429,8 +535,77 @@
 
     </div>
 
+    <!-- Bootstrap core JavaScript -->
+    {% load staticfiles %}
+    <script src="{% static 'garage/vendor/jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+
+    <!-- Plugin JavaScript -->
+
+    <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="{% static 'garage/js/creative.min.js'%}"></script>
 
 
+    <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
+    <!-- jquery:slick -->
+    <script type="text/javascript" src="{% static 'garage/vendor/slick/slick.js'%}"></script>
+    <script>
+        $(function() {
+            $('#slider-div').slick({
+                slide: 'div', //슬라이드 되어야 할 태그 ex) div, li 
+                infinite: true, //무한 반복 옵션	 
+                slidesToShow: 5, // 한 화면에 보여질 컨텐츠 개수
+                slidesToScroll: 1, //스크롤 한번에 움직일 컨텐츠 개수
+                speed: 120, // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+                arrows: true, // 옆으로 이동하는 화살표 표시 여부
+                dots: true, // 스크롤바 아래 점으로 페이지네이션 여부
+                autoplay: false, // 자동 스크롤 사용 여부
+                autoplaySpeed: 10000, // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
+                pauseOnHover: true, // 슬라이드 이동	시 마우스 호버하면 슬라이더 멈추게 설정
+                vertical: false, // 세로 방향 슬라이드 옵션
+                prevArrow: "<button type='button' class='slick-prev'>Previous</button>", // 이전 화살표 모양 설정
+                nextArrow: "<button type='button' class='slick-next'>Next</button>", // 다음 화살표 모양 설정
+                dotsClass: "slick-dots", //아래 나오는 페이지네이션(점) css class 지정
+                draggable: true, //드래그 가능 여부 
+
+                responsive: [ // 반응형 웹 구현 옵션
+                                        {
+                        breakpoint: 1030, //화면 사이즈 960px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow: 4
+                        }
+                    },
+                    {
+                        breakpoint: 960, //화면 사이즈 960px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 768, //화면 사이즈 768px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow: 2
+                        }
+                    },
+                                        {
+                        breakpoint: 500, //화면 사이즈 768px
+                        settings: {
+                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                            slidesToShow: 2
+                        }
+                    }
+                    
+                ]
+
+            });
+        })
+
+    </script>
 </body>
 
 </html>
