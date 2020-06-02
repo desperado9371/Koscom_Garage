@@ -122,6 +122,8 @@ class BacktestAPI:
                 bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
             elif time_delta == '1m':
                 bitcoin_dt = pd.read_csv('upbit_krwbtc_1min.csv')
+            elif time_delta == '1h':
+                bitcoin_dt = pd.read_csv('upbit_krwbtc_1hr.csv')
         elif market == 'binance':
             if time_delta == '1d':
                 bitcoin_dt = pd.read_csv('binance_btcusdt_1day.csv')
@@ -251,7 +253,9 @@ class BacktestAPI:
 
         return
 
-    def send_order(self, market='upbit',
+    def send_order(self,
+                   bitcoin_dt,
+                   market='upbit',
                    order_type='buy',
                    quantity=1,
                    target_date="20181011",
@@ -269,9 +273,9 @@ class BacktestAPI:
         :param btc_balance:
         :return:
         """
-        bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
+        bitcoin_dt = bitcoin_dt
 
-        target_date = datetime.strptime(target_date, "%Y-%m-%d")
+        target_date = datetime.strptime(target_date, "%Y%m%dT%H:%M:%S")
 
         price = -1
 
@@ -281,11 +285,11 @@ class BacktestAPI:
         old_total = old_btc_bal * average_price
 
         for index, bitcoin in bitcoin_dt.iterrows():
-            temp = datetime.strptime(bitcoin['timestamp'][:10], "%Y-%m-%d")
+            temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%dT%H:%M:%S")
             if temp == target_date:
                 price = float(bitcoin['close'])
                 dt_index = index
-                break;
+                break
 
         if order_type == 'buy':
             if (price * quantity) <= krw_balance:
@@ -325,9 +329,10 @@ class BacktestAPI:
         else:
             return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, (bitcoin['close']-average_price)/average_price*100,
 
-    def execute_backtest(self, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
+    def execute_backtest(self,bitcoin_dt, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
                          date_list=['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20'],
-                         type_list=['buy', 'buy', 'buy', 'sell', 'sell', 'sell']):
+                         type_list=['buy', 'buy', 'buy', 'sell', 'sell', 'sell'],
+                         ):
         """
         백테스트를 실행하는 함수
 
@@ -355,7 +360,9 @@ class BacktestAPI:
 
         for i in range(list_len):
             old_krw = krw_bal
-            target_date, order_type, price, krw_bal, btc_bal, avg_prc, profit = self.send_order(market='upbit',
+            target_date, order_type, price, krw_bal, btc_bal, avg_prc, profit = self.send_order(
+                                               bitcoin_dt=bitcoin_dt,
+                                               market='upbit',
                                                order_type=type_list[i],
                                                quantity=order_quantity,
                                                target_date=date_list[i],
@@ -363,7 +370,7 @@ class BacktestAPI:
                                                btc_balance=btc_bal,
                                                average_price=avg_prc)
             if old_krw == krw_bal:
-                continue;
+                continue
             temp = []
             temp.append(target_date.strftime("%Y-%m-%d"))
             temp.append(order_type)
@@ -374,8 +381,7 @@ class BacktestAPI:
             temp.append( (krw_bal + (btc_bal * price)) )
             trade_list.append(temp)
 
-
-        df = self.get_price_data()
+        df = bitcoin_dt
 
         print("")
         print("초기 원화자본 : {}원".format(init_krw_bal))

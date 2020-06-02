@@ -1,74 +1,32 @@
 {
-	"algo": {
-		"market": "upbit",
-		"end_date": "20200510",
-		"srt_date": "20200301",
-		"buysell": "Buy",
-		"block1": {
-			"min": "1",
-			"max": "2",
-			"total_count": "2",
-			"group1": [
-				{
-					"name": "macd",
-					"val": {
-						"close": "50000",
-						"n_fast": "10",
-						"n_slow": "3",
-						"n_sign": "5"
-					}
-				},
-				{
-					"name": "sig",
-					"val": ">"
-				},
-				{
-					"name": "obv",
-					"val": {
-						"volume": "10"
-					}
-				}
-			],
-			"group2": [
-				{
-					"name": "macd",
-					"val": {
-						"close": "50000",
-						"n_fast": "6",
-						"n_slow": "2",
-						"n_sign": "5"
-					}
-				},
-				{
-					"name": "sig",
-					"val": "<"
-				},
-				{
-					"name": "num",
-					"val": "310000"
-				}
-			]
-		},
-		"block2": {
-			"min": "1",
-			"max": "1",
-			"total_count": "1",
-			"group1": [
-				{
-					"name": "rsi",
-					"val": {
-						"period": "10"
-					}
-				},
-				{
-					"name": "sig",
-					"val": ">"
-				},
-				{
-					"name": "num",
-					"val": "80"
-				}
-			]
-		}
-	}
+  "algo": {
+    "block1": {
+      "max": "1",
+      "min": "1",
+      "group1": [
+        {
+          "val": {
+            "period": "14"
+          },
+          "name": "rsi"
+        },
+        {
+          "val": "<",
+          "name": "sig"
+        },
+        {
+          "val": "30",
+          "name": "num"
+        }
+      ],
+      "total_count": "1"
+    },
+    "market": "upbit",
+    "buysell": "buy",
+    "end_date": "20200510",
+    "srt_date": "20200301",
+    "srt_time": "09",
+    "end_time": "23",
+		"hourday": "hour"
+  }
 }

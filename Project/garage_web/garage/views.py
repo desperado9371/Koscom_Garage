@@ -11,6 +11,7 @@ import pandas as pd
 from backtestAPI import BacktestAPI
 import asyncio
 from websocket import create_connection
+import ParsingJson
 
 # Create your views here.
 
@@ -74,29 +75,31 @@ def test(request):
     # 백테스트 수행 관련
 
     init_krw_bal = 500000000
-    order_quantity = 1
+    order_quantity = 0.25
     final_balance = 0
     final_profit = 0
 
     result = []
-    # with open('Define_Algo2.json', 'r') as f:
-    #     json_data = json.load(f)
+    with open('Define_Algo.json', 'r') as f:
+        json_data1 = json.load(f)
+    with open('Define_Algo2.json', 'r') as f:
+        json_data2 = json.load(f)
 
-    username = request.COOKIES.get('username')
-    ws = create_connection("ws://52.79.241.205:80/Cocos")
-    ws.send("load|{}|all".format(username))
-    json_data = ws.recv()
-    json_data = eval(json_data)
-    print("session: {}".format(request.user))
-    print("cookies: {}".format(username))
-    if json_data['items'][-1]['buy_algo'] == None:
-        json_data1 = ''
-    else:
-        json_data1 = eval(json_data['items'][-1]['buy_algo'])
-    if json_data['items'][-1]['sell_algo'] == None:
-        json_data2 = ''
-    else:
-        json_data2 = eval(json_data['items'][-1]['sell_algo'])
+    # username = request.COOKIES.get('username')
+    # ws = create_connection("ws://52.79.241.205:80/Cocos")
+    # ws.send("load|{}|all".format(username))
+    # json_data = ws.recv()
+    # json_data = eval(json_data)
+    # print("session: {}".format(request.user))
+    # print("cookies: {}".format(username))
+    # if json_data['items'][-1]['buy_algo'] == None:
+    #     json_data1 = ''
+    # else:
+    #     json_data1 = eval(json_data['items'][-1]['buy_algo'])
+    # if json_data['items'][-1]['sell_algo'] == None:
+    #     json_data2 = ''
+    # else:
+    #     json_data2 = eval(json_data['items'][-1]['sell_algo'])
     print(json_data1)
     print(json_data2)
     with open('Define_Algo.json', 'r') as f:
@@ -104,12 +107,13 @@ def test(request):
     with open('Define_Algo2.json', 'r') as f:
         json_data_s = json.load(f)
 
-    # json_data = json_data_b
-    # market = json_data['algo']['market']
-    # str_date = json_data['algo']['srt_date']
-    # end_date = json_data['algo']['end_date']
-    # bns_tp = json_data['algo']['buysell']
-    # Prc_history = Get_DtPrc(market,str_date,end_date)
+    market = json_data1['algo']['market']
+    hourday_tp = json_data1['algo']['hourday']
+    srt_date = json_data1['algo']['srt_date']
+    end_date = json_data1['algo']['end_date']
+    srt_time = json_data1['algo']['srt_time']
+    end_time = json_data1['algo']['end_time']
+    bns_tp = json_data1['algo']['buysell']
 
     Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
     Prc_history = Prc_history[-150:]
@@ -121,7 +125,13 @@ def test(request):
     # df = Set_Indicator(df,json_data)
 
     # result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
-    result = Parsing_Main(Prc_history, json_data1, json_data2)
+    result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time, hourday_tp)
+    if hourday_tp == 'day':  # 일봉일 경우
+        bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
+    else:  # 시간봉일 경우
+        bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
+        bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+
     trade_list = []
     final_balance = init_krw_bal
     final_increase = 0
@@ -134,7 +144,8 @@ def test(request):
     else:
         date_list = np.array(result).T[0]
         type_list = np.array(result).T[1]
-        trade_list, final_balance, final_increase, final_profit, krw_bal, btc_bal, avg_prc = backtestapi.execute_backtest(init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list)
+        trade_list, final_balance, final_increase, final_profit, krw_bal, btc_bal, avg_prc = backtestapi.execute_backtest(
+            bitcoin_dt=bitcoin_dt, init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list)
         final_increase = "%.2f" % final_increase
         final_profit = "%.2f" % final_profit
 
@@ -203,8 +214,8 @@ def test(request):
     #     trade_list.append(tmp)
     # print(trade_list)
 
-    start_date = Prc_history['timestamp'][0][:10]
-    end_date = Prc_history['timestamp'][len(Prc_history)-1][:10]
+    start_date = srt_date
+    end_date = end_date
     trade_num = len(trade_list)
 
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),

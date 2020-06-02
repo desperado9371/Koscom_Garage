@@ -1,8 +1,8 @@
 {
   "algo": {
     "block1": {
-      "max": "2",
-      "min": "2",
+      "max": "1",
+      "min": "1",
       "group1": [
         {
           "val": {
@@ -11,38 +11,22 @@
           "name": "rsi"
         },
         {
-          "val": "<",
-          "name": "sig"
-        },
-        {
-          "val": "30",
-          "name": "num"
-        }
-      ],
-      "group2": [
-        {
-          "val": {
-            "close": "50000",
-            "n_fast": "5",
-            "n_sign": "5",
-            "n_slow": "3"
-          },
-          "name": "macd"
-        },
-        {
           "val": ">",
           "name": "sig"
         },
         {
-          "val": "3",
+          "val": "80",
           "name": "num"
         }
       ],
-      "total_count": "2"
+      "total_count": "1"
     },
     "market": "upbit",
     "buysell": "buy",
     "end_date": "20200510",
-    "srt_date": "20200301"
+    "srt_date": "20200301",
+    "srt_time": "09",
+    "end_time": "23",
+		"hourday": "hour"
   }
 }
