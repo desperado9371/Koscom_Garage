@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[38]:
+# In[20]:
 
 
 import asyncio
@@ -39,35 +39,22 @@ def Make_indicat(indi,prc_lst):
         prc_lst = obv(prc_lst)
     elif indi['name'] == 'rsi':
         prc_lst = rsi(prc_lst,int(indi['val']['period']))
-    elif indi['name'] == 'bollinger_band':
-        prc_lst = bollinger_band(prc_lst,
-                                 int(indi['val']['period']),
-                                 int(indi['val']['ndev']))
+    elif indi['name'] == 'bollinger_hband':
+        prc_lst = bollinger_hband(prc_lst,
+                                 int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_lband':
+        prc_lst = bollinger_lband(prc_lst,
+                                 int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_mband':
+        prc_lst = bollinger_mband(prc_lst,
+                                 int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_wband':
+        prc_lst = bollinger_wband(prc_lst,
+                                 int(indi['val']['period']))
+    #정의되어있지 않으면 그냥 PASS
 
     return prc_lst
 
-def get_price_data( market='upbit', time_delta='1d'):
-        """
-        파일로 되어있는 시세 정보를 시장과 시간단위 를 입력받아서 읽어오는 함수
-
-        :param market:
-        :param time_delta:
-        :return:
-        """
-
-        bitcoin_dt = pd.DataFrame()
-        if market == 'upbit':
-            if time_delta == '1d':
-                bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
-            elif time_delta == '1m':
-                bitcoin_dt = pd.read_csv('upbit_krwbtc_1min.csv')
-        elif market == 'binance':
-            if time_delta == '1d':
-                bitcoin_dt = pd.read_csv('binance_btcusdt_1day.csv')
-            elif time_delta == '1m':
-                bitcoin_dt = pd.read_csv('binance_btcusdt_1min.csv')
-
-        return bitcoin_dt
     
 ##지표 구현 부분########
 def macd(Prc_history, n_slow=26, n_fast=12, n_sign=9):
@@ -86,22 +73,42 @@ def rsi(df, n=14):
     df['rsi'] = indicator_rsi.rsi()
     return df
 
-def bollinger_band(df, n=20, ndev=2):
+
+def bollinger_hband(df, n=20, ndev=2):
     indicator_bollinger = ta.volatility.BollingerBands(df['close'],
                                                        n=n,
                                                        ndev=ndev)
     df['bollinger_hband'] = indicator_bollinger.bollinger_hband()
-    df['bollinger_hband_indicator'] = indicator_bollinger.bollinger_hband_indicator()
-    df['bollinger_lband'] = indicator_bollinger.bollinger_lband()
-    df['bollinger_lband_indicator'] = indicator_bollinger.bollinger_lband_indicator()
-    df['bollinger_mband'] = indicator_bollinger.bollinger_mavg()
-    df['bollinger_wband'] = indicator_bollinger.bollinger_wband()
     return df
+
+def bollinger_lband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
+                                                       n=n,
+                                                       ndev=ndev)
+    df['bollinger_lband'] = indicator_bollinger.bollinger_hband()
+    return df
+
+def bollinger_mband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
+                                                       n=n,
+                                                       ndev=ndev)
+    df['bollinger_mband'] = indicator_bollinger.bollinger_hband()
+    return df
+
+def bollinger_wband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
+                                                       n=n,
+                                                       ndev=ndev)
+    df['bollinger_wband'] = indicator_bollinger.bollinger_hband()
+    return df
+
 
 def obv(df):
     indicator_obv = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume'])
     df['obv'] = indicator_obv.on_balance_volume()
     return df
+
+##지표 추가 구현 부분(2020.06.02)########
 
 
 #  ----- Chk_Meet_Condition 함수
@@ -140,7 +147,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
 def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
     result_datelist = []
-    #for row in range(60, 70):
+
     for row in range(len(Prc_history)):
         group_meet_condtion = 0  # 각 그룹의 충족갯수
         block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
@@ -190,7 +197,7 @@ def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
 def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
     print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     
-    ws = create_connection('ws://52.79.241.205:80/BackServer_Day')
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Day')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date
     print(order_packet)
     if ws.connected:
@@ -212,7 +219,7 @@ def Get_HrPrc(market='upbit',str_date='0',end_date='99999999', srt_time = '00', 
     print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     print('srt_time: '+srt_time+' end_time: '+end_time)
     
-    ws = create_connection('ws://52.79.241.205:80/BackServer_Hr')
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Hr')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date+'|'+srt_time+'|'+end_time
     print(order_packet)
     if ws.connected:
@@ -244,7 +251,11 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
         Prc_history = Get_HrPrc(market,srt_date,end_date,srt_time,end_time)
         Prc_history['timestamp'] = Prc_history[['timestamp','time']].apply(lambda x:'T'.join(x),axis=1)
     
+    
+    Prc_history = bollinger_wband(Prc_history)
     print(Prc_history)
+    print(Prc_history['bollinger_wband'][165])
+#임시
     print('매수전략 시작')
     if buy_strategy =='':
         print("매수전략 없음")
@@ -270,7 +281,7 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
 if __name__ == '__main__':
     data = []
     result = []
-    with open('Define_Algo.json', 'r') as f:
+    with open('Define_Algo_bb.json', 'r') as f:
         json_data = json.load(f)
     market = json_data['algo']['market']
     hourday_tp = json_data['algo']['hourday']
