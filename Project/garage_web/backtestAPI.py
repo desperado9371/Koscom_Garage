@@ -372,7 +372,7 @@ class BacktestAPI:
             if old_krw == krw_bal:
                 continue
             temp = []
-            temp.append(target_date.strftime("%Y-%m-%d"))
+            temp.append(target_date.strftime("%Y-%m-%dT%H:%M:%S"))
             temp.append(order_type)
             temp.append(price)
             temp.append(order_quantity)

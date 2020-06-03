@@ -25,21 +25,18 @@ import ParsingJson
 def test(request):
     backtestapi = BacktestAPI()
 
-    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-    upbit_min = upbit_min[-150:]
+    upbit_min = pd.read_csv('upbit_krwbtc_1hr.csv')
     upbit_min.reset_index(drop=True, inplace=True)
     upbit_min = backtestapi.macd(upbit_min)
     upbit_min = backtestapi.rsi(upbit_min)
     upbit_min = backtestapi.obv(upbit_min)
 
     timestamps = upbit_min['timestamp']
+    longtimestamps = timestamps
     opens = upbit_min['open']
     closes = upbit_min['close']
     highs = upbit_min['high']
     lows = upbit_min['low']
-
-    for i in range(len(timestamps)):
-        timestamps[i] = timestamps[i][:10]
 
     data = list()
     tooltips = list()
@@ -61,11 +58,12 @@ def test(request):
         temp.append(year)
         temp.append(month)
         temp.append(day)
-        temp.append(timestamps[i][:10])
+        temp.append(timestamps[i])
         temp.append(lows[i])
         temp.append(opens[i])
         temp.append(closes[i])
         temp.append(highs[i])
+        temp.append(longtimestamps[i])
         # temp.append(tooltips[i])
         data.append(temp)
     # print( upbit_min['close'][-30:].tolist())

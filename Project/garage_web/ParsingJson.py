@@ -190,7 +190,7 @@ def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
 def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
     #print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     
-    ws = create_connection('ws://52.79.241.205:80/BackServer_Day')
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Day')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date
     #print(order_packet)
     if ws.connected:
@@ -212,7 +212,7 @@ def Get_HrPrc(market='upbit',str_date='0',end_date='99999999', srt_time = '00', 
     #print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     #print('srt_time: '+srt_time+' end_time: '+end_time)
     
-    ws = create_connection('ws://52.79.241.205:80/BackServer_Hr')
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Hr')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date+'|'+srt_time+'|'+end_time
     #print(order_packet)
     if ws.connected:

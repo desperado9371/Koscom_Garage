@@ -223,11 +223,11 @@
         for ( i=0 ; i< temp.length  ;i++)
         {
             if( trade_index < trade_length && temp[i][3] == trade_list[trade_index][0]){
-                data.addRows([[new Date(temp[i][0], temp[i][1]-1, temp[i][2]), temp[i][6], trade_list[trade_index][1], trade_list[trade_index][3]+"btc",  ]]);
+                data.addRows([[new Date(temp[i][3]), temp[i][6], trade_list[trade_index][1], trade_list[trade_index][3]+"btc",  ]]);
                 trade_index = trade_index + 1
             }
             else{
-                data.addRows([[new Date(temp[i][0], temp[i][1]-1, temp[i][2]), temp[i][6], undefined, undefined]]);
+                data.addRows([[new Date(temp[i][3]), temp[i][6], undefined, undefined]]);
             }
         }
 
@@ -496,7 +496,7 @@
                                 <div class="col-lg-12" id="chart">
                                     <div class="au-card recent-report">
                                         <!-- 차트는 여기에 넣어주세용  -->
-                                        <div id="chart_div2" style="width:100%; height:110%"></div>
+                                        <div id="chart_div2" style="width:900px; height:110%"></div>
 <!--                                        <div class="row justify-content-center">-->
 <!--                                            <button id="b1">prev</button>-->
 <!--                                                <div>    &nbsp</div>-->
