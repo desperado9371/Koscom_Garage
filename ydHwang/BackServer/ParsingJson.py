@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[55]:
+# In[74]:
 
 
 import asyncio
@@ -56,7 +56,27 @@ def Make_indicat(indi,prc_lst):
         prc_lst = kama(prc_lst, n = int(indi['val']['ration']))
     elif indi['name'] == 'stoch':
         prc_lst = stoch(prc_lst, n = int(indi['val']['period']))
-    #정의되어있지 않으면 그냥 PASS
+    #volume
+    elif indi['name'] == 'adi':
+        prc_lst = adi(prc_lst)
+    elif indi['name'] == 'obv':
+        prc_lst = obv(prc_lst)
+    elif indi['name'] == 'cmf':
+        prc_lst = cmf(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'eom':
+        prc_lst = eom(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'fi':
+        prc_lst = fi(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'mfi':
+        prc_lst = mfi(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'nvi':
+        prc_lst = nvi(prc_lst)
+    elif indi['name'] == 'vpt':
+        prc_lst = vpt(prc_lst)
+    elif indi['name'] == 'vwap':
+        prc_lst = vwap(prc_lst, n=int(indi['val']['period']))
+
+        #정의되어있지 않으면 그냥 PASS
 
     return prc_lst
 
@@ -104,12 +124,9 @@ def bollinger_wband(df, n=20, ndev=2):
     return df
 
 
-def obv(df):
-    indicator_obv = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume'])
-    df['obv'] = indicator_obv.on_balance_volume()
-    return df
 
-## Momentum지표 추가 구현 부분(2020.06.02)########
+
+## Momentum지표 추가 구현 부분########
 def roc(df,n=12):
     indicator_roc = ta.momentum.ROCIndicator(df['close'],n=n)
     df['roc'] = indicator_roc.roc()
@@ -138,6 +155,52 @@ def kama(df,n=10,pow1=2, pow2=30):
 def stoch(df,n=14, d_n=3 ):
     indicator_stoch = ta.momentum.StochasticOscillator(df['high'],df['low'],df['close'],n=n,d_n=d_n)
     df['stoch'] = indicator_stoch.stoch()
+    return df
+
+## Volume 지표 추가 구현 부분########
+def adi(df):
+    indicator_adi = ta.volume.AccDistIndexIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'])
+    df['adi'] = indicator_adi.acc_dist_index()
+    return df
+
+def obv(df):
+    indicator_obv = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume'])
+    df['obv'] = indicator_obv.on_balance_volume()
+    return df
+
+def cmf(df,n=20):
+    indicator_cmf = ta.volume.ChaikinMoneyFlowIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
+    df['cmf'] = indicator_cmf.chaikin_money_flow()
+    return df
+
+def eom(df,n=14):
+    indicator_eom = ta.volume.EaseOfMovementIndicator(high=df['high'], low=df['low'], volume =df['volume'],n=n)
+    df['eom'] = indicator_eom.ease_of_movement()
+    return df
+
+def fi(df,n=13):
+    indicator_fi = ta.volume.ForceIndexIndicator(close=df['close'], volume=df['volume'],n=n)
+    df['fi'] = indicator_fi.force_index()
+    return df
+
+def mfi(df,n=14):
+    indicator_mfi = ta.volume.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
+    df['mfi'] = indicator_mfi.money_flow_index()
+    return df
+
+def nvi(df):
+    indicator_nvi = ta.volume.NegativeVolumeIndexIndicator(close=df['close'], volume =df['volume'])
+    df['nvi'] = indicator_nvi.negative_volume_index()
+    return df
+
+def vpt(df):
+    indicator_vpt = ta.volume.VolumePriceTrendIndicator(close=df['close'], volume =df['volume'])
+    df['vpt'] = indicator_vpt.volume_price_trend()
+    return df
+
+def vwap(df,n=14):
+    indicator_vwap = ta.volume.VolumeWeightedAveragePrice(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
+    df['vwap'] = indicator_vwap.volume_weighted_average_price()
     return df
 
 #  ----- Chk_Meet_Condition 함수
@@ -280,7 +343,9 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
     else : #시간봉일 경우 
         Prc_history = Get_HrPrc(market,srt_date,end_date,srt_time,end_time)
         Prc_history['timestamp'] = Prc_history[['timestamp','time']].apply(lambda x:'T'.join(x),axis=1)
-
+        
+#     Prc_history = vwap(Prc_history)
+#     print(Prc_history)
 #임시
     print('매수전략 시작')
     if buy_strategy =='':
