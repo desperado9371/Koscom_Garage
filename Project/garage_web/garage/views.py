@@ -252,7 +252,15 @@ def intro(request):
     return render(request, 'garage/intro.html', {})
 
 def mypage(request):
+    username = request.COOKIES.get('username')
+    ws = create_connection("ws://13.124.102.83:80/Cocos")
+    ws.send("load|{}|all".format(username))
+    json_data = ws.recv()
+    json_data = eval(json_data)
 
+    #print(json_data['items'][-1]['algo_nm'])
+    for i in json_data['items']:
+        print(i['algo_nm'])
 
     return render(request, 'garage/mypage.html',{})
 
@@ -304,7 +312,7 @@ def signup(request):
                 username=request.POST["username"], password=request.POST["password1"], email=request.POST["email"])
             # 해당 유저로 로그인 처리
             auth.login(request, user)
-            ws = create_connection("ws://52.79.241.205:80/JoinMem")
+            ws = create_connection("ws://13.124.102.83:80/JoinMem")
             ws.send("save|{}|{}".format(user.username, user.email))
             response = redirect('/')
             response.set_cookie('username', request.POST["username"])
