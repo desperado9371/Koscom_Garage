@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[74]:
+# In[25]:
 
 
 import asyncio
@@ -36,14 +36,6 @@ def Make_indicat(indi,prc_lst):
                        int(indi['val']['n_sign']))
     elif indi['name'] == 'obv':
         prc_lst = obv(prc_lst)
-    elif indi['name'] == 'bollinger_hband':
-        prc_lst = bollinger_hband(prc_lst,int(indi['val']['period']))
-    elif indi['name'] == 'bollinger_lband':
-        prc_lst = bollinger_lband(prc_lst, int(indi['val']['period']))
-    elif indi['name'] == 'bollinger_mband':
-        prc_lst = bollinger_mband(prc_lst,int(indi['val']['period']))
-    elif indi['name'] == 'bollinger_wband':
-        prc_lst = bollinger_wband(prc_lst, int(indi['val']['period']))
     elif indi['name'] == 'roc':
         prc_lst = roc(prc_lst, n = int(indi['val']['period']))
     elif indi['name'] == 'rsi':
@@ -75,6 +67,50 @@ def Make_indicat(indi,prc_lst):
         prc_lst = vpt(prc_lst)
     elif indi['name'] == 'vwap':
         prc_lst = vwap(prc_lst, n=int(indi['val']['period']))
+    #Volatility
+    elif indi['name'] == 'atr':
+        prc_lst = atr(prc_lst,int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_hband':
+        prc_lst = bollinger_hband(prc_lst,int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_lband':
+        prc_lst = bollinger_lband(prc_lst, int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_mband':
+        prc_lst = bollinger_mband(prc_lst,int(indi['val']['period']))
+    elif indi['name'] == 'bollinger_wband':
+        prc_lst = bollinger_wband(prc_lst, int(indi['val']['period']))
+    elif indi['name'] == 'donchian_channel_hband':
+        prc_lst = donchian_channel_hband(prc_lst,int(indi['val']['period']))
+    elif indi['name'] == 'donchian_channel_lband':
+        prc_lst = donchian_channel_lband(prc_lst,int(indi['val']['period']))
+    #Trend
+    elif indi['name'] == 'adx':
+        prc_lst = adx(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'adx_neg':
+        prc_lst = adx_neg(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'aroon_down':
+        prc_lst = aroon_down(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'aroon_up':
+        prc_lst = aroon_up(prc_lst, n=int(indi['val']['period']))  
+    elif indi['name'] == 'aroon_indicator':
+        prc_lst = aroon_indicator(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'cci':
+        prc_lst = cci(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'dpo':
+        prc_lst = dpo(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'ema':
+        prc_lst = ema(prc_lst, n=int(indi['val']['period']))  
+    elif indi['name'] == 'mi':
+        prc_lst = mi(prc_lst, n=int(indi['val']['short']),n2=int(indi['val']['long']))
+    elif indi['name'] == 'sma':
+        prc_lst = sma(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'trix':
+        prc_lst = trix(prc_lst, n=int(indi['val']['period']))    
+    elif indi['name'] == 'vortex_indicator_diff':
+        prc_lst = vortex_indicator_diff(prc_lst, n=int(indi['val']['period']))
+    elif indi['name'] == 'vortex_indicator_neg':
+        prc_lst = vortex_indicator_neg(prc_lst, n=int(indi['val']['period']))    
+    elif indi['name'] == 'vortex_indicator_pos':
+        prc_lst = vortex_indicator_pos(prc_lst, n=int(indi['val']['period']))
 
         #정의되어있지 않으면 그냥 PASS
 
@@ -91,39 +127,6 @@ def macd(Prc_history, n_slow=26, n_fast=12, n_sign=9):
     Prc_history['macd_diff'] = indicator_macd.macd_diff()
     Prc_history['macd_signal'] = indicator_macd.macd_signal()
     return Prc_history
-
-
-
-
-def bollinger_hband(df, n=20, ndev=2):
-    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
-                                                       n=n,
-                                                       ndev=ndev)
-    df['bollinger_hband'] = indicator_bollinger.bollinger_hband()
-    return df
-
-def bollinger_lband(df, n=20, ndev=2):
-    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
-                                                       n=n,
-                                                       ndev=ndev)
-    df['bollinger_lband'] = indicator_bollinger.bollinger_hband()
-    return df
-
-def bollinger_mband(df, n=20, ndev=2):
-    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
-                                                       n=n,
-                                                       ndev=ndev)
-    df['bollinger_mband'] = indicator_bollinger.bollinger_hband()
-    return df
-
-def bollinger_wband(df, n=20, ndev=2):
-    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
-                                                       n=n,
-                                                       ndev=ndev)
-    df['bollinger_wband'] = indicator_bollinger.bollinger_hband()
-    return df
-
-
 
 
 ## Momentum지표 추가 구현 부분########
@@ -202,6 +205,114 @@ def vwap(df,n=14):
     indicator_vwap = ta.volume.VolumeWeightedAveragePrice(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
     df['vwap'] = indicator_vwap.volume_weighted_average_price()
     return df
+
+## Volatility 지표 추가 구현 부분########
+def atr(df,n=14):
+    indicator_atr = ta.volatility.AverageTrueRange(high=df['high'], low=df['low'], close=df['close'],n=n)
+    df['atr'] = indicator_atr.average_true_range()
+    return df
+
+def bollinger_hband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'],n=n, ndev=ndev)
+    df['bollinger_hband'] = indicator_bollinger.bollinger_hband()
+    return df
+
+def bollinger_lband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'], n=n, ndev=ndev)
+    df['bollinger_lband'] = indicator_bollinger.bollinger_hband()
+    return df
+
+def bollinger_mband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'], n=n, ndev=ndev)
+    df['bollinger_mband'] = indicator_bollinger.bollinger_hband()
+    return df
+
+def bollinger_wband(df, n=20, ndev=2):
+    indicator_bollinger = ta.volatility.BollingerBands(df['close'], n=n, ndev=ndev)
+    df['bollinger_wband'] = indicator_bollinger.bollinger_hband()
+    return df
+
+def donchian_channel_hband(df,n=20):
+    indicator_donchian_channel = ta.volatility.DonchianChannel(close=df['close'],n=n)
+    df['donchian_channel_hband'] = indicator_donchian_channel.donchian_channel_hband()
+    return df
+
+def donchian_channel_lband(df,n=20):
+    indicator_donchian_channel = ta.volatility.DonchianChannel(close=df['close'],n=n)
+    df['donchian_channel_lband'] = indicator_donchian_channel.donchian_channel_lband()
+    return df
+
+## Trend 지표 추가 구현 부분########
+def adx(df,n=14):
+    indicator_adx = ta.trend.ADXIndicator(high=df['high'], low=df['low'], close=df['close'],n=n)
+    df['adx'] = indicator_adx.adx()
+    return df
+
+def adx_neg(df,n=14):
+    indicator_adx = ta.trend.ADXIndicator(high=df['high'], low=df['low'], close=df['close'],n=n)
+    df['adx_neg'] = indicator_adx.adx_neg()
+    return df
+
+def aroon_down(df,n=25):
+    indicator_aroon = ta.trend.AroonIndicator(close=df['close'],n=n)
+    df['aroon_down'] = indicator_aroon.aroon_down()
+    return df
+
+def aroon_up(df,n=25):
+    indicator_aroon = ta.trend.AroonIndicator(close=df['close'],n=n)
+    df['aroon_up'] = indicator_aroon.aroon_up()
+    return df
+
+def aroon_indicator(df,n=25):
+    indicator_aroon = ta.trend.AroonIndicator(close=df['close'],n=n)
+    df['aroon_indicator'] = indicator_aroon.aroon_indicator()
+    return df
+
+def cci(df,n=20):
+    indicator_cci = ta.trend.CCIIndicator(high=df['high'], low=df['low'], close=df['close'],n=n,c=0.015)
+    df['cci'] = indicator_cci.cci()
+    return df
+
+def dpo(df,n=20):
+    indicator_dpo = ta.trend.DPOIndicator(close=df['close'],n=n)
+    df['dpo'] = indicator_dpo.dpo()
+    return df
+
+def ema(df,n=14):
+    indicator_ema = ta.trend.EMAIndicator(close=df['close'],n=n)
+    df['ema'] = indicator_ema.ema_indicator()
+    return df
+
+def mi(df,n=9,n2=25):
+    indicator_mi = ta.trend.MassIndex(high=df['high'],low=df['low'],n=n,n2=n2)
+    df['mi'] = indicator_mi.mass_index()
+    return df
+
+def sma(df,n=14):
+    indicator_sma = ta.trend.SMAIndicator(close=df['close'],n=n)
+    df['sma'] = indicator_sma.sma_indicator()
+    return df
+
+def trix(df,n=15):
+    indicator_trix = ta.trend.TRIXIndicator(close=df['close'],n=n)
+    df['trix'] = indicator_trix.trix()
+    return df
+
+def vortex_indicator_diff(df,n=14):
+    indicator_vi = ta.trend.VortexIndicator(high=df['high'], low=df['low'], close=df['close'],n=n)
+    df['vortex_indicator_diff'] = indicator_vi.vortex_indicator_diff()
+    return df
+
+def vortex_indicator_neg(df,n=14):
+    indicator_vi = ta.trend.VortexIndicator(high=df['high'], low=df['low'], close=df['close'],n=n)
+    df['vortex_indicator_neg'] = indicator_vi.vortex_indicator_neg()
+    return df
+
+def vortex_indicator_pos(df,n=14):
+    indicator_vi = ta.trend.VortexIndicator(high=df['high'], low=df['low'], close=df['close'],n=n)
+    df['vortex_indicator_pos'] = indicator_vi.vortex_indicator_pos()
+    return df
+
 
 #  ----- Chk_Meet_Condition 함수
 #  ----- input 으로 들어온 값들의 
@@ -344,7 +455,7 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
         Prc_history = Get_HrPrc(market,srt_date,end_date,srt_time,end_time)
         Prc_history['timestamp'] = Prc_history[['timestamp','time']].apply(lambda x:'T'.join(x),axis=1)
         
-#     Prc_history = vwap(Prc_history)
+#     Prc_history = stoch(Prc_history)
 #     print(Prc_history)
 #임시
     print('매수전략 시작')
