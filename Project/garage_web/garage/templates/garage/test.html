@@ -222,7 +222,7 @@
         var trade_length = trade_list.length
         for ( i=0 ; i< temp.length  ;i++)
         {
-            if( trade_index < trade_length && temp[i][3] == trade_list[trade_index][0]){
+            if( trade_index < trade_length && temp[i][8] == trade_list[trade_index][0]){
                 data.addRows([[new Date(temp[i][3]), temp[i][6], trade_list[trade_index][1], trade_list[trade_index][3]+"btc",  ]]);
                 trade_index = trade_index + 1
             }
