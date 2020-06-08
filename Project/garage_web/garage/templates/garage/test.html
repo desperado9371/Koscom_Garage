@@ -238,6 +238,7 @@
             displayAnnotationsFilter: true,
             scaleColumns:[0,1,1],
             thickness:3,
+            fontSize: 18,
             colors:['#6C63FF'],
         };
 
@@ -249,7 +250,6 @@
 .tooltip2 {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black;
 }
 
 .tooltip2 .tooltiptext {
@@ -304,7 +304,7 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" > 마이페이지 </a>
+                        <a class="nav-link js-scroll-trigger tooltip2" > {{ user.username }} </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
@@ -406,30 +406,28 @@
                 <div class="col-lg-3 col-md-6">
                     <div class="mt-1 pt-5">
                         <h4 class="menu">백테스트 결과 </h4>
-                        <h5>알고리즘 명 : {{algoname|safe}}</h5>
+<!--                        <h5>알고리즘 명 : {{algoname|safe}}</h5>-->
                     </div>
                 </div>
             </div>
-                   <!--
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="overview-wrap">
-                                <h2 class="title-2">백테스팅 결과</h2>
-                                <div class="tooltip2">추가 개발 진행 사항
-                                    <span class="tooltiptext">
-                                        기간 설정기능<br>
-                                        초기자본 설정기능<br>
-                                        거래 승률 계산<br>
-                                        알고리즘 선택기능<br>
-                                        사용한 지표 그래프<br>
-                                        수익률 및 자산 그래프<br>
 
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
+<!--                    <div class="row">-->
+<!--                        <div class="col-lg-12">-->
+<!--                            <div class="overview-wrap">-->
+<!--                                <div class="tooltip2">추가 개발 진행 사항-->
+<!--                                    <span class="tooltiptext">-->
+<!--                                        기간 설정기능<br>-->
+<!--                                        초기자본 설정기능<br>-->
+<!--                                        거래 승률 계산<br>-->
+<!--                                        알고리즘 선택기능<br>-->
+<!--                                        사용한 지표 그래프<br>-->
+<!--                                        수익률 및 자산 그래프<br>-->
+<!--                                    </span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="row m-t-25">
@@ -482,11 +480,11 @@
 <!--                                                    <h2>거래 승률 -%</h2>-->
 <!--                                                    <span>승 : -건<br>-->
 <!--                                                    패 : -건</span>-->
-                                                    <h5>원화 잔고: {{krw_bal|safe}}원</h5>
-                                                    <h5>BTC 잔고: {{btc_bal|safe}}BTC</h5>
-                                                    <h5>평가 잔고: {{fin_bal|safe}}원</h5>
-                                                    <h5>평균 단가: {{avg_prc|safe}}원</h5>
-                                                    <h5>금일 종가: {{cur_prc|safe}}원</h5>
+                                                    <h5 style="font-size: 1.2em;">원화 잔고: {{krw_bal|safe}}원<br>
+                                                    BTC 잔고: {{btc_bal|safe}}BTC<br>
+                                                    평가 잔고: {{fin_bal|safe}}원<br>
+                                                    평균 단가: {{avg_prc|safe}}원<br>
+                                                    금일 종가: {{cur_prc|safe}}원</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -497,7 +495,7 @@
                                 <div class="col-lg-12" id="chart">
                                     <div class="au-card recent-report">
                                         <!-- 차트는 여기에 넣어주세용  -->
-                                        <div id="chart_div2" style="width:900px; height:110%"></div>
+                                        <div id="chart_div2" style="width:90%; height:110%"></div>
 <!--                                        <div class="row justify-content-center">-->
 <!--                                            <button id="b1">prev</button>-->
 <!--                                                <div>    &nbsp</div>-->

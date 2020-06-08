@@ -53,12 +53,12 @@ def test(request):
     else:
         sell_algo = eval(json_data['items'][-1]['sell_algo'])
 
-    print("buy")
-    print(buy_algo)
-    print("----")
-    print('sell')
-    print(sell_algo)
-    print("----")
+    # print("buy")
+    # print(buy_algo)
+    # print("----")
+    # print('sell')
+    # print(sell_algo)
+    # print("----")
 
     # with open('Define_Algo.json', 'r') as f:
     #     json_data1 = json.load(f)
@@ -138,8 +138,8 @@ def test(request):
             temp = temp.strftime("%Y-%m-%dT%H:%M:%S")
             upbit_min['timestamp'][i] = temp
 
-    print(upbit_min['timestamp'][0])
-    print(bitcoin_dt['timestamp'][0])
+    # print(upbit_min['timestamp'][0])
+    # print(bitcoin_dt['timestamp'][0])
 
 
     # upbit_min = backtestapi.macd(upbit_min)
@@ -299,9 +299,9 @@ def mypage(request):
         temp.append(eval(i['buy_algo'])['algo']['srt_date'])
         temp.append(eval(i['buy_algo'])['algo']['end_date'])
         algo_info.append(temp)
-    print(algo_names)
-    print(algo_dates)
-    print(len(json_data['items']))
+    # print(algo_names)
+    # print(algo_dates)
+    # print(len(json_data['items']))
     temp_name = algo_names[0]
     return render(request, 'garage/mypage.html',{'algo_names': algo_names,
                                                  'algo_dates': algo_dates,
@@ -401,9 +401,9 @@ def algomaker(request):
 @login_required
 def loading(request):
     check = 1;
-    print("loading")
-    print(request.GET.get('algoname'))
-    print("0000000")
+    # print("loading")
+    # print(request.GET.get('algoname'))
+    # print("0000000")
     return render(request, 'garage/loading.html',{'check': check,
                                                   'algoname': request.GET.get('algoname')})
 

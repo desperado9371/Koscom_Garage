@@ -27,6 +27,34 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
 
+    <style>
+.tooltip2 {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip2 .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip2:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
+
 </head>
 
 <body id="page-top">
@@ -54,8 +82,12 @@
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/mypage">MY알고리즘</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item tooltip2">
                         <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
+
+                             <span class="tooltiptext">
+                                        구현 예정<br>
+                             </span>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">

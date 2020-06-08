@@ -59,7 +59,7 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" > 마이페이지 </a>
+                        <a class="nav-link js-scroll-trigger" > {{ user.username }} </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
