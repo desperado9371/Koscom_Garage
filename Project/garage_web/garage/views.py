@@ -35,10 +35,38 @@ def test(request):
     final_profit = 0
 
     result = []
-    with open('Define_Algo.json', 'r') as f:
-        json_data1 = json.load(f)
-    with open('Define_Algo2.json', 'r') as f:
-        json_data2 = json.load(f)
+
+    username = request.user.username
+    algo_name = request.GET.get('algoname')
+    ws = create_connection("ws://13.124.102.83/Cocos")
+    ws.send("load|{}|{}".format(username, algo_name))
+    json_data = ws.recv()
+    json_data = eval(json_data)
+
+    if json_data['items'][-1]['buy_algo'] == None:
+        buy_algo = ''
+    else:
+        buy_algo = eval(json_data['items'][-1]['buy_algo'])
+
+    if json_data['items'][-1]['sell_algo'] == None:
+        sell_algo = ''
+    else:
+        sell_algo = eval(json_data['items'][-1]['sell_algo'])
+
+    print("buy")
+    print(buy_algo)
+    print("----")
+    print('sell')
+    print(sell_algo)
+    print("----")
+
+    # with open('Define_Algo.json', 'r') as f:
+    #     json_data1 = json.load(f)
+    # with open('Define_Algo2.json', 'r') as f:
+    #     json_data2 = json.load(f)
+
+    json_data1 = buy_algo
+    json_data2 = sell_algo
 
     # username = request.COOKIES.get('username')
     # ws = create_connection("ws://52.79.241.205:80/Cocos")
@@ -55,20 +83,16 @@ def test(request):
     #     json_data2 = ''
     # else:
     #     json_data2 = eval(json_data['items'][-1]['sell_algo'])
-    print(json_data1)
-    print(json_data2)
+    # print(json_data1)
+    # print(json_data2)
 
     market = json_data1['algo']['market']
-    hourday_tp = json_data1['algo']['hourday']
+    hourday_tp = json_data1['algo']['hourday_tp']
     srt_date = json_data1['algo']['srt_date']
     end_date = json_data1['algo']['end_date']
     srt_time = json_data1['algo']['srt_time']
     end_time = json_data1['algo']['end_time']
     bns_tp = json_data1['algo']['buysell']
-
-    Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
-    Prc_history = Prc_history[-150:]
-    Prc_history.reset_index(drop=True, inplace=True)
 
     # 시세데이터 get
     #     df = get_price_data('upbit','1d')
@@ -100,15 +124,27 @@ def test(request):
         final_increase = "%.2f" % final_increase
         final_profit = "%.2f" % final_profit
 ######################################################################
+# 차트 관련
+    upbit_min = bitcoin_dt
 
     if hourday_tp == 'day':
-        upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
+        for i in range(len(upbit_min)):
+            temp = datetime.strptime(upbit_min['timestamp'][i],"%Y%m%d")
+            temp = temp.strftime("%Y-%m-%dT09:00:00")
+            upbit_min['timestamp'][i] = temp
     else:
-        upbit_min = pd.read_csv('upbit_krwbtc_1hr.csv')
-    upbit_min.reset_index(drop=True, inplace=True)
-    upbit_min = backtestapi.macd(upbit_min)
-    upbit_min = backtestapi.rsi(upbit_min)
-    upbit_min = backtestapi.obv(upbit_min)
+        for i in range(len(upbit_min)):
+            temp = datetime.strptime(upbit_min['timestamp'][i],"%Y%m%dT%H:%M:%S")
+            temp = temp.strftime("%Y-%m-%dT%H:%M:%S")
+            upbit_min['timestamp'][i] = temp
+
+    print(upbit_min['timestamp'][0])
+    print(bitcoin_dt['timestamp'][0])
+
+
+    # upbit_min = backtestapi.macd(upbit_min)
+    # upbit_min = backtestapi.rsi(upbit_min)
+    # upbit_min = backtestapi.obv(upbit_min)
 
     timestamps = upbit_min['timestamp']
     opens = upbit_min['open']
@@ -148,7 +184,6 @@ def test(request):
         # temp.append(tooltips[i])
         data.append(temp)
     # print( upbit_min['close'][-30:].tolist())
-
 
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
@@ -196,11 +231,6 @@ def test(request):
         init_bal = init_bal[0:-3] + ',' + init_bal[-3:]
 #########################################################
 
-
-
-
-
-
     start_date = srt_date
     end_date = end_date
     trade_num = len(trade_list)
@@ -220,7 +250,9 @@ def test(request):
                                                 'krw_bal': krw_bal,
                                                 'btc_bal': btc_bal,
                                                 'avg_prc': avg_prc,
-                                                'cur_prc': cur_prc})
+                                                'cur_prc': cur_prc,
+                                                'algoname': request.GET.get('algoname'),
+                                                })
 
 def home(request):
     """
@@ -229,6 +261,8 @@ def home(request):
     :param request:
     :return:
     """
+    if request.user.is_authenticated:
+        print(request.user.username)
     return render(request, 'garage/index.html', {})
 
 def intro(request):
@@ -260,6 +294,10 @@ def mypage(request):
         temp = []
         temp.append(i['algo_nm'])
         temp.append(i['date_created'])
+        temp.append(i['algo_seq'])
+        temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
+        temp.append(eval(i['buy_algo'])['algo']['srt_date'])
+        temp.append(eval(i['buy_algo'])['algo']['end_date'])
         algo_info.append(temp)
     print(algo_names)
     print(algo_dates)
@@ -344,6 +382,7 @@ def logout(request):
     auth.logout(request)
     return response
 
+
 @login_required
 def algomaker(request):
     """
@@ -359,88 +398,12 @@ def algomaker(request):
     return render(request, 'garage/cocos_algo.html', {'username': username})
 
 
+@login_required
 def loading(request):
     check = 1;
-    return render(request, 'garage/loading.html',{'check': check})
-
-
-def charttest(request):
-    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-    backtestapi = BacktestAPI()
-    upbit_min = backtestapi.macd(upbit_min)
-    upbit_min = backtestapi.rsi(upbit_min)
-    upbit_min = upbit_min[-400:]
-    upbit_min.reset_index(drop=True, inplace=True)
-
-    timestamps = upbit_min['timestamp']
-    closes = upbit_min['close']
-    macds = upbit_min['macd']
-    rsis = upbit_min['rsi']
-
-    for i in range(len(timestamps)):
-        timestamps[i] = timestamps[i][:10]
-
-    data = list()
-
-    for i in range(len(timestamps)):
-        temp=[]
-        year = timestamps[i][:4]
-        month = timestamps[i][5:7]
-        day = timestamps[i][8:10]
-        temp.append(year)
-        temp.append(month)
-        temp.append(day)
-        temp.append(closes[i])
-        if i % 3 == 0:
-            temp.append("buy")
-        else:
-            temp.append("null")
-        # temp.append(macds[i])
-        # temp.append(rsis[i])
-        data.append(temp)
-
-
-    return render(request, 'garage/chart_test.html', {'data':data})
-
-def backtest(request):
-
-    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-
-    timestamps = upbit_min['timestamp']
-    opens = upbit_min['open']
-    closes = upbit_min['close']
-    highs = upbit_min['high']
-    lows = upbit_min['low']
-
-    for i in range(len(timestamps)):
-        timestamps[i] = timestamps[i][:10]
-
-    data = list()
-    temp = list()
-    tooltips = list()
-    for i in range(len(timestamps)):
-        if i % 3 == 0:
-            tooltips.append('stroke-width: 5;' +
-                            'stroke-color: #1800c8')
-        if i % 3 == 1:
-            tooltips.append('stroke-width: 5;' +
-                           'stroke-color: #1800c8')
-        if i % 2 == 0:
-            tooltips.append('')
-
-    for i in range(len(timestamps)):
-        temp.append(timestamps[i])
-        temp.append(lows[i])
-        temp.append(opens[i])
-        temp.append(closes[i])
-        temp.append(highs[i])
-        #temp.append(tooltips[i])
-        data.append(temp)
-        temp = list()
-    print( data[:4])
-    # print( upbit_min['close'][-30:].tolist())
-
-    return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-30:].tolist(),
-                                                   'labels': upbit_min['timestamp'][-30:].tolist(),
-                                                    'datas': data[-100:]})
+    print("loading")
+    print(request.GET.get('algoname'))
+    print("0000000")
+    return render(request, 'garage/loading.html',{'check': check,
+                                                  'algoname': request.GET.get('algoname')})
 
