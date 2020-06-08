@@ -240,6 +240,7 @@ def intro(request):
     """
     return render(request, 'garage/intro.html', {})
 
+@login_required
 def mypage(request):
     username = request.COOKIES.get('username')
     ws = create_connection("ws://13.124.102.83:80/Cocos")
@@ -247,11 +248,29 @@ def mypage(request):
     json_data = ws.recv()
     json_data = eval(json_data)
 
+    algo_names = []
+    algo_dates = []
+    algo_info = []
+    algo_num = 0
+    temp_name =''
     #print(json_data['items'][-1]['algo_nm'])
     for i in json_data['items']:
-        print(i['algo_nm'])
-
-    return render(request, 'garage/mypage.html',{})
+        algo_names.append(i['algo_nm'])
+        algo_dates.append(i['date_created'])
+        temp = []
+        temp.append(i['algo_nm'])
+        temp.append(i['date_created'])
+        algo_info.append(temp)
+    print(algo_names)
+    print(algo_dates)
+    print(len(json_data['items']))
+    temp_name = algo_names[0]
+    return render(request, 'garage/mypage.html',{'algo_names': algo_names,
+                                                 'algo_dates': algo_dates,
+                                                 'algo_info': algo_info,
+                                                 'algo_num': algo_num,
+                                                 'name0': temp_name,
+                                                 })
 
 @csrf_exempt
 def login(request):

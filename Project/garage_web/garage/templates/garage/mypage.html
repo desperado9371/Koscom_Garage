@@ -57,14 +57,14 @@
                         <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/loading">알고리즘 관리</a>
+                        <a class="nav-link js-scroll-trigger" href="/mypage">MY알고리즘</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/mypage"> 마이페이지 </a>
+                        <a class="nav-link js-scroll-trigger" > 마이페이지 </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
@@ -82,25 +82,25 @@
         </div>
     </nav>
     <!-- section customer-->
-    <section class="page-section-small" id="customer">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-5 pt-5 text-center">
-                        <img class="img" href="/" src="{% static 'garage/images/user.png'%}" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-1 pt-3 text-center">
-                        <h5 class="mb-2">{{ user.username }}</h5>
-                        <h5 class="mb-3">{{ user.email}}</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!--    <section class="page-section-small" id="customer">-->
+<!--        <div class="container">-->
+<!--            <div class="row justify-content-center">-->
+<!--                <div class="col-lg-3 col-md-6">-->
+<!--                    <div class="mt-5 pt-5 text-center">-->
+<!--                        <img class="img" href="/" src="{% static 'garage/images/user.png'%}" alt="">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row justify-content-center">-->
+<!--                <div class="col-lg-3 col-md-6">-->
+<!--                    <div class="mt-1 pt-3 text-center">-->
+<!--                        <h5 class="mb-2">{{ user.username }}</h5>-->
+<!--                        <h5 class="mb-3">{{ user.email}}</h5>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
     <!-- section algorithm-->
     <section class="page-section-small" id="algorithm">
         <div class="container">
@@ -113,67 +113,18 @@
             </div>
             <div style="padding:20px 30px;">
                 <div id="slider-div" href="/loading">
-                    <div>
-                            <div class="slider_box">
-                               <div class="wrap">
-                                <h4>알고리즘1</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                   <button onclick="window.open('/loading')">Continue</button>
+                    {% for name,date in algo_info %}
+                        <div>
+                                <div class="slider_box" OnClick="location.href ='/loading'" style="cursor:pointer;">
+                                   <div class="wrap">
+                                    <h4>{{name}}</h4>
+                                       <h5><br></h5>
+<!--                                    <h5><br>수익률 4.5%</h5>-->
+                                    <h6><br>수정일 {{date}}</h6>
+                                    </div>
                                 </div>
-                            </div>
-                    </div>
-                    <div>
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘2</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-             
-                    </div>
-                    <div>
-                
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘3</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                    </div>
-                    <div>
-                    
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘4</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                     
-                    </div>
-                    <div>
-                 
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘5</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                       
-                    </div>
-                    <div>
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘6</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
