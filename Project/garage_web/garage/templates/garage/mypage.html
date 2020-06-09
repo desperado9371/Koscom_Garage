@@ -36,6 +36,11 @@
         {
             document.getElementById("main_frame").src = url;
         }
+
+        function test(text)
+        {
+            console.log(document.getElementById("start").value);
+        }
     </script>
 </head>
 
@@ -139,6 +144,23 @@
         </div>
 
     </section>
+
+{#    <div align="center">#}
+{#    <form action="">#}
+{#        <label for="start">시작:</label>#}
+{#        <input type="date" id="start" name="start">#}
+{#        <button type="button" onclick="test(start)"> 설정 </button>#}
+{#    </form>#}
+{#    </div>#}
+{##}
+{#    <div align="center">#}
+{#        <form action="" >#}
+{#            <label for="end">종료:</label>#}
+{#            <input type="date" id="start" name="start">#}
+{#            <button type="button"> 설정 </button>#}
+{#        </form>#}
+{#    </div>#}
+
 
     <iframe src="/ready" frameborder="0" width="100%" height="100%" name="main_frame" id="main_frame"></iframe>
 
