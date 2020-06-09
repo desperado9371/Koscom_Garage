@@ -52,7 +52,7 @@ def test(request):
         sell_algo = ''
     else:
         sell_algo = eval(json_data['items'][-1]['sell_algo'])
-
+    algo_realname = json_data['items'][-1]['algo_nm']
     # print("buy")
     # print(buy_algo)
     # print("----")
@@ -252,6 +252,7 @@ def test(request):
                                                 'avg_prc': avg_prc,
                                                 'cur_prc': cur_prc,
                                                 'algoname': request.GET.get('algoname'),
+                                                'algoreal': algo_realname,
                                                 })
 
 def home(request):
@@ -407,3 +408,6 @@ def loading(request):
     return render(request, 'garage/loading.html',{'check': check,
                                                   'algoname': request.GET.get('algoname')})
 
+
+def ready(request):
+    return render(request,'garage/ready.html',)

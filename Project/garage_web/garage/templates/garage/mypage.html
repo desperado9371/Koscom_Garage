@@ -31,7 +31,12 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
-
+    <script type="text/javascript">
+        function changeIframeUrl(url)
+        {
+            document.getElementById("main_frame").src = url;
+        }
+    </script>
 </head>
 
 <body id="page-top">
@@ -115,9 +120,10 @@
                 <div id="slider-div" href="/loading">
                     {% for name,date,seq,hd,start,end in algo_info %}
                         <div>
-                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">
-                                   <div class="wrap">
-                                    <h4 style="font-size: 0.6em">{{name}}</h4>
+<!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
+                            <div class="slider_box" onClick="changeIframeUrl('/loading?algoname={{seq}}')">
+                            <div class="wrap">
+                                    <h4 style="font-size: 0.6em">{{name}}_{{seq}}</h4>
 <!--                                       <h5><br>{{seq}}</h5>-->
 <!--                                       <h6>{{seq}}</h6>-->
 <!--                                    <h5><br>수익률 4.5%</h5>-->
@@ -133,6 +139,8 @@
         </div>
 
     </section>
+
+    <iframe src="/ready" frameborder="0" width="100%" height="100%" name="main_frame" id="main_frame"></iframe>
 
 
     <!-- Bootstrap core JavaScript -->
