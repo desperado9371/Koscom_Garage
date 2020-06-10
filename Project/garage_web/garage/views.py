@@ -29,8 +29,8 @@ def test(request):
 ################################################################
     # 백테스트 수행 관련
 
-    init_krw_bal = 500000000
-    order_quantity = 0.25
+    init_krw_bal = int(request.GET.get('money'))
+    order_quantity = float(request.GET.get('coin'))
     final_balance = 0
     final_profit = 0
 
@@ -90,6 +90,9 @@ def test(request):
     hourday_tp = json_data1['algo']['hourday_tp']
     srt_date = json_data1['algo']['srt_date']
     end_date = json_data1['algo']['end_date']
+    srt_date = request.GET.get('start').replace('-', '')
+    end_date = request.GET.get('end').replace('-', '')
+
     srt_time = json_data1['algo']['srt_time']
     end_time = json_data1['algo']['end_time']
     bns_tp = json_data1['algo']['buysell']
@@ -405,8 +408,13 @@ def loading(request):
     # print("loading")
     # print(request.GET.get('algoname'))
     # print("0000000")
-    return render(request, 'garage/loading.html',{'check': check,
-                                                  'algoname': request.GET.get('algoname')})
+    return render(request, 'garage/loading.html', {'check': check,
+                                                   'algoname': request.GET.get('algoname'),
+                                                   'start': request.GET.get('start'),
+                                                   'end': request.GET.get('end'),
+                                                   'money': request.GET.get('money'),
+                                                   'coin': request.GET.get('coin'),
+                                                  })
 
 
 def ready(request):

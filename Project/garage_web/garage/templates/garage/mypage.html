@@ -32,14 +32,21 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
     <script type="text/javascript">
-        function changeIframeUrl(url)
+        function changeIframeUrl(seq)
         {
+            start = document.getElementById("start").value;
+            end =  document.getElementById("end").value;
+            money = document.getElementById("money").value;
+            coin = document.getElementById("coin").value;
+            url = '/loading?algoname='+seq+'&start='+start+'&end='+end+'&money='+money+'&coin='+coin;
+            console.log(url)
             document.getElementById("main_frame").src = url;
         }
 
         function test(text)
         {
             console.log(document.getElementById("start").value);
+            console.log(document.getElementById("end").value);
         }
     </script>
 </head>
@@ -126,7 +133,7 @@
                     {% for name,date,seq,hd,start,end in algo_info %}
                         <div>
 <!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
-                            <div class="slider_box" onClick="changeIframeUrl('/loading?algoname={{seq}}')">
+                            <div class="slider_box" onClick="changeIframeUrl('{{seq}}')">
                             <div class="wrap">
                                     <h4 style="font-size: 0.6em">{{name}}_{{seq}}</h4>
 <!--                                       <h5><br>{{seq}}</h5>-->
@@ -144,22 +151,32 @@
         </div>
 
     </section>
+    <div align="center">백테스트 설정</div>
+    <br>
+    <div align="center">
+        <form action="">
+            <label for="start">시작:</label>
+            <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
+{#            <button type="button" onclick="test(start)"> 설정 </button>#}
+        </form>
+    </div>
 
-{#    <div align="center">#}
-{#    <form action="">#}
-{#        <label for="start">시작:</label>#}
-{#        <input type="date" id="start" name="start">#}
-{#        <button type="button" onclick="test(start)"> 설정 </button>#}
-{#    </form>#}
-{#    </div>#}
-{##}
-{#    <div align="center">#}
-{#        <form action="" >#}
-{#            <label for="end">종료:</label>#}
-{#            <input type="date" id="end" name="end">#}
+    <div align="center">
+        <form action="" >
+            <label for="end">종료:</label>
+            <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">
 {#            <button type="button"> 설정 </button>#}
-{#        </form>#}
-{#    </div>#}
+        </form>
+    </div>
+
+    <div align="center">
+        <label for="money">초기자본(원):</label>
+        <input type="number" id="money" name="money" value="500000000">
+    </div>
+    <div align="center">
+        <label for="coin">1회 거래량(BTC):</label>
+        <input type="number" id="coin" name="coin" value="0.25">
+    </div>
 
 
     <iframe src="/ready" frameborder="0" width="100%" height="100%" name="main_frame" id="main_frame"></iframe>
