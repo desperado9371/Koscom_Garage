@@ -41,6 +41,7 @@
             url = '/loading?algoname='+seq+'&start='+start+'&end='+end+'&money='+money+'&coin='+coin;
             console.log(url)
             document.getElementById("main_frame").src = url;
+            document.getElementById("main_frame").scrollIntoView();
         }
 
         function test(text)
@@ -49,56 +50,127 @@
             console.log(document.getElementById("end").value);
         }
     </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {font-family: Arial, Helvetica, sans-serif;}
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #myBtn{
+            background-color: #6C63FF;
+            color: white;
+        }
+        #myBtn2 {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #6C63FF;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        #myBtn:hover {
+            background-color: #24E1E8;
+        }
+        #myBtn2:hover {
+            background-color: #24E1E8;
+        }
+    </style>
 </head>
 
 <body id="page-top">
+<button onclick="topFunction()" id="myBtn2" title="Go to top">Top</button>
 
 
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-        <div class="container">
-            <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
-            <a class="navbar-brand js-scroll-trigger" href="/">
-                <font size=4.5><B>&nbsp Algorithm Trading</B></font>
-            </a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/intro">소개</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/mypage">MY알고리즘</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
-                    </li>
-                    {% if user.is_authenticated %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+    <div class="container">
+        <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="50" height="25">
+        <a class="navbar-brand js-scroll-trigger" href="/">
+            <font size=4.5><B>&nbsp Algorithm Trading</B></font>
+        </a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/intro">소개</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/mypage">MY알고리즘</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
+                </li>
+                {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" > {{ user.username }} </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
                     </li>
-                    {% else %}
+                {% else %}
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="login">로그인</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="signup">회원가입</a>
                     </li>
-                    {% endif %}
-                </ul>
-            </div>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
-    <!-- section customer-->
+    </div>
+</nav>
+<!-- section customer-->
 <!--    <section class="page-section-small" id="customer">-->
 <!--        <div class="container">-->
 <!--            <div class="row justify-content-center">-->
@@ -118,141 +190,233 @@
 <!--            </div>-->
 <!--        </div>-->
 <!--    </section>-->
-    <!-- section algorithm-->
-    <section class="page-section-small" id="algorithm">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-1 pt-3">
-                        <h4 class="menu">내 알고리즘</h4>
-                    </div>
-                </div>
-            </div>
-            <div style="padding:20px 30px;">
-                <div id="slider-div" href="/loading">
-                    {% for name,date,seq,hd,start,end in algo_info %}
-                        <div>
-<!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
-                            <div class="slider_box" onClick="changeIframeUrl('{{seq}}')">
-                            <div class="wrap">
-                                    <h4 style="font-size: 0.6em">{{name}}_{{seq}}</h4>
-<!--                                       <h5><br>{{seq}}</h5>-->
-<!--                                       <h6>{{seq}}</h6>-->
-<!--                                    <h5><br>수익률 4.5%</h5>-->
-                                       <h6 style="font-size: 0.4em" >{{start}}~{{end}}</h6>
-                                       <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>
-                                    <h6><br>작성일 : {{date}}</h6>
-                                    </div>
-                                </div>
-                        </div>
-                    {% endfor %}
+<!-- section algorithm-->
+<section class="page-section-small" id="algorithm" style="width: 100%">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="mt-1 pt-3">
+                    <h4 class="menu">내 알고리즘</h4>
                 </div>
             </div>
         </div>
+        <div align="right">
+            <button id="myBtn">백테스트 조건 설정</button>
+        </div>
+        <div style="padding:20px 30px;">
+            <div id="slider-div" href="/loading">
+                {% for name,date,seq,hd,start,end in algo_info %}
+                    <div>
+                        <!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
+                        <div class="slider_box" onClick="changeIframeUrl('{{seq}}')">
+                            <div class="wrap">
+                                <h4 style="font-size: 0.6em">{{name}}_{{seq}}</h4>
+                                <!--                                       <h5><br>{{seq}}</h5>-->
+                                <!--                                       <h6>{{seq}}</h6>-->
+                                <!--                                    <h5><br>수익률 4.5%</h5>-->
+                                <h6 style="font-size: 0.4em" >{{start}}~{{end}}</h6>
+                                <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>
+                                <h6><br>작성일 : {{date}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-    </section>
-    <div align="center">백테스트 설정</div>
-    <br>
-    <div align="center">
-        <form action="">
-            <label for="start">시작:</label>
-            <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
+</section>
+{#<div align="center">백테스트 설정</div>#}
+{#<br>#}
+{#<div align="center">#}
+{#    <form action="">#}
+{#        <label for="start">시작:</label>#}
+{#        <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">#}
 {#            <button type="button" onclick="test(start)"> 설정 </button>#}
-        </form>
-    </div>
-
-    <div align="center">
-        <form action="" >
-            <label for="end">종료:</label>
-            <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">
+{#    </form>#}
+{#</div>#}
+{##}
+{#<div align="center">#}
+{#    <form action="" >#}
+{#        <label for="end">종료:</label>#}
+{#        <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">#}
 {#            <button type="button"> 설정 </button>#}
-        </form>
+{#    </form>#}
+{#</div>#}
+{##}
+{#<div align="center">#}
+{#    <label for="money">초기자본(원):</label>#}
+{#    <input type="number" id="money" name="money" value="500000000">#}
+{#</div>#}
+{#<div align="center">#}
+{#    <label for="coin">1회 거래량(BTC):</label>#}
+{#    <input type="number" id="coin" name="coin" value="0.25">#}
+{#</div>#}
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 align="center" >백테스트 조건 설정</h2>
+        <br>
+        <div align="center">
+            <form action="">
+                <label for="start">테스트 시작 일자 :</label>
+                <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
+                {#            <button type="button" onclick="test(start)"> 설정 </button>#}
+            </form>
+        </div>
+
+        <div align="center">
+            <form action="" >
+                <label for="end">테스트 종료 일자 :</label>
+                <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">
+                {#            <button type="button"> 설정 </button>#}
+            </form>
+        </div>
+
+        <div align="center">
+            <label for="money">테스트 초기자본(원) :</label>
+            <input type="number" id="money" name="money" value="500000000" style="width: 9em">
+            <label for="money">원</label>
+        </div>
+        <div align="center">
+            <label for="coin">주문 1회당 거래량(BTC) :</label>
+            <input type="number" id="coin" name="coin" value="0.25" style="width: 8em">
+            <label for="coin">BTC</label>
+        </div>
+        <br>
     </div>
 
-    <div align="center">
-        <label for="money">초기자본(원):</label>
-        <input type="number" id="money" name="money" value="500000000">
-    </div>
-    <div align="center">
-        <label for="coin">1회 거래량(BTC):</label>
-        <input type="number" id="coin" name="coin" value="0.25">
-    </div>
+</div>
+
+<script>
+    //Get the button
+    var mybutton = document.getElementById("myBtn2");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 
 
-    <iframe src="/ready" frameborder="0" width="100%" height="100%" name="main_frame" id="main_frame"></iframe>
+<iframe src="/ready" frameborder="0" width="100%" height="100%" name="main_frame" id="main_frame"></iframe>
 
 
-    <!-- Bootstrap core JavaScript -->
-    {% load staticfiles %}
-    <script src="{% static 'garage/vendor/jquery/jquery.min.js'%}"></script>
-    <script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+<!-- Bootstrap core JavaScript -->
+{% load staticfiles %}
+<script src="{% static 'garage/vendor/jquery/jquery.min.js'%}"></script>
+<script src="{% static 'garage/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
 
-    <!-- Plugin JavaScript -->
+<!-- Plugin JavaScript -->
 
-    <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
+<script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
 
-    <!-- Custom scripts for this template -->
-    <script src="{% static 'garage/js/creative.min.js'%}"></script>
+<!-- Custom scripts for this template -->
+<script src="{% static 'garage/js/creative.min.js'%}"></script>
 
 
-    <script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
-    <!-- jquery:slick -->
-    <script type="text/javascript" src="{% static 'garage/vendor/slick/slick.js'%}"></script>
-    <script>
-        $(function() {
-            $('#slider-div').slick({
-                slide: 'div', //슬라이드 되어야 할 태그 ex) div, li 
-                infinite: true, //무한 반복 옵션	 
-                slidesToShow: 5, // 한 화면에 보여질 컨텐츠 개수
-                slidesToScroll: 1, //스크롤 한번에 움직일 컨텐츠 개수
-                speed: 120, // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
-                arrows: true, // 옆으로 이동하는 화살표 표시 여부
-                dots: true, // 스크롤바 아래 점으로 페이지네이션 여부
-                autoplay: false, // 자동 스크롤 사용 여부
-                autoplaySpeed: 10000, // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
-                pauseOnHover: true, // 슬라이드 이동	시 마우스 호버하면 슬라이더 멈추게 설정
-                vertical: false, // 세로 방향 슬라이드 옵션
-                prevArrow: "<button type='button' class='slick-prev'>Previous</button>", // 이전 화살표 모양 설정
-                nextArrow: "<button type='button' class='slick-next'>Next</button>", // 다음 화살표 모양 설정
-                dotsClass: "slick-dots", //아래 나오는 페이지네이션(점) css class 지정
-                draggable: true, //드래그 가능 여부 
+<script src="{% static 'garage/vendor/magnific-popup/jquery.magnific-popup.min.js'%}"></script>
+<!-- jquery:slick -->
+<script type="text/javascript" src="{% static 'garage/vendor/slick/slick.js'%}"></script>
+<script>
+    $(function() {
+        $('#slider-div').slick({
+            slide: 'div', //슬라이드 되어야 할 태그 ex) div, li
+            infinite: true, //무한 반복 옵션
+            slidesToShow: 5, // 한 화면에 보여질 컨텐츠 개수
+            slidesToScroll: 1, //스크롤 한번에 움직일 컨텐츠 개수
+            speed: 120, // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
+            arrows: true, // 옆으로 이동하는 화살표 표시 여부
+            dots: true, // 스크롤바 아래 점으로 페이지네이션 여부
+            autoplay: false, // 자동 스크롤 사용 여부
+            autoplaySpeed: 10000, // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
+            pauseOnHover: true, // 슬라이드 이동	시 마우스 호버하면 슬라이더 멈추게 설정
+            vertical: false, // 세로 방향 슬라이드 옵션
+            prevArrow: "<button type='button' class='slick-prev'>Previous</button>", // 이전 화살표 모양 설정
+            nextArrow: "<button type='button' class='slick-next'>Next</button>", // 다음 화살표 모양 설정
+            dotsClass: "slick-dots", //아래 나오는 페이지네이션(점) css class 지정
+            draggable: true, //드래그 가능 여부
 
-                responsive: [ // 반응형 웹 구현 옵션
-                                        {
-                        breakpoint: 1030, //화면 사이즈 960px
-                        settings: {
-                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
-                            slidesToShow: 4
-                        }
-                    },
-                    {
-                        breakpoint: 960, //화면 사이즈 960px
-                        settings: {
-                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
-                            slidesToShow: 3
-                        }
-                    },
-                    {
-                        breakpoint: 768, //화면 사이즈 768px
-                        settings: {
-                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
-                            slidesToShow: 2
-                        }
-                    },
-                                        {
-                        breakpoint: 500, //화면 사이즈 768px
-                        settings: {
-                            //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
-                            slidesToShow: 2
-                        }
+            responsive: [ // 반응형 웹 구현 옵션
+                {
+                    breakpoint: 1030, //화면 사이즈 960px
+                    settings: {
+                        //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                        slidesToShow: 4
                     }
-                    
-                ]
+                },
+                {
+                    breakpoint: 960, //화면 사이즈 960px
+                    settings: {
+                        //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 768, //화면 사이즈 768px
+                    settings: {
+                        //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 500, //화면 사이즈 768px
+                    settings: {
+                        //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
+                        slidesToShow: 2
+                    }
+                }
 
-            });
-        })
+            ]
 
-    </script>
+        });
+    })
+
+</script>
 </body>
 
 </html>
