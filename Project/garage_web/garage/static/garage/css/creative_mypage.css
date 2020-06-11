@@ -2538,15 +2538,15 @@ textarea.form-control.is-invalid {
 .btn {
     display: inline-block;
     font-weight: 400;
-    color: #212529;
+    color: white;
     text-align: center;
     vertical-align: middle;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
+    background-color: #6C63FF;
+    border: 1px solid ;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
@@ -2561,7 +2561,8 @@ textarea.form-control.is-invalid {
 }
 
 .btn:hover {
-    color: #212529;
+    color: white;
+    background-color: #24E1E8;
     text-decoration: none;
 }
 
@@ -10888,8 +10889,8 @@ header.masthead h1 {
 }
 
 .slider_box :hover {
-    background: #6C63FF;
-    color: white;
+    /*background: #6C63FF;*/
+    /*color: white;*/
 }
 .wrap{
     padding-top: 15%;
@@ -10898,7 +10899,7 @@ header.masthead h1 {
 @media (max-width: 450px) {
     .slider_box {
             width: 130px;
-    height: 180px;
+    height: 190px;
     }
     h4{
         font-size: 

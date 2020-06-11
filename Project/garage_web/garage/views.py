@@ -88,6 +88,7 @@ def test(request):
 
     market = json_data1['algo']['market']
     hourday_tp = json_data1['algo']['hourday_tp']
+    hourday_tp = request.GET.get('hourday')
     srt_date = json_data1['algo']['srt_date']
     end_date = json_data1['algo']['end_date']
     srt_date = request.GET.get('start').replace('-', '')
@@ -414,6 +415,7 @@ def loading(request):
                                                    'end': request.GET.get('end'),
                                                    'money': request.GET.get('money'),
                                                    'coin': request.GET.get('coin'),
+                                                   'hourday': request.GET.get('hourday'),
                                                   })
 
 
