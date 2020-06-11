@@ -2538,20 +2538,22 @@ textarea.form-control.is-invalid {
 .btn {
     display: inline-block;
     font-weight: 400;
-    color: white;
+    color: #6C63FF;
+    border: none;
     text-align: center;
     vertical-align: middle;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background-color: #6C63FF;
-    border: 1px solid ;
+    background-color: white;
+    padding: 0.375rem 0.75rem;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom:32px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2561,8 +2563,7 @@ textarea.form-control.is-invalid {
 }
 
 .btn:hover {
-    color: white;
-    background-color: #24E1E8;
+    color: #24E1E8;
     text-decoration: none;
 }
 
@@ -10724,7 +10725,8 @@ hr.light {
 }
 
 .page-section-small {
-    padding: 4rem 0;
+    padding-top: 10rem;
+    padding-bottom: 6rem;
 
 }
 
@@ -10881,14 +10883,35 @@ header.masthead h1 {
     line-height: 100px;
     margin: 10px;
     width: 180px;
-    height: 190px;
+    height: 180px;
     position: relative;
     text-align: center;
     box-sizing: border-box;
     box-shadow:  0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
 }
 
 .slider_box :hover {
+    /*background: #6C63FF;*/
+    /*color: white;*/
+}
+.slider_box2 {
+    background: #fff;
+    color: black;
+    font-size: 36px;
+    line-height: 100px;
+    width: 190px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+    box-sizing: border-box;
+    border-top-width: 0.1px;
+    border-top-style : solid;
+    border-top-color: black;
+
+}
+
+.slider_box2 :hover {
     /*background: #6C63FF;*/
     /*color: white;*/
 }
