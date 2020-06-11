@@ -38,7 +38,17 @@
             end =  document.getElementById("end").value;
             money = document.getElementById("money").value;
             coin = document.getElementById("coin").value;
-            url = '/loading?algoname='+seq+'&start='+start+'&end='+end+'&money='+money+'&coin='+coin;
+            radios = document.getElementsByName("hourday")
+            var hourday;
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    // do whatever you want with the checked radio
+                    hourday = radios[i].value;
+                    // only one radio can be logically checked, don't check the rest
+                    break;
+                }
+            }
+            url = '/loading?algoname='+seq+'&start='+start+'&end='+end+'&money='+money+'&coin='+coin+'&hourday='+hourday;
             console.log(url)
             document.getElementById("main_frame").src = url;
             document.getElementById("main_frame").scrollIntoView();
@@ -208,15 +218,17 @@
                 {% for name,date,seq,hd,start,end in algo_info %}
                     <div>
                         <!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
-                        <div class="slider_box" onClick="changeIframeUrl('{{seq}}')">
+                        <div class="slider_box">
                             <div class="wrap">
-                                <h4 style="font-size: 0.6em">{{name}}_{{seq}}</h4>
+                                <h4 style="font-size: 0.6em">알고리즘_{{seq}}</h4>
                                 <!--                                       <h5><br>{{seq}}</h5>-->
                                 <!--                                       <h6>{{seq}}</h6>-->
                                 <!--                                    <h5><br>수익률 4.5%</h5>-->
-                                <h6 style="font-size: 0.4em" >{{start}}~{{end}}</h6>
-                                <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>
-                                <h6><br>작성일 : {{date}}</h6>
+                                <h6>이름 : {{ name }}</h6>
+{#                                <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>#}
+                                <h6>작성일 : {{date}}</h6>
+                                <button class="btn"  onClick="changeIframeUrl('{{seq}}')">백테스트</button>
+                                <button class="btn">수정하기</button>
                             </div>
                         </div>
                     </div>
@@ -272,20 +284,30 @@
         <div align="center">
             <form action="" >
                 <label for="end">테스트 종료 일자 :</label>
-                <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">
+                <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">
                 {#            <button type="button"> 설정 </button>#}
             </form>
         </div>
 
         <div align="center">
             <label for="money">테스트 초기자본(원) :</label>
-            <input type="number" id="money" name="money" value="500000000" style="width: 9em">
+            <input type="number" id="money" name="money" value="500000000" style="width: 9em" step="1000000" min="0">
             <label for="money">원</label>
         </div>
         <div align="center">
             <label for="coin">주문 1회당 거래량(BTC) :</label>
-            <input type="number" id="coin" name="coin" value="0.25" style="width: 8em">
+            <input type="number" id="coin" name="coin" value="0.25" style="width: 8em" step="0.25" min="0" max="10">
             <label for="coin">BTC</label>
+        </div>
+
+        <div align="center">
+            <form action="" >
+                알고리즘 수행 시간 단위 :
+                <input type="radio" id="day" name="hourday" value="day" checked="checked">
+                <label for="day">1일</label>
+                <input type="radio" id="hour" name="hourday" value="hour">
+                <label for="hour">1시간</label>
+            </form>
         </div>
         <br>
     </div>
