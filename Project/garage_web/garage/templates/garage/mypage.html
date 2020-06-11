@@ -59,6 +59,13 @@
             console.log(document.getElementById("start").value);
             console.log(document.getElementById("end").value);
         }
+
+        function modify(seq)
+        {
+            document.cookie = "algo_seq="+seq+";path=/";
+            console.log(document.cookie)
+            location.href='/algomaker'
+        }
     </script>
     <style>
         html {
@@ -228,7 +235,7 @@
 {#                                <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>#}
                                 <h6>작성일 : {{date}}</h6>
                                 <button class="btn"  onClick="changeIframeUrl('{{seq}}')">백테스트</button>
-                                <button class="btn">수정하기</button>
+                                <button class="btn" href="/algomaker" onclick="modify({{ seq }})">수정하기</button>
                             </div>
                         </div>
                     </div>
