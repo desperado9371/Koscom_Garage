@@ -115,6 +115,7 @@ export default class Block extends cc.Component {
 
         
         if(cardName == '숫자카드'){
+            json.name = 'num';
             json.val = this.getBodyString();
         }
         else{
