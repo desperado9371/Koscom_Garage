@@ -30,9 +30,12 @@ export default class LineList extends cc.Component {
         var newLine = cc.instantiate(this.line);
         
         newLine.setParent(this.node);
-        newLine.getComponent(AlgorithmLine).init(this.node, this.blockParent);
+        var lineComp = newLine.getComponent(AlgorithmLine);
+        lineComp.init(this.node, this.blockParent);
         newLine.active= true;
         newLine.position = new cc.Vec3(0,0,0);
+
+        return lineComp;
     }
 
     removeLine(){

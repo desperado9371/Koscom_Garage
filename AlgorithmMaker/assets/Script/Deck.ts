@@ -8,13 +8,31 @@
 import HandItem from "./HandItem";
 import Card from "./Card";
 import HandManager from "./HandManager";
+import FileManager from "./FileManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Deck extends HandItem {
+    
+    @property(cc.Sprite)
+    sprite: cc.Sprite = null;
+
+    @property(cc.Label)
+    lblCategory : cc.Label = null;
+    
     getType(): string {
         return 'Deck';
+    }
+
+    
+
+    /**
+     *
+     */
+    constructor() {
+        super();
+        this.package = new Array<HandItem>();
     }
 
     package: HandItem[] = null;
@@ -30,9 +48,41 @@ export default class Deck extends HandItem {
         hm.displayNextHand();
         
     }
+    category = null;
+    setCategory(category){
+        this.category = category;
+        if(this.lblCategory != null){
+
+            this.lblCategory.string = category;
+        }
+        if(this.sprite != null){
+            if(category.includes('거래량')){
+                this.sprite.spriteFrame = FileManager.getInstance().cardVolume;
+            }
+            else if(category.includes('추세')){
+                this.sprite.spriteFrame = FileManager.getInstance().cardTrend;
+                
+            }
+            else if(category.includes('모멘텀')){
+                this.sprite.spriteFrame = FileManager.getInstance().cardMomentum;
+                
+            }
+            else if(category.includes('변동성')){
+                this.sprite.spriteFrame = FileManager.getInstance().cardPrice;
+                
+            }
+        }
+
+    }
 
     init(nextItems: HandItem[]){
         this.package = nextItems;
+    }
+
+    pushCard(name){
+        var card = new Card();
+        card.dataInit(name);
+        this.package.push(card);
     }
     testInit(){
         this.package = new Array<HandItem>();
@@ -49,7 +99,7 @@ export default class Deck extends HandItem {
         this.package.push(card);
 
         card = new Card();
-        card.dataInit("Num");
+        card.dataInit("숫자카드");
         this.package.push(card);
 
 
