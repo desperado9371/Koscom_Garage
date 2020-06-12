@@ -2,6 +2,8 @@ import WebSocketConnect from "./WebSocket/WebSocketConnect";
 import AlgorithmLine from "./AlgorithmLine";
 import Block from "./Block";
 import Card from "./Card";
+import LineList from "./LineList";
+import BlockList from "./BlockList";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -35,6 +37,13 @@ export default class AlgorithmManager extends cc.Component {
     @property(cc.Prefab)
     block : cc.Prefab = null;
 
+    @property(cc.Node)
+    popupParent : cc.Node = null;
+    @property(cc.Prefab)
+    popupSave : cc.Prefab = null;
+    @property(cc.Prefab)
+    popupSaveTooltip : cc.Prefab = null;
+
     isBuy = true;
     switchBuySell(isBuy){
         this.isBuy = !isBuy;
@@ -47,6 +56,13 @@ export default class AlgorithmManager extends cc.Component {
         this.sellUnderline.active = this.isBuy;
         
         this.isBuy = this.lineParent.active;
+    }
+
+    showSaveTooltip(){
+        cc.instantiate(this.popupSaveTooltip).setParent(this.popupParent);
+    }
+    showSavePopup(){
+        cc.instantiate(this.popupSave).setParent(this.popupParent);
     }
 
     switchToBuy(){
@@ -80,6 +96,10 @@ export default class AlgorithmManager extends cc.Component {
 
         this.isBuy = false;
         this.switchToBuy();
+        var loadSeq = this.getCookie('algo_seq');
+        if(loadSeq != null){
+            this.loadAlgorithm(loadSeq);
+        }
     }
 
     addBlockWithEvent(event, cardInfo :Card): Block{
@@ -112,13 +132,23 @@ export default class AlgorithmManager extends cc.Component {
                 return decodeURIComponent(cookie.substring(nameLenPlus));
             })[0] || null;
     }
-    SaveAlgorithm(){
+
+
+    SaveAlgorithm(algorithmName :string ){
+
+        if(algorithmName == '' || algorithmName == null){
+            algorithmName = 'test_algo';
+        }
         var json : any = {} ;
         var jsonIn : any = {}
         jsonIn.market = "upbit";
         jsonIn.srt_date = "20190101";
         jsonIn.end_date = "20200415";
         jsonIn.buysell = "buy";
+        jsonIn.srt_time = "00";
+        jsonIn.end_time = "24";
+        jsonIn.hourday_tp = "hour";
+
         
         var algoLines = this.lineParent.getComponentsInChildren(AlgorithmLine);
         for(var k = 0; k < algoLines.length; k++){
@@ -135,6 +165,9 @@ export default class AlgorithmManager extends cc.Component {
         sellJsonIn.srt_date = "20190101";
         sellJsonIn.end_date = "20200415";
         sellJsonIn.buysell = "sell";
+        sellJsonIn.srt_time = "00";
+        sellJsonIn.end_time = "24";
+        sellJsonIn.hourday_tp = "hour";
         
         var sellAlgoLines = this.sellLineParent.getComponentsInChildren(AlgorithmLine);
         for(var k = 0; k < sellAlgoLines.length; k++){
@@ -150,17 +183,210 @@ export default class AlgorithmManager extends cc.Component {
             user_id = 'test_user';
         }
 
-        WebSocketConnect.getSock().send('save|'+user_id+'|test_algo_name|'+JSON.stringify(json)+'|'+JSON.stringify(sellJson));
+        WebSocketConnect.getSock().send('save|'+user_id+'|'+algorithmName+'|'+JSON.stringify(json)+'|'+JSON.stringify(sellJson));
 
     }
+    
     requestIndicators(){
         WebSocketConnect.getSock().send('Indicators');
     }
 
-    loadAlgorithm(){
-        WebSocketConnect.getSock().send('load|test_user|all');
+    loadAlgorithm(seq){
+        //WebSocketConnect.getSock().send('load|test_user|12', this, 'load');
+        WebSocketConnect.getSock().send('load|test_user|' + seq, this, 'load');
 
     }
+
+    testLoadAlgorithm(){
+        WebSocketConnect.getSock().send('load|test_user|all', this, 'load');
+    }
+
+    parseAlgorithm(algorithm : string,  algorithmName : string = ''){
+
+        var json = (0, eval)('(' + algorithm + ')');
+
+
+        
+
+        
+        var buyAlgo;
+        var sellAlgo;
+        if(algorithmName == null || algorithmName == ''){
+            json = json.items[json.items.length-1];
+            buyAlgo = json.buy_algo;
+            sellAlgo = json.sell_algo;
+        }
+        else{
+            for(var k =0; k < json.length ; k++){
+                if(json.items[k].algo_nm == algorithmName){
+                    json = json.items[k];
+                    buyAlgo = json.buy_algo.algo;
+                    sellAlgo = json.sell_algo.algo;
+                }
+            }
+        }
+
+        buyAlgo = (0, eval)('(' + buyAlgo + ')');
+        sellAlgo = (0, eval)('(' + sellAlgo + ')');
+
+        var blocks;
+        var min, max;
+        //buy algo 
+        blocks = buyAlgo.algo;
+
+
+        for(var k = 0; true; k++){
+            //create line
+            var lines = this.lineParent.getComponentsInChildren(AlgorithmLine);
+            var blkNum = k + 1;
+            if(k >= lines.length){
+                break;
+            }
+            lines[k].onPlusButtonClick();
+            var block = blocks["block"+blkNum];
+                    if(block == null){
+                        break;
+                    }
+
+            min = block.min;
+            max = block.max;
+    
+            if(min != max){
+                lines[k].changeCondition();
+            }
+            //line setting done
+
+            for(var j = 0; j < block.total_count; j++){
+                //create group
+                var blockList = this.blockParent.getComponent(BlockList);
+                
+                 
+
+                var groupNum = j + 1;
+                var group = block["group"+groupNum];
+                var prevCard = null;
+                var sign = null;
+                for(var i = 0; i < group.length; i++){
+                    //create card
+
+                    var card = group[i];
+                    var cardName = card.name;
+                    var variables = card.val;
+                    if(cardName == 'sig'){
+                        sign = card.val;
+                        continue;
+                    }
+                    var newBlock = blockList.addBlock();
+
+                    
+                    newBlock.init(0,0, cardName, '');
+                    if(cardName == '숫자카드'){
+                        newBlock.setBodyString(variables);
+                    }
+                    else{
+                        newBlock.setBodyString(variables[Object.keys(variables)[0]]);
+                    }
+                    if(i == 0){
+                        
+                        newBlock.dockToFirstSlot(lines[k].groupList.elementAtIndex(j));
+                        lines[k].groupList.elementAtIndex(j).targetBlock = newBlock;
+                        prevCard = newBlock;
+                    }
+                    else{
+                        newBlock.dockToOtherBlock(prevCard);
+                        newBlock.relationSymbol.getComponent(cc.Label).string = sign;
+                        sign = null;
+                        prevCard = newBlock;
+                    }
+                }
+                /*for (var key in group) {
+                    console.log(' name=' + key + ' value=' + group[key]);
+
+                }*/
+            }
+        }
+
+        //sell algo
+
+        blocks = sellAlgo.algo;
+
+
+        for(var k = 0; true; k++){
+            //create line
+            var lines = this.sellLineParent.getComponentsInChildren(AlgorithmLine);
+            var blkNum = k + 1;
+            if(k >= lines.length){
+                break;
+            }
+            lines[k].onPlusButtonClick();
+            var block = blocks["block"+blkNum];
+                    if(block == null){
+                        break;
+                    }
+
+            min = block.min;
+            max = block.max;
+    
+            if(min != max){
+                lines[k].changeCondition();
+            }
+            //line setting done
+
+            for(var j = 0; j < block.total_count; j++){
+                //create group
+                var blockList = this.sellBlockParent.getComponent(BlockList);
+                
+                 
+
+                var groupNum = j + 1;
+                var group = block["group"+groupNum];
+                var prevCard = null;
+                var sign = null;
+                for(var i = 0; i < group.length; i++){
+                    //create card
+
+                    var card = group[i];
+                    var cardName = card.name;
+                    var variables = card.val;
+                    if(cardName == 'sig'){
+                        sign = card.val;
+                        continue;
+                    }
+                    var newBlock = blockList.addBlock();
+
+                    
+                    newBlock.init(0,0, cardName, '');
+                    if(cardName == '숫자카드'){
+                        newBlock.setBodyString(variables);
+                    }
+                    else{
+                        newBlock.setBodyString(variables[Object.keys(variables)[0]]);
+                    }
+
+                    if(i == 0){
+                        newBlock.dockToFirstSlot(lines[k].groupList.elementAtIndex(j));
+                        lines[k].groupList.elementAtIndex(j).targetBlock = newBlock;
+                        prevCard = newBlock;
+                    }
+                    else{
+                        newBlock.dockToOtherBlock(prevCard);
+                        newBlock.relationSymbol.getComponent(cc.Label).string = sign;
+                        sign = null;
+                        prevCard = newBlock;
+                    }
+                }
+                /*for (var key in group) {
+                    console.log(' name=' + key + ' value=' + group[key]);
+
+                }*/
+            }
+        }
+    }
+
+
+    
+
+
 
     onRecieveIndicators(json : string){
         var indicators: JSON = JSON.parse(json);

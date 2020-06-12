@@ -46,14 +46,17 @@ export default class Card extends HandItem {
         this.cardName = name;
     }
     init(name){
-        
         this.cardName = name;
+        
+        if(name.includes("|")){
+            this.cardName = name.replace("|", "\r\n");
+        }
         if(this.lblCardName!= null){
-            this.lblCardName.string = name;
+            this.lblCardName.string = this.cardName;
 
         }
 
-        var cardData = FileManager.getInstance().getCardData(this.cardName.toLowerCase());
+        var cardData = FileManager.getInstance().getCardData(name.toLowerCase());
         if(cardData == null){
             this.imgCardImage.node.active = false;
             return;
@@ -67,10 +70,12 @@ export default class Card extends HandItem {
             this.imgCardImage.spriteFrame = FileManager.getInstance().cardTrend;
             
         }
-        else if(category.includes('거래량')){
+        else if(category.includes('모멘텀')){
+            this.imgCardImage.spriteFrame = FileManager.getInstance().cardMomentum;
             
         }
-        else if(category.includes('거래량')){
+        else if(category.includes('변동성')){
+            this.imgCardImage.spriteFrame = FileManager.getInstance().cardPrice;
             
         }
         

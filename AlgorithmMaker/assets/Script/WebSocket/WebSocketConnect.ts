@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import AlgorithmManager from "../AlgorithmManager";
+
 const {ccclass, property} = cc._decorator;
 
 
@@ -21,7 +23,7 @@ export default class WebSocketConnect extends cc.Component {
     // onLoad () {}
 
     start () {
-      this.ws = new WebSocket("ws://52.79.241.205:80/Cocos");
+      this.ws = new WebSocket("ws://13.124.102.83:80/Cocos");
       this.ws.onopen = this.onOpen;
       this.ws.onmessage = this.onRecieve;
       this.ws.onclose = this.onClose;
@@ -33,22 +35,44 @@ export default class WebSocketConnect extends cc.Component {
     onOpen(event){
       
       this.isOpen = true;
-      this.send("Indicators");
+      //this.send("Indicators");
     }
 
     onClose(event){
       this.isOpen = false;
     }
 
+
+    recieveMode = '';
+    sender = null;
     onRecieve(event){
       console.log(event.data);
       
+      if(WebSocketConnect.sock.recieveMode == 'load'){
+        var am = AlgorithmManager.getInstance();
+        am.parseAlgorithm(event.data);
+      }
+      
+    }
+
+    tempStr : string = '';
+    resend(event){
+
     }
 
 
-    send(str : string){
+    send(str : string, sender = null, recieveMode = ''){
+      this.recieveMode = recieveMode;
+      this.sender = sender;
       if(this.isOpen = true){
-        this.ws.send(str);
+        try {
+          this.ws.send(str);
+        } catch (error) {
+          this.tempStr = str;
+          this.ws = new WebSocket("ws:/13.124.102.83:80/Cocos");
+          this.ws.onopen = this.resend;
+        }
+        
 
       }
       else{

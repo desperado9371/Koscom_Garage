@@ -1,6 +1,6 @@
 {
   "ver": "2.3.4",
-  "uuid": "eef7cfe3-bfc1-4afb-942a-c0902431c648",
+  "uuid": "f274b5ad-592e-47be-8119-86f0e19ab1dd",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "point",
@@ -11,10 +11,10 @@
   "height": 50,
   "platformSettings": {},
   "subMetas": {
-    "saveButton": {
+    "conditionButton": {
       "ver": "1.0.4",
-      "uuid": "354b51af-9aaf-4203-bbba-a97dfd0145f6",
-      "rawTextureUuid": "eef7cfe3-bfc1-4afb-942a-c0902431c648",
+      "uuid": "9dbb0584-4201-45fb-bf3f-ca3c072dd5c1",
+      "rawTextureUuid": "f274b5ad-592e-47be-8119-86f0e19ab1dd",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
@@ -26,10 +26,10 @@
       "height": 45,
       "rawWidth": 112,
       "rawHeight": 50,
-      "borderTop": 10.5,
+      "borderTop": 9.5,
       "borderBottom": 12.5,
-      "borderLeft": 17.5,
-      "borderRight": 17.5,
+      "borderLeft": 19.5,
+      "borderRight": 18.5,
       "subMetas": {}
     }
   }
