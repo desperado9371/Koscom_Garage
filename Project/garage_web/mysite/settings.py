@@ -131,3 +131,6 @@ LOGIN_URL = '/login/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com','*',]
+
+SESSION_COOKIE_AGE = 1200
+SESSION_SAVE_EVERY_REQUEST = True

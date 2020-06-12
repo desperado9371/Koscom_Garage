@@ -384,6 +384,7 @@ def logout(request):
     # 쿠키 삭제 및 세션 종료 후 메인페이지로 복귀
     response = redirect('/')
     response.delete_cookie('username')
+    response.delete_cookie('algo_seq')
     auth.logout(request)
     return response
 
@@ -395,12 +396,19 @@ def algomaker(request):
     :param request:
     return:
     """
-    username = ""
-    if request.COOKIES.get('username') is not None:
-        print("cookie found!")
-        print(request.COOKIES.get('username'))
-        username = request.COOKIES.get('username')
-    return render(request, 'garage/cocos_algo.html', {'username': username})
+    response = redirect('/algomaker')
+    # username = ""
+    # if request.COOKIES.get('username') is not None:
+    #     print("cookie found!")
+    #     print(request.COOKIES.get('username'))
+    #     username = request.COOKIES.get('username')
+
+    if request.META['HTTP_REFERER'][-7:] != 'mypage/' and request.COOKIES.get('algo_seq') is not None:
+        print('cookie delete')
+        response.delete_cookie('algo_seq')
+        return response
+
+    return render(request, 'garage/cocos_algo.html', )
 
 
 @login_required
