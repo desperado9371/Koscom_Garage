@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[14]:
+# In[13]:
 
 
 import glob
@@ -9,6 +9,7 @@ import pandas as pd
 import mysql.connector as sql
 from datetime import datetime
 import json
+from InsAlgoJson import InsAlgoToDB
 
 def InsMem(user_id,email):
     print("id: "+user_id)
@@ -17,7 +18,6 @@ def InsMem(user_id,email):
     db_cursor = db_connection.cursor() 
 
     if user_id != '':
-        print('실행')
         query = "INSERT INTO algo_member (id, email, tutorial_yn, date_created) VALUES (%s, %s, %s, %s)"
         val = (user_id, email, '0', datetime.today().strftime("%Y%m%d")) 
         db_cursor.execute(query, val)          
@@ -25,6 +25,18 @@ def InsMem(user_id,email):
         result = 'Success'
     else:
         result = 'Fail'
+    
+    if result == 'Success':
+        f = open("../sample_buy_algo1.json", 'r')
+        sample_buy = f.read()
+        f.close()
+        f = open("../sample_sell_algo1.json", 'r')
+        sample_sell = f.read()
+        f.close()
+        InsAlgoToDB(user_id,'Sample',str(sample_buy),str(sample_sell))
+        #InsAlgoToDB(user_id,'Sample','1',data)
+        print('Sample insert Complete')
+
     return result
 
 def SelMemTutorial(user_id):
@@ -59,11 +71,17 @@ def UpdTutorial(user_id):
 
 # if __name__ == "__main__":
 #     print("start")
-#     print(UpdTutorial('Join4'))
+#     InsMem
 
 # if __name__ == "__main__":
 #     print("start")
-#     InsMem('Test_id','test@test.com')
+#     InsMem('Test_id_S','test@test.com')
+
+
+# In[1]:
+
+
+
 
 
 # In[ ]:
