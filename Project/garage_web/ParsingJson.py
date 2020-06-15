@@ -317,31 +317,31 @@ def vortex_indicator_pos(df,n=14):
 #  ----- Chk_Meet_Condition 함수
 #  ----- input 으로 들어온 값들의 
 def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
-    print("Chk_Meet_Condition 시작:" )
-    #print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
+    # print("Chk_Meet_Condition 시작:" )
+    # print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
     meet_condtion= int(meet_condtion)
     # (case1 지표끼리 비교시)
     if group_algo[0]['name'] !='num' and group_algo[2]['name'] !='num':
         if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True:
-            print('case1 지표끼리 비교시')
+            # print('case1 지표끼리 비교시')
             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
-            print(chk)
+            # print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     elif group_algo[0]['name'] !='num' and group_algo[2]['name'] =='num':
-        print('case2 지표랑 뒷부분의 상수랑 비교시')
+        # print('case2 지표랑 뒷부분의 상수랑 비교시')
         # (case2 지표랑 뒷부분의 상수랑 비교시)
         if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(int(group_algo[2]['val']))!= True:
             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(group_algo[2]['val'])
-            print(chk)
+            # print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
-        print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
+        # print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
         if math.isnan(int(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
             chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
-            print(chk)
+            # print(chk)
             if eval(chk) == True:
                 meet_condtion = meet_condtion + 1
     return meet_condtion
@@ -361,54 +361,54 @@ def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
                 for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
-                        print(pars + "/" + search_group + " 시작!")
+                        # print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
                         for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
                             Prc_history = Make_indicat(group_algo, Prc_history)
-                        print(Prc_history)
+                        # print(Prc_history)
                         group_meet_condtion = Chk_Meet_Condition(Prc_history, algo['algo'][pars][search_group], row,
                                                                  group_meet_condtion)
 
-                print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(
-                    algo['algo'][pars]['max']))
-                print("group 충족수:" + str(group_meet_condtion))
+                # print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(
+                #     algo['algo'][pars]['max']))
+                # print("group 충족수:" + str(group_meet_condtion))
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
                 if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
                         algo['algo'][pars]['max']) >= int(group_meet_condtion):
-                    print("충족!")
+                    # print("충족!")
                     block_meet_condtion = 1
                 else:
-                    print("미충족!")
+                    # print("미충족!")
                     block_meet_condtion = 0
 
                 # 이미 블록중에 미충족된 블록이 있는경우 더이상 순회할 필요가 없으므로 break
                 if block_meet_condtion == 0:
-                    print("미충족 block 존재 다음 알고리즘으로 PASS")
+                    # print("미충족 block 존재 다음 알고리즘으로 PASS")
                     break
         if block_meet_condtion == 1:
             # 충족시 일자를 리스트에 추가
-            print("이날 알고리즘은 완벽하게 충족")
+            # print("이날 알고리즘은 완벽하게 충족")
             if hourday_tp == 'day':#일봉인 경우
                 result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
             else :#시간봉인경우
                 result_datelist.append([Prc_history['timestamp'][row], bns_tp])
 
-    print(result_datelist)
+    # print(result_datelist)
     return result_datelist
 
 #일봉 기준 시세 가져오기
 def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
-    print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
+    # print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
     
     ws = create_connection('ws://13.124.102.83:80/BackServer_Day')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date
-    print(order_packet)
+    # print(order_packet)
     if ws.connected:
         ws.send(order_packet)
-        print()
+        # print()
         result = ws.recv()
-        print(f"client received:{result}")
+        # print(f"client received:{result}")
         ws.close()
     if not result :
         print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
@@ -420,17 +420,17 @@ def Get_DtPrc(market='upbit',str_date='0',end_date='99999999'):
 
 #시간봉 기준 시세 가져오기
 def Get_HrPrc(market='upbit',str_date='0',end_date='99999999', srt_time = '00', end_time='24'):
-    print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
-    print('srt_time: '+srt_time+' end_time: '+end_time)
+    # print('market: '+market+' str_date: '+str_date+' end_date: '+end_date)
+    # print('srt_time: '+srt_time+' end_time: '+end_time)
     
     ws = create_connection('ws://13.124.102.83:80/BackServer_Hr')
     order_packet = 'load'+'|'+market+'|'+str_date+'|'+end_date+'|'+srt_time+'|'+end_time
-    print(order_packet)
+    # print(order_packet)
     if ws.connected:
         ws.send(order_packet)
-        print()
+        # print()
         result = ws.recv()
-        print(f"client received:{result}")
+        # print(f"client received:{result}")
         ws.close()
     if not result :
         print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
@@ -458,7 +458,7 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
 #     Prc_history = stoch(Prc_history)
 #     print(Prc_history)
 #임시
-    print('매수전략 시작')
+    # print('매수전략 시작')
     if buy_strategy =='':
         print("매수전략 없음")
     else :
@@ -469,14 +469,14 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
     else :
         sell_result = Fet_Algo(Prc_history,sell_strategy,'sell',hourday_tp)
     
-    print('매수리스트')
-    print(buy_result)
-    print('매도리스트')
-    print(sell_result)
-    print('최종리스트')
+    # print('매수리스트')
+    # print(buy_result)
+    # print('매도리스트')
+    # print(sell_result)
+    # print('최종리스트')
     buy_result.extend(sell_result)
     final_result=sorted(buy_result)
-    print(final_result)
+    # print(final_result)
     return final_result
     
     
