@@ -15,7 +15,7 @@
           "name": "sig"
         },
         {
-          "val": "80",
+          "val": "75",
           "name": "num"
         }
       ],
@@ -27,6 +27,6 @@
     "srt_date": "20200301",
     "srt_time": "09",
     "end_time": "23",
-		"hourday": "hour"
+		"hourday": "day"
   }
 }

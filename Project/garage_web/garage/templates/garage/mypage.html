@@ -31,11 +31,148 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'garage/images/icons/favicon-32x32.png'%}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
+    <script type="text/javascript">
+        function changeIframeUrl(seq) {
+            start = document.getElementById("start").value;
+            end = document.getElementById("end").value;
+            money = document.getElementById("money").value;
+            coin = document.getElementById("coin").value;
+            radios = document.getElementsByName("hourday")
+            var hourday;
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    // do whatever you want with the checked radio
+                    hourday = radios[i].value;
+                    // only one radio can be logically checked, don't check the rest
+                    break;
+                }
+            }
+            url = '/loading?algoname=' + seq + '&start=' + start + '&end=' + end + '&money=' + money + '&coin=' + coin + '&hourday=' + hourday;
+            console.log(url)
+            document.getElementById("main_frame").src = url;
+            document.getElementById("main_frame").scrollIntoView();
+        }
 
+        function test(text) {
+            console.log(document.getElementById("start").value);
+            console.log(document.getElementById("end").value);
+        }
+
+        function modify(seq) {
+            document.cookie = "algo_seq=" + seq + ";path=/";
+            console.log(document.cookie)
+            location.href = '/algomaker'
+        }
+
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #myBtn {
+            background-color: #6C63FF;
+            border: none;
+            color: white;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: 50px;
+            border-radius: 2px;
+            box-shadow:  0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
+        }
+        #myBtn:hover {
+            background-color: #24E1E8;
+            color : black;
+        }
+
+        #myBtn:focus {
+            outline: none;
+            background-color: #1CFFF4;
+            color : black;
+        }
+        #myBtn2 {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #6C63FF;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        #myBtn2:hover {
+            background-color: #24E1E8;
+        }
+
+                #myBtn3 {
+            background-color: white;
+        }
+
+
+    </style>
 </head>
 
 <body id="page-top">
-
+    <button onclick="topFunction()" id="myBtn2" title="Go to top">Top</button>
 
 
     <!-- Navigation -->
@@ -51,20 +188,20 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto my-2 my-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/intro">소개</a>
+                        <a class="nav-link js-scroll-trigger" href="/">소개</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/loading">알고리즘 관리</a>
+                        <a class="nav-link js-scroll-trigger" href="/mypage">MY알고리즘</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
+                        <a class="nav-link js-scroll-trigger">마켓플레이스</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/mypage"> 마이페이지 </a>
+                        <a class="nav-link js-scroll-trigger"> {{ user.username }} </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/logout">로그아웃</a>
@@ -82,103 +219,198 @@
         </div>
     </nav>
     <!-- section customer-->
-    <section class="page-section-small" id="customer">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-5 pt-5 text-center">
-                        <img class="img" href="/" src="{% static 'garage/images/user.png'%}" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-1 pt-3 text-center">
-                        <h5 class="mb-2">{{ user.username }}</h5>
-                        <h5 class="mb-3">{{ user.email}}</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!--    <section class="page-section-small" id="customer">-->
+    <!--        <div class="container">-->
+    <!--            <div class="row justify-content-center">-->
+    <!--                <div class="col-lg-3 col-md-6">-->
+    <!--                    <div class="mt-5 pt-5 text-center">-->
+    <!--                        <img class="img" href="/" src="{% static 'garage/images/user.png'%}" alt="">-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class="row justify-content-center">-->
+    <!--                <div class="col-lg-3 col-md-6">-->
+    <!--                    <div class="mt-1 pt-3 text-center">-->
+    <!--                        <h5 class="mb-2">{{ user.username }}</h5>-->
+    <!--                        <h5 class="mb-3">{{ user.email}}</h5>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </section>-->
     <!-- section algorithm-->
-    <section class="page-section-small" id="algorithm">
+    <section class="page-section-small" id="algorithm" style="width: 100%">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="mt-1 pt-3">
-                        <h4 class="menu">내 알고리즘</h4>
+                        <h4 class="menu" style="font-weight: bold">내 알고리즘</h4>
                     </div>
                 </div>
             </div>
+            <div align="right">
+                <button id="myBtn">백테스트 설정</button>
+            </div>
             <div style="padding:20px 30px;">
                 <div id="slider-div" href="/loading">
+                    {% for name,date,seq,hd,start,end in algo_info %}
                     <div>
-                            <div class="slider_box">
-                               <div class="wrap">
-                                <h4>알고리즘1</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                   <button onclick="window.open('/loading')">Continue</button>
-                                </div>
+                        <!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
+                        <div class="slider_box">
+                            <div class="wrap">
+                                <h4 style="font-size: 0.6em">알고리즘_{{seq}}</h4>
+                                <!--                                       <h5><br>{{seq}}</h5>-->
+                                <!--                                       <h6>{{seq}}</h6>-->
+                                <!--                                    <h5><br>수익률 4.5%</h5>-->
+                                <h6>이름 : {{ name }}</h6>
+                                {#                                <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>#}
+                                <h6>작성일 : {{date}}</h6>
+
+                                <button class="btn" onClick="changeIframeUrl('{{seq}}')">백테스트</button>
+                                <button class="btn" href="/algomaker" onclick="modify({{ seq }})">수정하기</button>
+
+                                
                             </div>
+                        </div>
                     </div>
-                    <div>
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘2</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-             
-                    </div>
-                    <div>
-                
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘3</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                    </div>
-                    <div>
-                    
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘4</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                     
-                    </div>
-                    <div>
-                 
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘5</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                       
-                    </div>
-                    <div>
-                            <div class="slider_box">
-                                  <div class="wrap">
-                                <h4>알고리즘6</h4>
-                                <h5><br>수익률 4.5%</h5>
-                                <h6><br>수정일 2020/05/18</h6>
-                                </div>
-                            </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
     </section>
+    {#<div align="center">백테스트 설정</div>#}
+    {#<br>#}
+    {#<div align="center">#}
+    {#    <form action="">#}
+    {#        <label for="start">시작:</label>#}
+    {#        <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">#}
+    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
+    {#    </form>#}
+    {#</div>#}
+    {##}
+    {#<div align="center">#}
+    {#    <form action="" >#}
+    {#        <label for="end">종료:</label>#}
+    {#        <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">#}
+    {#            <button type="button"> 설정 </button>#}
+    {#    </form>#}
+    {#</div>#}
+    {##}
+    {#<div align="center">#}
+    {#    <label for="money">초기자본(원):</label>#}
+    {#    <input type="number" id="money" name="money" value="500000000">#}
+    {#</div>#}
+    {#<div align="center">#}
+    {#    <label for="coin">1회 거래량(BTC):</label>#}
+    {#    <input type="number" id="coin" name="coin" value="0.25">#}
+    {#</div>#}
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 align="center">백테스트 조건 설정</h2>
+            <br>
+            <div align="center">
+                <form action="">
+                    <label for="start">테스트 시작 일자 :</label>
+                    <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
+                    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
+                </form>
+            </div>
+
+            <div align="center">
+                <form action="">
+                    <label for="end">테스트 종료 일자 :</label>
+                    <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">
+                    {#            <button type="button"> 설정 </button>#}
+                </form>
+            </div>
+
+            <div align="center">
+                <label for="money">테스트 초기자본(원) :</label>
+                <input type="number" id="money" name="money" value="500000000" style="width: 9em" step="1000000" min="0">
+                <label for="money">원</label>
+            </div>
+            <div align="center">
+                <label for="coin">주문 1회당 거래량(BTC) :</label>
+                <input type="number" id="coin" name="coin" value="0.25" style="width: 8em" step="0.25" min="0" max="10">
+                <label for="coin">BTC</label>
+            </div>
+
+            <div align="center">
+                <form action="">
+                    알고리즘 수행 시간 단위 :
+                    <input type="radio" id="day" name="hourday" value="day" checked="checked">
+                    <label for="day">1일</label>
+                    <input type="radio" id="hour" name="hourday" value="hour">
+                    <label for="hour">1시간</label>
+                </form>
+            </div>
+            <br>
+        </div>
+
+    </div>
+
+    <script>
+        //Get the button
+        var mybutton = document.getElementById("myBtn2");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+    </script>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    </script>
+
+
+    <iframe src="/ready" frameborder="0" width="100%" height="100%" name="main_frame" id="main_frame"></iframe>
 
 
     <!-- Bootstrap core JavaScript -->
@@ -200,8 +432,8 @@
     <script>
         $(function() {
             $('#slider-div').slick({
-                slide: 'div', //슬라이드 되어야 할 태그 ex) div, li 
-                infinite: true, //무한 반복 옵션	 
+                slide: 'div', //슬라이드 되어야 할 태그 ex) div, li
+                infinite: true, //무한 반복 옵션
                 slidesToShow: 5, // 한 화면에 보여질 컨텐츠 개수
                 slidesToScroll: 1, //스크롤 한번에 움직일 컨텐츠 개수
                 speed: 120, // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
@@ -214,10 +446,10 @@
                 prevArrow: "<button type='button' class='slick-prev'>Previous</button>", // 이전 화살표 모양 설정
                 nextArrow: "<button type='button' class='slick-next'>Next</button>", // 다음 화살표 모양 설정
                 dotsClass: "slick-dots", //아래 나오는 페이지네이션(점) css class 지정
-                draggable: true, //드래그 가능 여부 
+                draggable: true, //드래그 가능 여부
 
                 responsive: [ // 반응형 웹 구현 옵션
-                                        {
+                    {
                         breakpoint: 1030, //화면 사이즈 960px
                         settings: {
                             //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
@@ -238,14 +470,14 @@
                             slidesToShow: 2
                         }
                     },
-                                        {
+                    {
                         breakpoint: 500, //화면 사이즈 768px
                         settings: {
                             //위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
                             slidesToShow: 2
                         }
                     }
-                    
+
                 ]
 
             });

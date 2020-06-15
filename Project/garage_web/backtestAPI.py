@@ -261,10 +261,13 @@ class BacktestAPI:
                    target_date="20181011",
                    krw_balance=0.0,
                    btc_balance=0.0,
-                   average_price=0.0):
+                   average_price=0.0,
+                   hourday='day'):
         """
         과거데이터에 주문을 실행하는 함수
 
+        :param hourday:
+        :param average_price:
         :param market: 대사
         :param order_type:
         :param quantity:
@@ -274,8 +277,10 @@ class BacktestAPI:
         :return:
         """
         bitcoin_dt = bitcoin_dt
-
-        target_date = datetime.strptime(target_date, "%Y%m%dT%H:%M:%S")
+        if hourday == 'day':
+            target_date = datetime.strptime(target_date, "%Y%m%d")
+        else:
+            target_date = datetime.strptime(target_date, "%Y%m%dT%H:%M:%S")
 
         price = -1
 
@@ -285,7 +290,10 @@ class BacktestAPI:
         old_total = old_btc_bal * average_price
 
         for index, bitcoin in bitcoin_dt.iterrows():
-            temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%dT%H:%M:%S")
+            if hourday == 'day':
+                temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%d")
+            else:
+                temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%dT%H:%M:%S")
             if temp == target_date:
                 price = float(bitcoin['close'])
                 dt_index = index
@@ -332,6 +340,7 @@ class BacktestAPI:
     def execute_backtest(self,bitcoin_dt, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
                          date_list=['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20'],
                          type_list=['buy', 'buy', 'buy', 'sell', 'sell', 'sell'],
+                         hourday='day'
                          ):
         """
         백테스트를 실행하는 함수
@@ -341,6 +350,7 @@ class BacktestAPI:
         :param order_quantity:
         :param date_list:
         :param type_list:
+        :param hourday:
         :return:
         """
 
@@ -368,11 +378,15 @@ class BacktestAPI:
                                                target_date=date_list[i],
                                                krw_balance=krw_bal,
                                                btc_balance=btc_bal,
-                                               average_price=avg_prc)
+                                               average_price=avg_prc,
+                                               hourday=hourday)
             if old_krw == krw_bal:
                 continue
             temp = []
-            temp.append(target_date.strftime("%Y-%m-%dT%H:%M:%S"))
+            if hourday == 'day':
+                temp.append(target_date.strftime("%Y-%m-%d"))
+            else:
+                temp.append(target_date.strftime("%Y-%m-%dT%H:%M:%S"))
             temp.append(order_type)
             temp.append(price)
             temp.append(order_quantity)

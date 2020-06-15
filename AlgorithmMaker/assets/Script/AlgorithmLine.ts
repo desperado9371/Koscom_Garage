@@ -33,6 +33,10 @@ export default class AlgorithmLine extends cc.Component {
     @property(cc.Node)
     bodyBackground : cc.Node = null;
 
+    @property(cc.Label)
+    lblCondition: cc.Label = null;
+
+
 
 
     static ySpacing = 240;
@@ -40,7 +44,20 @@ export default class AlgorithmLine extends cc.Component {
     static xThreshold = 800;
     static baseHeight = 340;
 
-    groupList : LinkedList<BlockGroup> = null;
+    groupList : LinkedList<BlockGroup> = new LinkedList<BlockGroup>();
+    condition : string = 'all';
+    changeCondition(){
+        
+        if(this.condition == 'all'){
+            this.condition = '1';
+            this.lblCondition.string = '1개 이상 만족';
+        }
+        else {
+            this.condition = 'all';
+            this.lblCondition.string = '조건 모두 만족';
+        }
+        
+    }
     toJson(){
         var json : any = {};
 
@@ -48,8 +65,15 @@ export default class AlgorithmLine extends cc.Component {
             return null;
         }
 
-        json.min = (this.groupList.size()-1).toString();
-        json.max = (this.groupList.size()-1).toString();
+        if(this.condition == 'all'){
+            json.min = (this.groupList.size()-1).toString();
+            json.max = (this.groupList.size()-1).toString();
+
+        }
+        else{
+            json.min = 1;
+            json.max = (this.groupList.size()-1).toString();
+        }
         json.total_count = (this.groupList.size()-1).toString();
         for(var k = 1; k <= this.groupList.size(); k++){
             var j = this.groupList.elementAtIndex(k-1).toJson();
@@ -61,7 +85,6 @@ export default class AlgorithmLine extends cc.Component {
 
 
         return json;
-
     }
     addEmptyGroup(){
         var newNode = cc.instantiate(this.emptyGroup);
@@ -101,6 +124,7 @@ export default class AlgorithmLine extends cc.Component {
         var prevGroup : BlockGroup = null;
         var xPos = 0;
         var yPos = 0;
+        var number = 1;
         for(var k = 0; k < this.groupList.size(); k++){
             var elem = this.groupList.elementAtIndex(k);
             if(prevGroup == null){
@@ -118,6 +142,8 @@ export default class AlgorithmLine extends cc.Component {
                     xPos = 110;
                 }
             }
+            elem.setNumber(number.toString());
+            number++;
             elem.node.setPosition(xPos, yPos);
             prevGroup = elem;
             

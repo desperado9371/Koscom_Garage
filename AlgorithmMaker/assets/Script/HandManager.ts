@@ -59,9 +59,48 @@ export default class HandManager extends cc.Component {
     
     init(){
         var h : HandItem[] = [];
-        var d = new Deck();
-        d.testInit();
-        h.push(d);
+
+        var vol = new Deck();
+        vol.setCategory("거래량");
+        vol.pushCard("OBV");
+        vol.pushCard("ADI");
+        vol.pushCard("CMF");
+        vol.pushCard("MFI");
+        vol.pushCard("FI");
+
+
+        var trend = new Deck();
+        trend.setCategory("추세");
+        trend.pushCard("MACD");
+        trend.pushCard("RSI");
+        trend.pushCard("MACD|시그널");
+        trend.pushCard("ADX");
+        trend.pushCard("CCI");
+        trend.pushCard("TRIX");
+
+        var momentum = new Deck();
+        momentum.setCategory("모멘텀");
+        momentum.pushCard("스토캐스틱");
+        momentum.pushCard("TSI");
+        momentum.pushCard("ROC");
+        momentum.pushCard("AO");
+
+        var volatility  = new Deck();
+        volatility.setCategory("변동성");
+        volatility.pushCard("볼린저밴드|중심선");
+        volatility.pushCard("볼린저밴드|상한선");
+        volatility.pushCard("볼린저밴드|하한선");
+        volatility.pushCard("볼린저밴드|밴드폭");
+        volatility.pushCard("ATR");
+
+        
+        h.push(vol);
+        h.push(trend);
+        h.push(momentum);
+        h.push(volatility);
+        var numCard = new Card();
+        numCard.dataInit('숫자카드');
+        h.push(numCard);
 
         this.hands.push(h);
 
@@ -165,12 +204,15 @@ export default class HandManager extends cc.Component {
                 obj = cc.instantiate(this.deckPrefab);
                 var deck = obj.getComponent(Deck);
                 var originalDeck = item as Deck;
+                var cast = item as Deck;
+                deck.setCategory(cast.category);
                 deck.init(originalDeck.package);
             }
             else{
                 console.log("type error"); 
             }
             obj.setParent(this.handParent);
+            obj.setPosition(0,0,0);
         }
 
 

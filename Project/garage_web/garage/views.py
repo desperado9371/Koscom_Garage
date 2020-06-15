@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from datetime import datetime
 import numpy as np
 import pandas as pd
+import json
 from backtestAPI import BacktestAPI
 import asyncio
 from websocket import create_connection
@@ -25,14 +26,131 @@ import ParsingJson
 def test(request):
     backtestapi = BacktestAPI()
 
-    upbit_min = pd.read_csv('upbit_krwbtc_1hr.csv')
-    upbit_min.reset_index(drop=True, inplace=True)
-    upbit_min = backtestapi.macd(upbit_min)
-    upbit_min = backtestapi.rsi(upbit_min)
-    upbit_min = backtestapi.obv(upbit_min)
+################################################################
+    # 백테스트 수행 관련
+
+    init_krw_bal = int(request.GET.get('money'))
+    order_quantity = float(request.GET.get('coin'))
+    final_balance = 0
+    final_profit = 0
+
+    result = []
+
+    username = request.user.username
+    algo_name = request.GET.get('algoname')
+    ws = create_connection("ws://13.124.102.83/Cocos")
+    ws.send("load|{}|{}".format(username, algo_name))
+    json_data = ws.recv()
+    json_data = eval(json_data)
+
+    if json_data['items'][-1]['buy_algo'] == None:
+        buy_algo = ''
+    else:
+        buy_algo = eval(json_data['items'][-1]['buy_algo'])
+
+    if json_data['items'][-1]['sell_algo'] == None:
+        sell_algo = ''
+    else:
+        sell_algo = eval(json_data['items'][-1]['sell_algo'])
+    algo_realname = json_data['items'][-1]['algo_nm']
+    # print("buy")
+    # print(buy_algo)
+    # print("----")
+    # print('sell')
+    # print(sell_algo)
+    # print("----")
+
+    # with open('Define_Algo.json', 'r') as f:
+    #     json_data1 = json.load(f)
+    # with open('Define_Algo2.json', 'r') as f:
+    #     json_data2 = json.load(f)
+
+    json_data1 = buy_algo
+    json_data2 = sell_algo
+
+    # username = request.COOKIES.get('username')
+    # ws = create_connection("ws://52.79.241.205:80/Cocos")
+    # ws.send("load|{}|all".format(username))
+    # json_data = ws.recv()
+    # json_data = eval(json_data)
+    # print("session: {}".format(request.user))
+    # print("cookies: {}".format(username))
+    # if json_data['items'][-1]['buy_algo'] == None:
+    #     json_data1 = ''
+    # else:
+    #     json_data1 = eval(json_data['items'][-1]['buy_algo'])
+    # if json_data['items'][-1]['sell_algo'] == None:
+    #     json_data2 = ''
+    # else:
+    #     json_data2 = eval(json_data['items'][-1]['sell_algo'])
+    # print(json_data1)
+    # print(json_data2)
+
+    market = json_data1['algo']['market']
+    hourday_tp = json_data1['algo']['hourday_tp']
+    hourday_tp = request.GET.get('hourday')
+    srt_date = json_data1['algo']['srt_date']
+    end_date = json_data1['algo']['end_date']
+    srt_date = request.GET.get('start').replace('-', '')
+    end_date = request.GET.get('end').replace('-', '')
+
+    srt_time = json_data1['algo']['srt_time']
+    end_time = json_data1['algo']['end_time']
+    bns_tp = json_data1['algo']['buysell']
+
+    # 시세데이터 get
+    #     df = get_price_data('upbit','1d')
+    #     print(df)
+    # df = Set_Indicator(df,json_data)
+
+    # result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
+    result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time, hourday_tp)
+    if hourday_tp == 'day':  # 일봉일 경우
+        bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
+    else:  # 시간봉일 경우
+        bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
+        bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+
+    trade_list = []
+    final_balance = init_krw_bal
+    final_increase = 0
+    final_profit = 0
+    krw_bal = 0;
+    btc_bal = 0;
+    avg_prc = 0;
+    if not result:
+        print("해당 조건에 충족하는 주문일이 없습니다.")
+    else:
+        date_list = np.array(result).T[0]
+        type_list = np.array(result).T[1]
+        trade_list, final_balance, final_increase, final_profit, krw_bal, btc_bal, avg_prc = backtestapi.execute_backtest(
+            bitcoin_dt=bitcoin_dt, init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list, hourday=hourday_tp)
+        final_increase = "%.2f" % final_increase
+        final_profit = "%.2f" % final_profit
+######################################################################
+# 차트 관련
+    upbit_min = bitcoin_dt
+
+    if hourday_tp == 'day':
+        for i in range(len(upbit_min)):
+            temp = datetime.strptime(upbit_min['timestamp'][i],"%Y%m%d")
+            temp = temp.strftime("%Y-%m-%dT09:00:00")
+            upbit_min['timestamp'][i] = temp
+    else:
+        for i in range(len(upbit_min)):
+            temp = datetime.strptime(upbit_min['timestamp'][i],"%Y%m%dT%H:%M:%S")
+            temp = temp.strftime("%Y-%m-%dT%H:%M:%S")
+            upbit_min['timestamp'][i] = temp
+
+    # print(upbit_min['timestamp'][0])
+    # print(bitcoin_dt['timestamp'][0])
+
+
+    # upbit_min = backtestapi.macd(upbit_min)
+    # upbit_min = backtestapi.rsi(upbit_min)
+    # upbit_min = backtestapi.obv(upbit_min)
 
     timestamps = upbit_min['timestamp']
-    longtimestamps = timestamps
     opens = upbit_min['open']
     closes = upbit_min['close']
     highs = upbit_min['high']
@@ -63,89 +181,13 @@ def test(request):
         temp.append(opens[i])
         temp.append(closes[i])
         temp.append(highs[i])
-        temp.append(longtimestamps[i])
+        if hourday_tp == 'day':
+            temp.append(timestamps[i][:10])
+        else:
+            temp.append(timestamps[i])
         # temp.append(tooltips[i])
         data.append(temp)
     # print( upbit_min['close'][-30:].tolist())
-
-
-################################################################
-    # 백테스트 수행 관련
-
-    init_krw_bal = 500000000
-    order_quantity = 0.25
-    final_balance = 0
-    final_profit = 0
-
-    result = []
-    with open('Define_Algo.json', 'r') as f:
-        json_data1 = json.load(f)
-    with open('Define_Algo2.json', 'r') as f:
-        json_data2 = json.load(f)
-
-    # username = request.COOKIES.get('username')
-    # ws = create_connection("ws://52.79.241.205:80/Cocos")
-    # ws.send("load|{}|all".format(username))
-    # json_data = ws.recv()
-    # json_data = eval(json_data)
-    # print("session: {}".format(request.user))
-    # print("cookies: {}".format(username))
-    # if json_data['items'][-1]['buy_algo'] == None:
-    #     json_data1 = ''
-    # else:
-    #     json_data1 = eval(json_data['items'][-1]['buy_algo'])
-    # if json_data['items'][-1]['sell_algo'] == None:
-    #     json_data2 = ''
-    # else:
-    #     json_data2 = eval(json_data['items'][-1]['sell_algo'])
-    print(json_data1)
-    print(json_data2)
-    with open('Define_Algo.json', 'r') as f:
-        json_data_b = json.load(f)
-    with open('Define_Algo2.json', 'r') as f:
-        json_data_s = json.load(f)
-
-    market = json_data1['algo']['market']
-    hourday_tp = json_data1['algo']['hourday']
-    srt_date = json_data1['algo']['srt_date']
-    end_date = json_data1['algo']['end_date']
-    srt_time = json_data1['algo']['srt_time']
-    end_time = json_data1['algo']['end_time']
-    bns_tp = json_data1['algo']['buysell']
-
-    Prc_history = pd.read_csv('upbit_krwbtc_1day.csv')
-    Prc_history = Prc_history[-150:]
-    Prc_history.reset_index(drop=True, inplace=True)
-
-    # 시세데이터 get
-    #     df = get_price_data('upbit','1d')
-    #     print(df)
-    # df = Set_Indicator(df,json_data)
-
-    # result= Fet_Algo(Prc_history,json_data,bns_tp,json_data)
-    result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time, hourday_tp)
-    if hourday_tp == 'day':  # 일봉일 경우
-        bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
-    else:  # 시간봉일 경우
-        bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
-        bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
-
-    trade_list = []
-    final_balance = init_krw_bal
-    final_increase = 0
-    final_profit = 0
-    krw_bal = 0;
-    btc_bal = 0;
-    avg_prc = 0;
-    if not result:
-        print("해당 조건에 충족하는 주문일이 없습니다.")
-    else:
-        date_list = np.array(result).T[0]
-        type_list = np.array(result).T[1]
-        trade_list, final_balance, final_increase, final_profit, krw_bal, btc_bal, avg_prc = backtestapi.execute_backtest(
-            bitcoin_dt=bitcoin_dt, init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list)
-        final_increase = "%.2f" % final_increase
-        final_profit = "%.2f" % final_profit
 
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
@@ -193,25 +235,6 @@ def test(request):
         init_bal = init_bal[0:-3] + ',' + init_bal[-3:]
 #########################################################
 
-    # date_list = ['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20']
-    # type_list = ['buy', 'buy', 'buy', 'sell', 'sell', 'sell']
-    # wl_list = ['', '', '', 'win', 'lose', 'win']
-    # daily_prof_list = ['0.1%', '0.3%', '1.0%', '0.5%', '0.6%', '1.2%']
-    # accum_prof_list = ['1.1%', '2.1%', '2.0%', '1.1%', '2.2%', '3.3%']
-    # balance_list = ['12345', '12346', '12345', '12344', '12346', '12347']
-    # trade_list = []
-    #
-    # for i in range(len(date_list)):
-    #     tmp = []
-    #     tmp.append(date_list[i])
-    #     tmp.append(type_list[i])
-    #     tmp.append(wl_list[i])
-    #     tmp.append(daily_prof_list[i])
-    #     tmp.append(accum_prof_list[i])
-    #     tmp.append(balance_list[i])
-    #     trade_list.append(tmp)
-    # print(trade_list)
-
     start_date = srt_date
     end_date = end_date
     trade_num = len(trade_list)
@@ -231,7 +254,10 @@ def test(request):
                                                 'krw_bal': krw_bal,
                                                 'btc_bal': btc_bal,
                                                 'avg_prc': avg_prc,
-                                                'cur_prc': cur_prc})
+                                                'cur_prc': cur_prc,
+                                                'algoname': request.GET.get('algoname'),
+                                                'algoreal': algo_realname,
+                                                })
 
 def home(request):
     """
@@ -240,6 +266,8 @@ def home(request):
     :param request:
     :return:
     """
+    if request.user.is_authenticated:
+        print(request.user.username)
     return render(request, 'garage/index.html', {})
 
 def intro(request):
@@ -251,6 +279,7 @@ def intro(request):
     """
     return render(request, 'garage/intro.html', {})
 
+@login_required
 def mypage(request):
     username = request.COOKIES.get('username')
     ws = create_connection("ws://13.124.102.83:80/Cocos")
@@ -258,11 +287,33 @@ def mypage(request):
     json_data = ws.recv()
     json_data = eval(json_data)
 
+    algo_names = []
+    algo_dates = []
+    algo_info = []
+    algo_num = 0
+    temp_name =''
     #print(json_data['items'][-1]['algo_nm'])
     for i in json_data['items']:
-        print(i['algo_nm'])
-
-    return render(request, 'garage/mypage.html',{})
+        algo_names.append(i['algo_nm'])
+        algo_dates.append(i['date_created'])
+        temp = []
+        temp.append(i['algo_nm'])
+        temp.append(i['date_created'])
+        temp.append(i['algo_seq'])
+        temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
+        temp.append(eval(i['buy_algo'])['algo']['srt_date'])
+        temp.append(eval(i['buy_algo'])['algo']['end_date'])
+        algo_info.append(temp)
+    # print(algo_names)
+    # print(algo_dates)
+    # print(len(json_data['items']))
+    temp_name = algo_names[0]
+    return render(request, 'garage/mypage.html',{'algo_names': algo_names,
+                                                 'algo_dates': algo_dates,
+                                                 'algo_info': algo_info,
+                                                 'algo_num': algo_num,
+                                                 'name0': temp_name,
+                                                 })
 
 @csrf_exempt
 def login(request):
@@ -333,8 +384,10 @@ def logout(request):
     # 쿠키 삭제 및 세션 종료 후 메인페이지로 복귀
     response = redirect('/')
     response.delete_cookie('username')
+    response.delete_cookie('algo_seq')
     auth.logout(request)
     return response
+
 
 @login_required
 def algomaker(request):
@@ -343,336 +396,36 @@ def algomaker(request):
     :param request:
     return:
     """
-    username = ""
-    if request.COOKIES.get('username') is not None:
-        print("cookie found!")
-        print(request.COOKIES.get('username'))
-        username = request.COOKIES.get('username')
-    return render(request, 'garage/cocos_algo.html', {'username': username})
+    response = redirect('/algomaker')
+    # username = ""
+    # if request.COOKIES.get('username') is not None:
+    #     print("cookie found!")
+    #     print(request.COOKIES.get('username'))
+    #     username = request.COOKIES.get('username')
+
+    if request.META['HTTP_REFERER'][-7:] != 'mypage/' and request.COOKIES.get('algo_seq') is not None:
+        print('cookie delete')
+        response.delete_cookie('algo_seq')
+        return response
+
+    return render(request, 'garage/cocos_algo.html', )
 
 
+@login_required
 def loading(request):
     check = 1;
-    return render(request, 'garage/loading.html',{'check': check})
+    # print("loading")
+    # print(request.GET.get('algoname'))
+    # print("0000000")
+    return render(request, 'garage/loading.html', {'check': check,
+                                                   'algoname': request.GET.get('algoname'),
+                                                   'start': request.GET.get('start'),
+                                                   'end': request.GET.get('end'),
+                                                   'money': request.GET.get('money'),
+                                                   'coin': request.GET.get('coin'),
+                                                   'hourday': request.GET.get('hourday'),
+                                                  })
 
 
-def charttest(request):
-    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-    backtestapi = BacktestAPI()
-    upbit_min = backtestapi.macd(upbit_min)
-    upbit_min = backtestapi.rsi(upbit_min)
-    upbit_min = upbit_min[-400:]
-    upbit_min.reset_index(drop=True, inplace=True)
-
-    timestamps = upbit_min['timestamp']
-    closes = upbit_min['close']
-    macds = upbit_min['macd']
-    rsis = upbit_min['rsi']
-
-    for i in range(len(timestamps)):
-        timestamps[i] = timestamps[i][:10]
-
-    data = list()
-
-    for i in range(len(timestamps)):
-        temp=[]
-        year = timestamps[i][:4]
-        month = timestamps[i][5:7]
-        day = timestamps[i][8:10]
-        temp.append(year)
-        temp.append(month)
-        temp.append(day)
-        temp.append(closes[i])
-        if i % 3 == 0:
-            temp.append("buy")
-        else:
-            temp.append("null")
-        # temp.append(macds[i])
-        # temp.append(rsis[i])
-        data.append(temp)
-
-
-    return render(request, 'garage/chart_test.html', {'data':data})
-
-def backtest(request):
-
-    upbit_min = pd.read_csv('upbit_krwbtc_1day.csv')
-
-    timestamps = upbit_min['timestamp']
-    opens = upbit_min['open']
-    closes = upbit_min['close']
-    highs = upbit_min['high']
-    lows = upbit_min['low']
-
-    for i in range(len(timestamps)):
-        timestamps[i] = timestamps[i][:10]
-
-    data = list()
-    temp = list()
-    tooltips = list()
-    for i in range(len(timestamps)):
-        if i % 3 == 0:
-            tooltips.append('stroke-width: 5;' +
-                            'stroke-color: #1800c8')
-        if i % 3 == 1:
-            tooltips.append('stroke-width: 5;' +
-                           'stroke-color: #1800c8')
-        if i % 2 == 0:
-            tooltips.append('')
-
-    for i in range(len(timestamps)):
-        temp.append(timestamps[i])
-        temp.append(lows[i])
-        temp.append(opens[i])
-        temp.append(closes[i])
-        temp.append(highs[i])
-        #temp.append(tooltips[i])
-        data.append(temp)
-        temp = list()
-    print( data[:4])
-    # print( upbit_min['close'][-30:].tolist())
-
-    return render(request, 'garage/backtest.html', {'data': upbit_min['close'][-30:].tolist(),
-                                                   'labels': upbit_min['timestamp'][-30:].tolist(),
-                                                    'datas': data[-100:]})
-
-
-import asyncio
-# from websocket import create_connection
-import math
-import json
-import pandas as pd
-from datetime import datetime
-import ta
-import socket
-import numpy as np
-from backtestAPI import BacktestAPI
-
-
-class Algo_Info:
-    str_date = ""
-    end_date = ""
-    bns_tp = ""
-    name = []
-
-
-class block:
-    condition_min = ""
-    condition_max = ""
-    total_count = ""
-
-
-# 지표값을 호출해서 리스트에 추가함
-def Make_indicat(indi, prc_lst):
-    if indi['name'] == 'macd':
-        prc_lst = macd(prc_lst,
-                       int(indi['val']['n_slow']),
-                       int(indi['val']['n_fast']),
-                       int(indi['val']['n_sign']))
-    elif indi['name'] == 'obv':
-        prc_lst = obv(prc_lst)
-    elif indi['name'] == 'rsi':
-        prc_lst = rsi(prc_lst, int(indi['val']['period']))
-    elif indi['name'] == 'bollinger_band':
-        prc_lst = bollinger_band(prc_lst,
-                                 int(indi['val']['period']),
-                                 int(indi['val']['ndev']))
-
-    return prc_lst
-
-
-def get_price_data(market='upbit', time_delta='1d'):
-    """
-    파일로 되어있는 시세 정보를 시장과 시간단위 를 입력받아서 읽어오는 함수
-    :param market:
-    :param time_delta:
-    :return:
-    """
-
-    bitcoin_dt = pd.DataFrame()
-    if market == 'upbit':
-        if time_delta == '1d':
-            bitcoin_dt = pd.read_csv('upbit_krwbtc_1day.csv')
-        elif time_delta == '1m':
-            bitcoin_dt = pd.read_csv('upbit_krwbtc_1min.csv')
-    elif market == 'binance':
-        if time_delta == '1d':
-            bitcoin_dt = pd.read_csv('binance_btcusdt_1day.csv')
-        elif time_delta == '1m':
-            bitcoin_dt = pd.read_csv('binance_btcusdt_1min.csv')
-
-    return bitcoin_dt
-
-
-##지표 구현 부분########
-def macd(Prc_history, n_slow=26, n_fast=12, n_sign=9):
-    indicator_macd = ta.trend.MACD(Prc_history['close'],
-                                   n_slow=n_slow,
-                                   n_fast=n_fast,
-                                   n_sign=n_sign)
-    Prc_history['macd'] = indicator_macd.macd()
-    Prc_history['macd_diff'] = indicator_macd.macd_diff()
-    Prc_history['macd_signal'] = indicator_macd.macd_signal()
-    return Prc_history
-
-
-def rsi(df, n=14):
-    indicator_rsi = ta.momentum.RSIIndicator(df['close'],
-                                             n=n)
-    df['rsi'] = indicator_rsi.rsi()
-    return df
-
-
-
-
-def bollinger_band(df, n=20, ndev=2):
-    indicator_bollinger = ta.volatility.BollingerBands(df['close'],
-                                                       n=n,
-                                                       ndev=ndev)
-    df['bollinger_hband'] = indicator_bollinger.bollinger_hband()
-    df['bollinger_hband_indicator'] = indicator_bollinger.bollinger_hband_indicator()
-    df['bollinger_lband'] = indicator_bollinger.bollinger_lband()
-    df['bollinger_lband_indicator'] = indicator_bollinger.bollinger_lband_indicator()
-    df['bollinger_mband'] = indicator_bollinger.bollinger_mavg()
-    df['bollinger_wband'] = indicator_bollinger.bollinger_wband()
-    return df
-
-
-def obv(df):
-    indicator_obv = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume'])
-    df['obv'] = indicator_obv.on_balance_volume()
-    return df
-
-
-#  ----- Chk_Meet_Condition 함수
-#  ----- input 으로 들어온 값들의
-def Chk_Meet_Condition(Prc_history, group_algo, row, meet_condtion):
-    # print("Chk_Meet_Condition 시작:")
-    # print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
-    meet_condtion = int(meet_condtion)
-    # (case1 지표끼리 비교시)
-    if group_algo[0]['name'] != 'num' and group_algo[2]['name'] != 'num':
-        if math.isnan(Prc_history[group_algo[0]['name']][row]) != True and math.isnan(
-                Prc_history[group_algo[2]['name']][row]) != True:
-            # print('case1 지표끼리 비교시')
-            chk = str(Prc_history[group_algo[0]['name']][row]) + str(group_algo[1]['val']) + str(
-                Prc_history[group_algo[2]['name']][row])
-            # print(chk)
-            if eval(chk) == True:
-                meet_condtion = meet_condtion + 1
-    elif group_algo[0]['name'] != 'num' and group_algo[2]['name'] == 'num':
-        # print('case2 지표랑 뒷부분의 상수랑 비교시')
-        # (case2 지표랑 뒷부분의 상수랑 비교시)
-        if math.isnan(Prc_history[group_algo[0]['name']][row]) != True and math.isnan(
-                int(group_algo[2]['val'])) != True:
-            chk = str(Prc_history[group_algo[0]['name']][row]) + str(group_algo[1]['val']) + str(group_algo[2]['val'])
-            # print(chk)
-            if eval(chk) == True:
-                meet_condtion = meet_condtion + 1
-    elif group_algo[0]['name'] == 'num' and group_algo[2]['name'] != 'num':
-        # print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
-        # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
-        if math.isnan(int(group_algo[0]['val'])) != True and math.isnan(
-                Prc_history[group_algo[2]['name']][row]) != True:
-            chk = str(group_algo[0]['val']) + str(group_algo[1]['val']) + str(Prc_history[group_algo[2]['name']][row])
-            # print(chk)
-            if eval(chk) == True:
-                meet_condtion = meet_condtion + 1
-    return meet_condtion
-
-
-#  ----- Fet 함수
-#  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo, bns_tp):
-    result_datelist = []
-    # for row in range(60, 70):
-    for row in range(len(Prc_history)):
-        group_meet_condtion = 0  # 각 그룹의 충족갯수
-        block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
-        # 알고리즘 확인후 각 일자별로 충족하는지 확인
-        for pars in algo['algo']:
-            if pars[0:5] == 'block':
-                group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                for search_group in algo['algo'][pars]:
-                    # group 순회시작
-                    if search_group[0:5] == 'group':
-                        # print(pars + "/" + search_group + " 시작!")
-                        # 각 그룹의 지표 확인
-                        for group_algo in algo['algo'][pars][search_group]:
-                            # 알고리즘에 맞게 지표 세팅
-                            Prc_history = Make_indicat(group_algo, Prc_history)
-                        group_meet_condtion = Chk_Meet_Condition(Prc_history, algo['algo'][pars][search_group], row,
-                                                                 group_meet_condtion)
-
-                # print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(algo['algo'][pars]['max']))
-                # print("group 충족수:" + str(group_meet_condtion))
-                # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
-                if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
-                        algo['algo'][pars]['max']) >= int(group_meet_condtion):
-                    # print("충족!")
-                    block_meet_condtion = 1
-                else:
-                    # print("미충족!")
-                    block_meet_condtion = 0
-
-                # 이미 블록중에 미충족된 블록이 있는경우 더이상 순회할 필요가 없으므로 break
-                if block_meet_condtion == 0:
-                    # print("미충족 block 존재 다음 알고리즘으로 PASS")
-                    break
-        if block_meet_condtion == 1:
-            # 충족시 일자를 리스트에 추가
-            # print("이날 알고리즘은 완벽하게 충족")
-            result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
-
-    # print(result_datelist)
-    return result_datelist
-
-
-def Get_DtPrc(market='upbit', str_date='0', end_date='99999999'):
-    # print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
-
-    ws = create_connection('ws://52.79.241.205:80/BackServer')
-    order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date
-    # print(order_packet)
-    if ws.connected:
-        ws.send(order_packet)
-        # print()
-        result = ws.recv()
-        # print(f"client received:{result}")
-        ws.close()
-    if not result:
-        print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
-    else:
-        json_data = json.loads(result)
-        dataframe_result = pd.DataFrame(list(json_data),
-                                        columns=['timestamp', 'open', 'close', 'high', 'low', 'volume'])
-
-    return dataframe_result
-
-
-def Parsing_Main(Prc_history, buy_strategy='', sell_strategy=''):
-    buy_result = []
-    sell_result = []
-    final_result = []
-    # print('매수전략 시작')
-    if buy_strategy == '':
-        print("매수전략 없음")
-    else:
-        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy')
-
-    if sell_strategy == '':
-        print("매도전략 없음")
-    else:
-        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell')
-
-    # print('매수리스트')
-    # print(buy_result)
-    # print('매도리스트')
-    # print(sell_result)
-    # print('최종리스트')
-    buy_result.extend(sell_result)
-    final_result = sorted(buy_result)
-    # print(final_result)
-    return final_result
-
-
+def ready(request):
+    return render(request,'garage/ready.html',)
