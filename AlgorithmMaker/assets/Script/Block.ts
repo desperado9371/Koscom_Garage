@@ -70,22 +70,32 @@ export default class Block extends cc.Component {
             val.period = this.getBodyString();
         }
         else if(cardName == 'obv'){
-            val.volume = "10";
+            val = {};
 
         }
         else if(cardName.includes('macd') ){
             json.name = 'macd_signal';
-            val = {};
+            val.n_fast= "6",
+            val.n_slow= "2",
+            val.n_sign= "5"
         }
-        else if(cardName.includes('스토캐스틱')){
+        else if(cardName.includes('스토캐스틱') || cardName == 'stoch'){
             json.name = 'stoch';
             val.period = this.getBodyString();
         }
         else if(cardName == 'adi'){
             val = {};
         }
-        else if(cardName == 'ao' || cardName == 'tsi' ){
+        else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low'){
             val = {};
+        }
+        else if(cardName == 'ao'){
+            val.long = "34";
+            val.short = "5";
+        }
+        else if(cardName == 'tsi'){
+            val.high = "25";
+            val.low = "13";
         }
         else if(cardName.includes("볼린저밴드")){
             if(cardName.includes("상단")){
@@ -166,7 +176,23 @@ export default class Block extends cc.Component {
         }
 
         cardName = cardName.toLowerCase();
-        if(cardName.includes('macd') || cardName == 'adi' || cardName.includes('스토캐스틱')){
+        this.title.getComponentInChildren(cc.Label).string = cardName;
+        
+        if(cardName == 'macd'){
+            this.title.getComponentInChildren(cc.Label).string = 'MACD';
+            this.body.active = false;
+        }
+        else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low' || cardName == 'volume'){
+            this.body.active = false;
+        }
+        else if(cardName.includes('macd') ){
+            this.title.getComponentInChildren(cc.Label).string = 'MACD\r\n시그널';
+            this.body.active = false;
+        }
+        else if(cardName == 'adi') {
+            this.body.active = false;
+        }
+        else if(cardName == 'stoch'){
             this.body.active = false;
         }
         else if(cardName == 'tsi' || cardName == 'ao'){
@@ -177,13 +203,29 @@ export default class Block extends cc.Component {
             this.setBodyString('14');
         }
         else if(cardName == 'obv'){
-            this.setBodyString('10');
+            this.body.active = false;
 
         }
-        if(cardName == '숫자카드'){
+        if(cardName == 'num' || cardName == '숫자카드'){
+            this.title.getComponentInChildren(cc.Label).string = '숫자카드';
             this.setBodyString('50');
         }
-        else if(cardName.includes("볼린저밴드") || cardName == 'cci' || cardName == 'cmf'){
+        else if(cardName.includes("bollinger")) {
+            if(cardName.includes("hband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n상한선';
+            }
+            else if(cardName.includes("lband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n하한선';
+            }
+            else if(cardName.includes("mband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n중심선';
+            }
+            else if(cardName.includes("wband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n너비';
+            }
+            this.setBodyString('20');
+        }
+        else if(cardName == 'cci' || cardName == 'cmf'){
             this.setBodyString('20');
         }
         else if(cardName == 'atr' || cardName == 'adx' || cardName == 'mfi'  ){
@@ -204,7 +246,7 @@ export default class Block extends cc.Component {
 
         //this.node.width = width;
         this.color = color;
-        this.title.getComponentInChildren(cc.Label).string = cardName;
+        
         //this.body.getComponent(cc.Label).string = bodyText;
         
 

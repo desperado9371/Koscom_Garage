@@ -56,6 +56,74 @@ export default class Card extends HandItem {
 
         }
 
+
+
+        var cardName = name.toLowerCase();
+        if(cardName == 'macd'){
+            this.lblCardName.string = 'MACD';
+
+        }
+        else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low'){
+
+        }
+        else if(cardName.includes('macd') ){
+            name = 'MACD|시그널';
+            this.lblCardName.string = 'MACD\r\n시그널';
+        }
+        else if(cardName == 'adi') {
+
+        }
+        else if(cardName == 'stoch'){
+            name = '스토캐스틱';
+            this.cardName = '스토캐스틱';
+            this.lblCardName.string = '스토캐스틱';
+        }
+        else if(cardName == 'tsi' || cardName == 'ao'){
+            
+        }
+        else if(cardName == 'rsi' ){
+
+            
+        }
+        else if(cardName == 'obv'){
+            
+
+        }
+        if(cardName == 'num' || cardName == '숫자카드'){
+            this.lblCardName.string = '숫자카드';
+
+        }
+        else if(cardName.includes("bollinger")) {
+            if(cardName.includes("hband")){
+                this.lblCardName.string  = '볼린저밴드\r\n상한선';
+            }
+            else if(cardName.includes("lband")){
+                this.lblCardName.string  = '볼린저밴드\r\n하한선';
+            }
+            else if(cardName.includes("mband")){
+                this.lblCardName.string  = '볼린저밴드\r\n중심선';
+            }
+            else if(cardName.includes("wband")){
+                this.lblCardName.string  = '볼린저밴드\r\n너비';
+            }
+        }
+        else if(cardName == 'cci' || cardName == 'cmf'){
+            
+        }
+        else if(cardName == 'atr' || cardName == 'adx' || cardName == 'mfi'  ){
+            
+        }
+        else if( cardName == 'fi'){
+            
+        }
+        else if(cardName == 'trix'){
+            
+        }
+        else if(cardName == 'roc'){
+            
+        }
+
+
         var cardData = FileManager.getInstance().getCardData(name.toLowerCase());
         if(cardData == null){
             this.imgCardImage.node.active = false;
@@ -78,6 +146,7 @@ export default class Card extends HandItem {
             this.imgCardImage.spriteFrame = FileManager.getInstance().cardPrice;
             
         }
+        
         
     }
     testInit(){

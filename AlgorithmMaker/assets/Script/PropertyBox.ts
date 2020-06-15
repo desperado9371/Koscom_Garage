@@ -60,7 +60,9 @@ export default class PropertyBox extends cc.Component {
         if(this.cardData == null){
             this.cardData =  FileManager.getInstance().cardData;
         }
-
+        if(this.cardData[cardName] == null){
+            return;
+        }
 
 
         this.insideCard.init(cardName);
@@ -84,6 +86,10 @@ export default class PropertyBox extends cc.Component {
 
         if(cardName.includes("\r\n")){
             cardName = cardName.replace("\r\n", "|");
+        }
+
+        if(this.cardData[cardName] == null){
+            return;
         }
 
         this.insideCard.init(cardName);

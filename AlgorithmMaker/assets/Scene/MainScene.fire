@@ -216,7 +216,7 @@
       "array": [
         0,
         0,
-        534.3376741349987,
+        536.9278281356824,
         0,
         0,
         0,
@@ -5829,7 +5829,7 @@
     "offset": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -47
+      "y": -20
     },
     "_id": "ef7de8VL9OrKaVh3oZU8hP"
   },
@@ -8891,7 +8891,7 @@
       "__id__": 2
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 222
@@ -9062,7 +9062,7 @@
     },
     "component": "",
     "_componentId": "c84aaCZ7l1GO4xDuQII+K4w",
-    "handler": "SaveAlgorithm",
+    "handler": "testLoadAlgorithm",
     "customEventData": ""
   },
   {
