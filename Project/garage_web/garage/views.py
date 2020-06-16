@@ -216,11 +216,41 @@ def test(request):
 
     start_date = srt_date
     end_date = end_date
-    trade_num = len(trade_list)
+
+    print(trade_list)
+
+    trade_temp = []
+
+    ind = 0
+
+    while ind <len(trade_list):
+        if ind < len(trade_list) - 1:
+            if trade_list[ind][0] != trade_list[ind+1][0]:
+                trade_temp.append(trade_list[ind])
+                ind = ind + 1
+            else:
+                ind = ind + 2
+        else:
+            trade_temp.append(trade_list[ind])
+            ind = ind + 1
+
+    trade_num = len(trade_temp)
+
+    # for i in range(len(trade_list)):
+    #     if i < len(trade_list)-1:
+    #         if trade_list[i][0] != trade_list[i+1][0]:
+    #             trade_temp.append(trade_list[i])
+    #         else:
+    #             i = i+1
+    #         continue
+    #     else:
+    #         trade_temp.append(trade_list[i])
+    #         continue
+
 
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
-                                                'trades': trade_list,
+                                                'trades': trade_temp,
                                                 'datas': data,
                                                 'init_bal': init_bal,
                                                 'fin_bal': fin_bal,
