@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[25]:
+# In[31]:
 
 
 import asyncio
@@ -160,6 +160,11 @@ def stoch(df,n=14, d_n=3 ):
     df['stoch'] = indicator_stoch.stoch()
     return df
 
+def mfi(df,n=14):
+    indicator_mfi = ta.momentum.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
+    df['mfi'] = indicator_mfi.money_flow_index()
+    return df
+
 ## Volume 지표 추가 구현 부분########
 def adi(df):
     indicator_adi = ta.volume.AccDistIndexIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'])
@@ -184,11 +189,6 @@ def eom(df,n=14):
 def fi(df,n=13):
     indicator_fi = ta.volume.ForceIndexIndicator(close=df['close'], volume=df['volume'],n=n)
     df['fi'] = indicator_fi.force_index()
-    return df
-
-def mfi(df,n=14):
-    indicator_mfi = ta.volume.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
-    df['mfi'] = indicator_mfi.money_flow_index()
     return df
 
 def nvi(df):
@@ -483,17 +483,18 @@ def Parsing_Main(buy_strategy='',sell_strategy = '',market='upbit',srt_date='000
 if __name__ == '__main__':
     data = []
     result = []
-    with open('Define_Algo_bb.json', 'r') as f:
-        json_data = json.load(f)
+    with open('buy.json', 'r') as f:
+        json_data_buy = json.load(f)
     market = json_data['algo']['market']
-    hourday_tp = json_data['algo']['hourday']
+    hourday_tp = json_data['algo']['hourday_tp']
     srt_date = json_data['algo']['srt_date']
     end_date = json_data['algo']['end_date']
     srt_time = json_data['algo']['srt_time']
     end_time = json_data['algo']['end_time']
     bns_tp = json_data['algo']['buysell']
     
-
+    with open('sell.json', 'r') as f:
+        json_data_sell = json.load(f)
     # Parsing 함수
     # 1번째 파라미터 = buy_strategy: 매수전략
     # 2번째 파라미터 = sell_strategy: 매도전략
@@ -503,7 +504,7 @@ if __name__ == '__main__':
     # 6번째 파라미터 = srt_time시작시간
     # 7번째 파라미터 = end_time종료시간
     # 8번째 파라미터 = hourday_tp 시간봉/일봉
-    result = Parsing_Main(json_data,json_data,market,srt_date,end_date,srt_time,end_time,hourday_tp)
+    result = Parsing_Main(json_data_buy,json_data_sell,market,srt_date,end_date,srt_time,end_time,'day')
     
     
 
