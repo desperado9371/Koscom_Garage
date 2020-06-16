@@ -54,13 +54,15 @@ export default class PropertyBox extends cc.Component {
     onBlockClick(block : Block){
         this.lblCategory.node.parent.active = true;
         var cardName = block.getCardName().toLowerCase();
-        if(cardName == 'num'){
+        if(cardName == '숫자카드'){
             return;
         }
         if(this.cardData == null){
             this.cardData =  FileManager.getInstance().cardData;
         }
-
+        if(this.cardData[cardName] == null){
+            return;
+        }
 
 
         this.insideCard.init(cardName);
@@ -75,11 +77,19 @@ export default class PropertyBox extends cc.Component {
     onCardClick(card : Card){
         this.lblCategory.node.parent.active = true;
         var cardName = card.getCardName().toLowerCase();
-        if(cardName == 'num'){
+        if(cardName == '숫자카드'){
             return;
         }
         if(this.cardData == null){
             this.cardData =  FileManager.getInstance().cardData;
+        }
+
+        if(cardName.includes("\r\n")){
+            cardName = cardName.replace("\r\n", "|");
+        }
+
+        if(this.cardData[cardName] == null){
+            return;
         }
 
         this.insideCard.init(cardName);

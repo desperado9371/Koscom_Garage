@@ -29,9 +29,8 @@ def test(request):
 ################################################################
     # 백테스트 수행 관련
 
-    # 초기자금 및 거래량 단위 설정
-    init_krw_bal = 500000000
-    order_quantity = 0.25
+    init_krw_bal = int(request.GET.get('money'))
+    order_quantity = float(request.GET.get('coin'))
     final_balance = 0
     final_profit = 0
 
@@ -58,8 +57,14 @@ def test(request):
         sell_algo = ''
     else:
         sell_algo = eval(json_data['items'][-1]['sell_algo'])
+    algo_realname = json_data['items'][-1]['algo_nm']
+    # print("buy")
+    # print(buy_algo)
+    # print("----")
+    # print('sell')
+    # print(sell_algo)
+    # print("----")
 
-    # 테스트용도 : 파일로 저장된 알고리즘 읽어올 때
     # with open('Define_Algo.json', 'r') as f:
     #     json_data1 = json.load(f)
     # with open('Define_Algo2.json', 'r') as f:
@@ -72,8 +77,12 @@ def test(request):
     # 백테스트 기본정보 알고리즘으로부터 읽어옴
     market = json_data1['algo']['market']
     hourday_tp = json_data1['algo']['hourday_tp']
+    hourday_tp = request.GET.get('hourday')
     srt_date = json_data1['algo']['srt_date']
     end_date = json_data1['algo']['end_date']
+    srt_date = request.GET.get('start').replace('-', '')
+    end_date = request.GET.get('end').replace('-', '')
+
     srt_time = json_data1['algo']['srt_time']
     end_time = json_data1['algo']['end_time']
     bns_tp = json_data1['algo']['buysell']
@@ -226,6 +235,7 @@ def test(request):
                                                 'avg_prc': avg_prc,
                                                 'cur_prc': cur_prc,
                                                 'algoname': request.GET.get('algoname'),
+                                                'algoreal': algo_realname,
                                                 })
 
 def home(request):
@@ -353,6 +363,7 @@ def logout(request):
     # 쿠키 삭제 및 세션 종료 후 메인페이지로 복귀
     response = redirect('/')
     response.delete_cookie('username')
+    response.delete_cookie('algo_seq')
     auth.logout(request)
     return response
 
@@ -364,12 +375,19 @@ def algomaker(request):
     :param request:
     return:
     """
-    username = ""
-    if request.COOKIES.get('username') is not None:
-        print("cookie found!")
-        print(request.COOKIES.get('username'))
-        username = request.COOKIES.get('username')
-    return render(request, 'garage/cocos_algo.html', {'username': username})
+    response = redirect('/algomaker')
+    # username = ""
+    # if request.COOKIES.get('username') is not None:
+    #     print("cookie found!")
+    #     print(request.COOKIES.get('username'))
+    #     username = request.COOKIES.get('username')
+
+    if request.META['HTTP_REFERER'][-7:] != 'mypage/' and request.COOKIES.get('algo_seq') is not None:
+        print('cookie delete')
+        response.delete_cookie('algo_seq')
+        return response
+
+    return render(request, 'garage/cocos_algo.html', )
 
 
 @login_required
@@ -378,6 +396,15 @@ def loading(request):
     # print("loading")
     # print(request.GET.get('algoname'))
     # print("0000000")
-    return render(request, 'garage/loading.html',{'check': check,
-                                                  'algoname': request.GET.get('algoname')})
+    return render(request, 'garage/loading.html', {'check': check,
+                                                   'algoname': request.GET.get('algoname'),
+                                                   'start': request.GET.get('start'),
+                                                   'end': request.GET.get('end'),
+                                                   'money': request.GET.get('money'),
+                                                   'coin': request.GET.get('coin'),
+                                                   'hourday': request.GET.get('hourday'),
+                                                  })
 
+
+def ready(request):
+    return render(request,'garage/ready.html',)

@@ -59,9 +59,57 @@ export default class HandManager extends cc.Component {
     
     init(){
         var h : HandItem[] = [];
-        var d = new Deck();
-        d.testInit();
-        h.push(d);
+
+        var vol = new Deck();
+        vol.setCategory("거래량");
+        vol.pushCard("OBV");
+        vol.pushCard("ADI");
+        vol.pushCard("CMF");
+        vol.pushCard("MFI");
+        vol.pushCard("FI");
+        vol.pushCard("volume")
+
+        
+        
+        var trend = new Deck();
+        trend.setCategory("추세");
+        trend.pushCard("MACD");
+        trend.pushCard("RSI");
+        trend.pushCard("MACD_signal");
+        trend.pushCard("ADX");
+        trend.pushCard("CCI");
+        trend.pushCard("TRIX");
+        
+        var momentum = new Deck();
+        momentum.setCategory("모멘텀");
+        momentum.pushCard("stoch");
+        momentum.pushCard("TSI");
+        momentum.pushCard("ROC");
+        momentum.pushCard("AO");
+        
+        var volatility  = new Deck();
+        volatility.setCategory("변동성");
+        volatility.pushCard("bollinger_mband");
+        volatility.pushCard("bollinger_hband");
+        volatility.pushCard("bollinger_lband");
+        volatility.pushCard("bollinger_wband");
+        volatility.pushCard("ATR");
+        
+        var value = new Deck();
+        value.setCategory("가격");
+        value.pushCard("open");
+        value.pushCard("close");
+        value.pushCard("high");
+        value.pushCard("low");
+        
+        h.push(vol);
+        h.push(trend);
+        h.push(momentum);
+        h.push(volatility);
+        h.push(value);
+        var numCard = new Card();
+        numCard.dataInit('num');
+        h.push(numCard);
 
         this.hands.push(h);
 
@@ -165,12 +213,15 @@ export default class HandManager extends cc.Component {
                 obj = cc.instantiate(this.deckPrefab);
                 var deck = obj.getComponent(Deck);
                 var originalDeck = item as Deck;
+                var cast = item as Deck;
+                deck.setCategory(cast.category);
                 deck.init(originalDeck.package);
             }
             else{
                 console.log("type error"); 
             }
             obj.setParent(this.handParent);
+            obj.setPosition(0,0,0);
         }
 
 

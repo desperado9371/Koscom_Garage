@@ -70,18 +70,69 @@ export default class Block extends cc.Component {
             val.period = this.getBodyString();
         }
         else if(cardName == 'obv'){
-            val.volume = "10";
+            val = {};
 
         }
-        if(cardName == 'num'){
-            
+        else if(cardName.includes('macd') ){
+            json.name = 'macd_signal';
+            val.n_fast= "6",
+            val.n_slow= "2",
+            val.n_sign= "5"
+        }
+        else if(cardName.includes('스토캐스틱') || cardName == 'stoch'){
+            json.name = 'stoch';
+            val.period = this.getBodyString();
+        }
+        else if(cardName == 'adi'){
+            val = {};
+        }
+        else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low'){
+            val = {};
+        }
+        else if(cardName == 'ao'){
+            val.long = "34";
+            val.short = "5";
+        }
+        else if(cardName == 'tsi'){
+            val.high = "25";
+            val.low = "13";
+        }
+        else if(cardName.includes("볼린저밴드")){
+            if(cardName.includes("상단")){
+                json.name = 'bollinger_hband';
+            }
+            else if(cardName.includes("하단")){
+                json.name = 'bollinger_lband';
+            }
+            else if(cardName.includes("중심")){
+                json.name = 'bollinger_mband';
+            }
+            else if(cardName.includes("너비")){
+                json.name = 'bollinger_wband';
+            }
+            val.period = this.getBodyString();
+        }
+
+        else{
+            val.period = this.getBodyString();
+        }
+        
+        
+        
+        
+
+
+
+        
+        if(cardName == '숫자카드'){
+            json.name = 'num';
             json.val = this.getBodyString();
-            
         }
         else{
-
             json.val = val;
         }
+
+        
 
         return json;
 
@@ -111,6 +162,7 @@ export default class Block extends cc.Component {
         return this.title.getComponentInChildren(cc.Label).string;
     }
 
+
     init(width:number, color:number, cardName:string, bodyText:string, isStuck:boolean = false){
         if(this.mouseManager == null){
             this.mouseManager = MouseManager.getInstance();
@@ -124,28 +176,77 @@ export default class Block extends cc.Component {
         }
 
         cardName = cardName.toLowerCase();
+        this.title.getComponentInChildren(cc.Label).string = cardName;
+        
         if(cardName == 'macd'){
+            this.title.getComponentInChildren(cc.Label).string = 'MACD';
             this.body.active = false;
         }
-        else if(cardName == 'rsi'){
+        else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low' || cardName == 'volume'){
+            this.body.active = false;
+        }
+        else if(cardName.includes('macd') ){
+            this.title.getComponentInChildren(cc.Label).string = 'MACD\r\n시그널';
+            this.body.active = false;
+        }
+        else if(cardName == 'adi') {
+            this.body.active = false;
+        }
+        else if(cardName == 'stoch'){
+            this.body.active = false;
+        }
+        else if(cardName == 'tsi' || cardName == 'ao'){
+            this.body.active = false;
+        }
+        else if(cardName == 'rsi' ){
 
             this.setBodyString('14');
         }
         else if(cardName == 'obv'){
-            this.setBodyString('10');
+            this.body.active = false;
 
         }
-        if(cardName == 'num'){
-            
+        if(cardName == 'num' || cardName == '숫자카드'){
+            this.title.getComponentInChildren(cc.Label).string = '숫자카드';
             this.setBodyString('50');
-            
         }
+        else if(cardName.includes("bollinger")) {
+            if(cardName.includes("hband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n상한선';
+            }
+            else if(cardName.includes("lband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n하한선';
+            }
+            else if(cardName.includes("mband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n중심선';
+            }
+            else if(cardName.includes("wband")){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n너비';
+            }
+            this.setBodyString('20');
+        }
+        else if(cardName == 'cci' || cardName == 'cmf'){
+            this.setBodyString('20');
+        }
+        else if(cardName == 'atr' || cardName == 'adx' || cardName == 'mfi'  ){
+            this.setBodyString('14');
+        }
+        else if( cardName == 'fi'){
+            this.setBodyString('13');
+        }
+        else if(cardName == 'trix'){
+            this.setBodyString('15');
+        }
+        else if(cardName == 'roc'){
+            this.setBodyString('12');
+        }
+
         
 
 
         //this.node.width = width;
         this.color = color;
-        this.title.getComponentInChildren(cc.Label).string = cardName;
+        
         //this.body.getComponent(cc.Label).string = bodyText;
         
 
@@ -387,6 +488,34 @@ export default class Block extends cc.Component {
                 }
             }
         }
+    }
+
+    dockToFirstSlot(other : BlockGroup){
+        var comp = other;
+        if(comp.targetBlock != null){
+            return;
+        }
+        this.connedtedMode = 'firstSlot';
+        comp.activateGroup(this);
+        //this.connectedSlot = other.node.getChildByName('hitbox').getComponent(cc.Collider);
+        this.connectedSlot = other.node.getChildByName('BlankGroup').getChildByName('hitbox').getComponent(cc.Collider);
+
+        this.stuckPos.x = this.mouseManager.getMousePos().x;
+        this.stuckPos.y = this.mouseManager.getMousePos().y;
+        comp.parentLine.addEmptyGroup();
+    }
+    dockToOtherBlock(other : Block){
+        var nextBlock = other.nextBlock;
+        if(nextBlock != null){
+            return;
+        }
+        this.connedtedMode = 'slot';
+        
+        this.connectedSlot = other.node.getChildByName('Relation').getChildByName('dockingSlot').getComponent(cc.Collider);
+
+        other.nextBlock = this;
+        this.stuckPos.x = this.mouseManager.getMousePos().x;
+        this.stuckPos.y = this.mouseManager.getMousePos().y;
     }
     onCollisionStay(other:cc.Collider, self:cc.Collider){
 

@@ -28,32 +28,33 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'garage/images/icons/favicon-16x16.png'%}">
 
     <style>
-.tooltip2 {
-  position: relative;
-  display: inline-block;
-}
+        .tooltip2 {
+            position: relative;
+            display: inline-block;
+        }
 
-.tooltip2 .tooltiptext {
-  visibility: hidden;
-  width: 150px;
-  top: 100%;
-  left: 50%;
-  margin-left: -60px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+        .tooltip2 .tooltiptext {
+            visibility: hidden;
+            width: 150px;
+            top: 100%;
+            left: 50%;
+            margin-left: -60px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
 
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1;
-}
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+        }
 
-.tooltip2:hover .tooltiptext {
-  visibility: visible;
-}
-</style>
+        .tooltip2:hover .tooltiptext {
+            visibility: visible;
+        }
+
+    </style>
 
 </head>
 
@@ -74,7 +75,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto my-2 my-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/intro">소개</a>
+                        <a class="nav-link js-scroll-trigger" href="#about">소개</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/algomaker">알고리즘 만들기</a>
@@ -83,15 +84,15 @@
                         <a class="nav-link js-scroll-trigger" href="/mypage">MY알고리즘</a>
                     </li>
                     <li class="nav-item tooltip2">
-                        <a class="nav-link js-scroll-trigger" >마켓플레이스</a>
+                        <a class="nav-link js-scroll-trigger">마켓플레이스</a>
 
-                             <span class="tooltiptext">
-                                        구현 예정<br>
-                             </span>
+                        <span class="tooltiptext">
+                            구현 예정<br>
+                        </span>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" > {{ user.username }} </a>
+                        <a class="nav-link js-scroll-trigger"> {{ user.username }} </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="logout">로그아웃</a>
@@ -126,46 +127,10 @@
     </header>
 
 
-    <!-- Services Section -->
-    <section class="page-section-small" id="services">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-5">
-                        <h3 class="mb-3">Make</h3>
-                        <h5 class="text-muted">지표 카드를 활용하여 <br>알고리즘 투자전략을 손쉽게 <br>만들 수 있습니다</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-5">
-                        <h3 class="mb-3">Test</h3>
-                        <h5 class="text-muted">과거 데이터를 통한 백테스트로 투자 전략의 수익률을 알아볼 수 있습니다</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-5">
-                        <h3 class="mb-3">Trading</h3>
-                        <h5 class="text-muted mb-0">실제 주문으로 연결하기</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="mt-5">
-                        <h3 class="mb-3">Marketplace</h3>
-                        <h5 class="text-muted mb-0">실제 주문으로 연결하기</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- divider -->
-    <div class="row" id="divider">
-    </div>
-
-
     <!-- about : make Section-->
     <section class="page-section bg-primary" id="about">
         <div class="container">
-            <div data-wow-duration="1.3s" class="wow fadeInUp">
+            <div data-wow-duration="1s" class="wow fadeInUp">
                 <div class="row justify-content-center">
                     <div class="col-lg-6 text-center">
                         <img class="img" href="/" src="{% static 'garage/images/make_sample2.png'%}" alt="">
@@ -244,37 +209,25 @@
 
 
     <!-- about4 : market Section-->
-    <section class="page-section-small bg-primary" id="about4">
+    <section class="page-section bg-primary" id="about4">
         <div class="container">
-            <div class="row justify content-center">
-                <div class="col-lg-12">
-<div class="swiper-container">
-    <!-- Additional required wrapper -->
-    <div class="swiper-wrapper">
-        <!-- Slides -->
-        <div class="swiper-slide">Slide 1</div>
-        <div class="swiper-slide">Slide 2</div>
-        <div class="swiper-slide">Slide 3</div>
-        ...
-    </div>
-    <!-- If we need pagination -->
-    <div class="swiper-pagination"></div>
 
-    <!-- If we need navigation buttons -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-
-    <!-- If we need scrollbar -->
-    <div class="swiper-scrollbar"></div>
-</div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <p><b>04</b></p>
+                    <h1 class="text-black"><b>알고리즘 마켓에서<br>다양한 투자전략을<br>구매해보세요 <br></b></h1>
+                    <h3 class="text-black">전문가들의 다양한 투자전략을<br>
+                        비교하고 구매할 수 있습니다.<br><br>구매한 알고리즘으로<br> 새로운 투자를 시작해보세요 <br>
+                    </h3>
                 </div>
-
+                <div class="col-lg-6 text-center">
+                    <div data-wow-duration="0.7s" class="wow fadeInUp">
+                        <img class="img" href="/" src="{% static 'garage/images/market_sample.png'%}" alt="">
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Slider main container -->
-
     </section>
-
     <!-- Footer -->
     <footer class="bg-light py-5">
         <div class="container">
@@ -284,12 +237,19 @@
             </div>
             <div class="row">
 
-                <div class="col-lg-10">
+                <div class="col-lg-8">
+                    <img class="img" href="/" src="{% static 'garage/images/logo_koscom.png'%}" alt="">
                     <div class="text-muted">
-                        <p><br><br>서울시 영등포구 여의나루로 76 ㈜코스콤<br>
+                        <p><br>서울시 영등포구 여의나루로 76 ㈜코스콤<br>
                             대표전화 : 02-767-7114<br><br>
                             © KOSCOM CORP. ALL RIGHTS RESERVED.</p>
                     </div>
+                </div>
+                <div class="col-lg-4">
+            <img class="img" href="/" src="{% static 'garage/img/logo_box.png'%}" alt="" width="100" height="50">
+            <a>
+                <font size=4.5><B>&nbsp Algorithm Trading</B></font>
+            </a>
                 </div>
 
             </div>

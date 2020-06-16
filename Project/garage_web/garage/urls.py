@@ -12,5 +12,6 @@ urlpatterns = [
     path('mypage/', views.mypage, name='mypage'),
     path('loading/', views.loading, name='loading'),
     path('intro/', views.intro, name='intro'),
+    path('ready/', views.ready, name='ready'),
     path('', views.home, name='home'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

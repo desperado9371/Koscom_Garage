@@ -304,16 +304,16 @@ class BacktestAPI:
                 krw_balance = krw_balance - (price * quantity)
                 btc_balance = btc_balance + quantity
                 average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
-            #     print("주문 성공 : 구매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
-            #           format(bitcoin_dt['timestamp'][dt_index],
-            #                  float(bitcoin['close']),
-            #                  quantity,
-            #                  krw_balance,
-            #                  btc_balance,
-            #                  average_price,
-            #                  krw_balance + (btc_balance) * float(bitcoin['close'])))
-            # else:
-            #     print("주문실패(매수) : KRW 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
+                print("주문 성공 : 구매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
+                      format(bitcoin_dt['timestamp'][dt_index],
+                             float(bitcoin['close']),
+                             quantity,
+                             krw_balance,
+                             btc_balance,
+                             average_price,
+                             krw_balance + (btc_balance) * float(bitcoin['close'])))
+            else:
+                print("주문실패(매수) : KRW 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
 
         elif order_type == 'sell':
             if quantity <= btc_balance:
@@ -323,15 +323,15 @@ class BacktestAPI:
                     average_price = 0
                 else:
                     average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
-            #     print("주문 성공 : 판매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
-            #           format(bitcoin_dt['timestamp'][dt_index],
-            #                  float(bitcoin['close']),
-            #                  quantity, krw_balance,
-            #                  btc_balance,
-            #                  average_price,
-            #                  krw_balance + (btc_balance) * float(bitcoin['close'])))
-            # else:
-            #     print("주문실패(매도) : BTC 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
+                print("주문 성공 : 판매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
+                      format(bitcoin_dt['timestamp'][dt_index],
+                             float(bitcoin['close']),
+                             quantity, krw_balance,
+                             btc_balance,
+                             average_price,
+                             krw_balance + (btc_balance) * float(bitcoin['close'])))
+            else:
+                print("주문실패(매도) : BTC 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
         if average_price ==0:
             return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, 0
         else:
