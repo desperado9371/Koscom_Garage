@@ -217,7 +217,7 @@ def test(request):
     start_date = srt_date
     end_date = end_date
 
-    print(trade_list)
+    # print(trade_list)
 
     trade_temp = []
 
@@ -266,6 +266,7 @@ def test(request):
                                                 'cur_prc': cur_prc,
                                                 'algoname': request.GET.get('algoname'),
                                                 'algoreal': algo_realname,
+                                                'signal': trade_list,
                                                 })
 
 def home(request):
@@ -290,7 +291,8 @@ def intro(request):
 
 @login_required
 def mypage(request):
-    username = request.COOKIES.get('username')
+    # username = request.COOKIES.get('username')
+    username = request.user.username
     ws = create_connection("ws://13.124.102.83:80/Cocos")
     ws.send("load|{}|all".format(username))
     json_data = ws.recv()
@@ -405,6 +407,12 @@ def algomaker(request):
     :param request:
     return:
     """
+
+    if request.COOKIES.get('username') == None:
+        response = redirect('/algomaker')
+        response.set_cookie('username', request.user.username)
+        return response
+
     response = redirect('/algomaker')
     # username = ""
     # if request.COOKIES.get('username') is not None:
