@@ -67,39 +67,48 @@ export default class HandManager extends cc.Component {
         vol.pushCard("CMF");
         vol.pushCard("MFI");
         vol.pushCard("FI");
+        vol.pushCard("volume")
 
-
+        
+        
         var trend = new Deck();
         trend.setCategory("추세");
         trend.pushCard("MACD");
         trend.pushCard("RSI");
-        trend.pushCard("MACD|시그널");
+        trend.pushCard("MACD_signal");
         trend.pushCard("ADX");
         trend.pushCard("CCI");
         trend.pushCard("TRIX");
-
+        
         var momentum = new Deck();
         momentum.setCategory("모멘텀");
-        momentum.pushCard("스토캐스틱");
+        momentum.pushCard("stoch");
         momentum.pushCard("TSI");
         momentum.pushCard("ROC");
         momentum.pushCard("AO");
-
+        
         var volatility  = new Deck();
         volatility.setCategory("변동성");
-        volatility.pushCard("볼린저밴드|중심선");
-        volatility.pushCard("볼린저밴드|상한선");
-        volatility.pushCard("볼린저밴드|하한선");
-        volatility.pushCard("볼린저밴드|밴드폭");
+        volatility.pushCard("bollinger_mband");
+        volatility.pushCard("bollinger_hband");
+        volatility.pushCard("bollinger_lband");
+        volatility.pushCard("bollinger_wband");
         volatility.pushCard("ATR");
-
+        
+        var value = new Deck();
+        value.setCategory("가격");
+        value.pushCard("open");
+        value.pushCard("close");
+        value.pushCard("high");
+        value.pushCard("low");
         
         h.push(vol);
         h.push(trend);
         h.push(momentum);
         h.push(volatility);
+        h.push(value);
         var numCard = new Card();
-        numCard.dataInit('숫자카드');
+        numCard.dataInit('num');
         h.push(numCard);
 
         this.hands.push(h);
