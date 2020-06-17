@@ -279,7 +279,7 @@
                        <div class="setting_capital">
                         <div align="center" id="setting_capital">
                             <label for="money">테스트 초기자본</label><br>
-                            <input type="text" onKeyup="inputNumberAutoComma(this);" id="money" name="money" value="500000000" style="width: 7em" step="1000000" min="0">
+                            <input type="text" onKeyup="inputNumberAutoComma(this);" id="money" name="money" value="500,000,000" style="width: 9em" step="1000000" min="0">
                             <label for="money">원</label>
                         </div>
                         </div>
@@ -391,81 +391,7 @@
         </div>
 
     </section>
-    {#<div align="center">백테스트 설정</div>#}
-    {#<br>#}
-    {#<div align="center">#}
-    {#    <form action="">#}
-    {#        <label for="start">시작:</label>#}
-    {#        <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">#}
-    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
-    {#    </form>#}
-    {#</div>#}
-    {##}
-    {#<div align="center">#}
-    {#    <form action="" >#}
-    {#        <label for="end">종료:</label>#}
-    {#        <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">#}
-    {#            <button type="button"> 설정 </button>#}
-    {#    </form>#}
-    {#</div>#}
-    {##}
-    {#<div align="center">#}
-    {#    <label for="money">초기자본(원):</label>#}
-    {#    <input type="text" onKeyup="inputNumberAutoComma(this);" id="money" name="money" value="500000000">#}
-    {#</div>#}
-    {#<div align="center">#}
-    {#    <label for="coin">1회 거래량(BTC):</label>#}
-    {#    <input type="number" id="coin" name="coin" value="0.25">#}
-    {#</div>#}
 
-    {#    <!-- The Modal -->#}
-    {#    <div id="myModal" class="modal">#}
-    {##}
-    {#        <!-- Modal content -->#}
-    {#        <div class="modal-content">#}
-    {#            <span class="close">&times;</span>#}
-    {#            <h2 align="center">백테스트 조건 설정</h2>#}
-    {#            <br>#}
-    {#            <div align="center">#}
-    {#                <form action="">#}
-    {#                    <label for="start">테스트 시작 일자 :</label>#}
-    {#                    <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">#}
-    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
-    {#                </form>#}
-    {#            </div>#}
-    {##}
-    {#            <div align="center">#}
-    {#                <form action="">#}
-    {#                    <label for="end">테스트 종료 일자 :</label>#}
-    {#                    <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">#}
-    {#            <button type="button"> 설정 </button>#}
-    {#                </form>#}
-    {#            </div>#}
-    {##}
-    {#            <div align="center">#}
-    {#                <label for="money">테스트 초기자본(원) :</label>#}
-    {#                <input type="text"onKeyup="inputNumberAutoComma(this);"  id="money" name="money" value="500000000" style="width: 9em" step="1000000" min="0">#}
-    {#                <label for="money">원</label>#}
-    {#            </div>#}
-    {#            <div align="center">#}
-    {#                <label for="coin">주문 1회당 거래량(BTC) :</label>#}
-    {#                <input type="number" id="coin" name="coin" value="0.25" style="width: 8em" step="0.25" min="0" max="10">#}
-    {#                <label for="coin">BTC</label>#}
-    {#            </div>#}
-    {##}
-    {#            <div align="center">#}
-    {#                <form action="">#}
-    {#                    알고리즘 수행 시간 단위 :#}
-    {#                    <input type="radio" id="day" name="hourday" value="day" checked="checked">#}
-    {#                    <label for="day">1일</label>#}
-    {#                    <input type="radio" id="hour" name="hourday" value="hour">#}
-    {#                    <label for="hour">1시간</label>#}
-    {#                </form>#}
-    {#            </div>#}
-    {#            <br>#}
-    {#        </div>#}
-    {##}
-    {#    </div>#}
 
     <script>
         //Get the button
@@ -520,7 +446,7 @@
         }
 
    function inputNumberAutoComma(obj) {
-       
+
         // 콤마( , )의 경우도 문자로 인식되기때문에 콤마를 따로 제거한다.
         var deleteComma = obj.value.replace(/\,/g, "");
 
