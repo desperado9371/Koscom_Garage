@@ -277,6 +277,10 @@ def home(request):
     :return:
     """
     if request.user.is_authenticated:
+        if request.COOKIES.get('username') == None:
+            response = redirect('/')
+            response.set_cookie('username', request.user.username)
+            return response
         print(request.user.username)
     return render(request, 'garage/index.html', {})
 
