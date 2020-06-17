@@ -96,6 +96,9 @@ def test(request):
     btc_bal = 0
     avg_prc = 0
 
+    ttt = pd.DataFrame(result)
+    ttt.to_csv(algo_name+"tradelist.csv")
+
     # 백테스트 실행
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
