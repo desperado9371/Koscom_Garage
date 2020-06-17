@@ -14,67 +14,56 @@ import asyncio
 from websocket import create_connection
 import ParsingJson
 
-
 @login_required
 def test(request):
-    """
-    백테스트 수행
-    :param request:
-    :return:
-    """
-
-    # 백테스트 api 호출
     backtestapi = BacktestAPI()
 
 ################################################################
     # 백테스트 수행 관련
 
+    # my알고리즘 페이지에서 입력한 백테스트 조건 설정에서 GET방식으로 보내준 조건 읽어서 사용
     init_krw_bal = int(request.GET.get('money'))
     order_quantity = float(request.GET.get('coin'))
     final_balance = 0
     final_profit = 0
-
     result = []
-
-    # 세션 및 GET 파라미터에서 유저 정보와 알고리즘 이름을 받아옴
     username = request.user.username
     algo_name = request.GET.get('algoname')
 
-    # 받아온 유저정보와 알고리즘 정보를 통해 미들웨어에 알고리즘 정보를 요청
+    # 세션에셔 읽어온 사용자 이름과 http get 에서 읽어온 알고리즘 이름을 바탕으로 미들웨어에 알고리즘 정보 요청
     ws = create_connection("ws://13.124.102.83/Cocos")
     ws.send("load|{}|{}".format(username, algo_name))
 
-    # 받아온 알고리즘 정보를 파싱
+    # 미들웨어로 부터 받은 데이터 파싱
     json_data = ws.recv()
     json_data = eval(json_data)
 
+    # 매수 알고리즘이 없을경우 empty string으로 대체
     if json_data['items'][-1]['buy_algo'] == None:
         buy_algo = ''
     else:
         buy_algo = eval(json_data['items'][-1]['buy_algo'])
 
+    # if no sell algorithm use empty string
     if json_data['items'][-1]['sell_algo'] == None:
         sell_algo = ''
     else:
         sell_algo = eval(json_data['items'][-1]['sell_algo'])
-    algo_realname = json_data['items'][-1]['algo_nm']
-    # print("buy")
-    # print(buy_algo)
-    # print("----")
-    # print('sell')
-    # print(sell_algo)
-    # print("----")
 
+    # 백테스트 결과 페이지에 보여줄 알고리즘 실제 이름
+    algo_realname = json_data['items'][-1]['algo_nm']
+
+    # 서버 이상시 알고리즘을 파일로 부터 읽을수 있도록 만든 테스트 코드
     # with open('Define_Algo.json', 'r') as f:
     #     json_data1 = json.load(f)
     # with open('Define_Algo2.json', 'r') as f:
     #     json_data2 = json.load(f)
 
-    # 백테스트 돌릴 알고리즘 셋팅 매수/매도
     json_data1 = buy_algo
     json_data2 = sell_algo
 
-    # 백테스트 기본정보 알고리즘으로부터 읽어옴
+    # 파싱 보내기전 필요한 정보들 로드
+    # 현재 알고리즘에 저장된 시작일, 종료일, 시간/일 봉 등의 정보보다 웹에서 설정한게 우선순위를 갖고있음
     market = json_data1['algo']['market']
     hourday_tp = json_data1['algo']['hourday_tp']
     hourday_tp = request.GET.get('hourday')
@@ -82,27 +71,28 @@ def test(request):
     end_date = json_data1['algo']['end_date']
     srt_date = request.GET.get('start').replace('-', '')
     end_date = request.GET.get('end').replace('-', '')
-
     srt_time = json_data1['algo']['srt_time']
     end_time = json_data1['algo']['end_time']
     bns_tp = json_data1['algo']['buysell']
 
+    # 파싱요청
     result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time, hourday_tp)
+
+    # 그래프 표시를 위해 시가 데이터 요청
     if hourday_tp == 'day':  # 일봉일 경우
         bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
     else:  # 시간봉일 경우
         bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
         bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
-
-    # 테스트 페이지에 보여질 변수들
+    # 거래 내역을 관리하기위한 변수
     trade_list = []
     final_balance = init_krw_bal
     final_increase = 0
     final_profit = 0
-    krw_bal = 0;
-    btc_bal = 0;
-    avg_prc = 0;
+    krw_bal = 0
+    btc_bal = 0
+    avg_prc = 0
 
     # 백테스트 실행
     if not result:
@@ -217,13 +207,11 @@ def test(request):
     start_date = srt_date
     end_date = end_date
 
-    # print(trade_list)
-
     trade_temp = []
 
     ind = 0
 
-    while ind <len(trade_list):
+    while ind < len(trade_list):
         if ind < len(trade_list) - 1:
             if trade_list[ind][0] != trade_list[ind+1][0]:
                 trade_temp.append(trade_list[ind])
@@ -235,18 +223,6 @@ def test(request):
             ind = ind + 1
 
     trade_num = len(trade_temp)
-
-    # for i in range(len(trade_list)):
-    #     if i < len(trade_list)-1:
-    #         if trade_list[i][0] != trade_list[i+1][0]:
-    #             trade_temp.append(trade_list[i])
-    #         else:
-    #             i = i+1
-    #         continue
-    #     else:
-    #         trade_temp.append(trade_list[i])
-    #         continue
-
 
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
@@ -269,6 +245,7 @@ def test(request):
                                                 'signal': trade_list,
                                                 })
 
+
 def home(request):
     """
     index페이지 로드
@@ -284,6 +261,7 @@ def home(request):
         print(request.user.username)
     return render(request, 'garage/index.html', {})
 
+
 def intro(request):
     """
     intro페이지 로드
@@ -292,6 +270,7 @@ def intro(request):
     :return:
     """
     return render(request, 'garage/intro.html', {})
+
 
 @login_required
 def mypage(request):
@@ -329,6 +308,7 @@ def mypage(request):
                                                  'algo_num': algo_num,
                                                  'name0': temp_name,
                                                  })
+
 
 @csrf_exempt
 def login(request):
@@ -418,11 +398,6 @@ def algomaker(request):
         return response
 
     response = redirect('/algomaker')
-    # username = ""
-    # if request.COOKIES.get('username') is not None:
-    #     print("cookie found!")
-    #     print(request.COOKIES.get('username'))
-    #     username = request.COOKIES.get('username')
 
     if request.META['HTTP_REFERER'][-7:] != 'mypage/' and request.COOKIES.get('algo_seq') is not None:
         print('cookie delete')
@@ -434,10 +409,7 @@ def algomaker(request):
 
 @login_required
 def loading(request):
-    check = 1;
-    # print("loading")
-    # print(request.GET.get('algoname'))
-    # print("0000000")
+    check = 1
     return render(request, 'garage/loading.html', {'check': check,
                                                    'algoname': request.GET.get('algoname'),
                                                    'start': request.GET.get('start'),
