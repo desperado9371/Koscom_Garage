@@ -437,7 +437,7 @@ h4,
 
 h5,
 .h5 {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
 }
 
 h6,
@@ -11037,4 +11037,7 @@ input {
 }
 .span2{
     font-weight: 400;
+}
+.h5-padding{
+    padding-top: 5px;
 }

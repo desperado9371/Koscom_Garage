@@ -3222,7 +3222,7 @@ section {
 }
 
 .overview-box .text span {
-    font-size: 18px;
+    font-size: 16px;
     color: black;
 }
 
@@ -3238,7 +3238,7 @@ section {
     }
 
     .overview-box .text span {
-        font-size: 14px;
+        font-size: 12px;
     }
 }
 
@@ -3248,7 +3248,7 @@ section {
     }
 
     .overview-box .text span {
-        font-size: 15px;
+        font-size: 13px;
     }
 }
 
