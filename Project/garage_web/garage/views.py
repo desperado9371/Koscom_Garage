@@ -323,6 +323,14 @@ def intro(request):
 @login_required
 def mypage(request):
     # username = request.COOKIES.get('username')
+
+    if request.COOKIES.get('algo_seq') is not None:
+        response = redirect('/mypage')
+        print('cookie delete')
+        response.delete_cookie('algo_seq')
+        return response
+
+
     username = request.user.username
     ws = create_connection("ws://13.124.102.83:80/Cocos")
     ws.send("load|{}|all".format(username))
