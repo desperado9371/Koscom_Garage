@@ -468,39 +468,39 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="overview-item overview-item--c4">
-                                <div class="overview__inner">
-                                    <div class="overview-box clearfix">
-                                        <div class="text">
-                                            <h5 style="color: #6C63FF">거래 횟수 {{trade_num|safe}}건 </h5>
-                                            <h5> 매수 {{buy_num|safe}}건, 매도 {{sell_num|safe}}건</h5>
-                                            <h5 style="color: #6C63FF">테스트 기간 </h5>
-                                            <span>{{st_date|safe}}~{{end_date|safe}}</span><br><br>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-sm-6 col-lg-3">
                             <div class="overview-item overview-item--c3">
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <div class="text">
-                                            <h5 style="font-size: 1.1em;">
-                                                원화 잔고: {{krw_bal|safe}}원<br>
-                                                BTC 잔고: {{btc_bal|safe}}BTC
-                                            </h5>
-                                            <h5 style="font-size: 1.1em;">
-                                                BTC 평균 단가: {{avg_prc|safe}}원<br>
-                                                BTC 금일 종가: {{cur_prc|safe}}원
-                                            </h5>
+                                            <h5 style="color: #6C63FF">
+                                                원화 잔고 {{krw_bal|safe}}원<br></h5>
+                                                 <h5 style="color: #6C63FF">
+                                                BTC 잔고 {{btc_bal|safe}}BTC</h5>
+                                                <span>&nbsp&nbsp- 매입 단가 : {{avg_prc|safe}}원<br>
+                                                &nbsp&nbsp- 금일 종가 : {{cur_prc|safe}}원
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="overview-item overview-item--c4">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="text">
+                                           <h5 style="color: #6C63FF">백테스트 기간 </h5>
+                                            <span>&nbsp&nbsp- {{st_date|safe}}~{{end_date|safe}}</span>
+                                            <h5 style="color: #6C63FF">거래 횟수 {{trade_num|safe}}건 </h5>
+                                            <span>&nbsp&nbsp- 매수 {{buy_num|safe}}건, 매도 {{sell_num|safe}}건</span>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-lg-12" id="chart">

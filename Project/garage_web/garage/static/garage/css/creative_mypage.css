@@ -80,7 +80,7 @@ section {
 body {
     margin: 0;
     font-family: "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-family-monospace: "NanumSquare", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     font-weight: 400;
     line-height: 1.5;
     color: #212529;
@@ -395,7 +395,6 @@ h1,
 h2,
 h3,
 h4,
-h5,
 h6,
 .h1,
 .h2,
@@ -406,6 +405,13 @@ h6,
     margin-bottom: 0.5rem;
     font-family: "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-weight: 500;
+    line-height: 1.2;
+}
+
+h5 {
+    margin-bottom: 0.5rem;
+    font-family: "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 550;
     line-height: 1.2;
 }
 
@@ -438,14 +444,17 @@ h6,
 .h6 {
     font-size: 1rem;
 }
+
 h7,
 .h7 {
     font-size: 0.75rem;
 }
+
 h8,
 .h7 {
     font-size: 0.5rem;
 }
+
 .lead {
     font-size: 1.25rem;
     font-weight: 300;
@@ -2554,7 +2563,7 @@ textarea.form-control.is-invalid {
     line-height: 1.5;
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    margin-bottom:32px;
+    margin-bottom: 32px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -10730,11 +10739,13 @@ hr.light {
     padding-bottom: 2rem;
 
 }
+
 .page-section-xsmall {
     padding-top: 2rem;
     padding-bottom: 2rem;
 
 }
+
 #services {
     background-color: #fafafa;
 }
@@ -10759,8 +10770,8 @@ hr.light {
 #mainNav .navbar-nav .nav-item .nav-link {
     color: #6c757d;
     font-family: "NanumSquare", "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-weight: 400;`
-    font-size: 0.9rem;
+    font-weight: 400;
+    ` font-size: 0.9rem;
     padding: 0.75rem 0;
 }
 
@@ -10892,9 +10903,9 @@ header.masthead h1 {
     position: relative;
     text-align: center;
     box-sizing: border-box;
-    box-shadow:  0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
     border-radius: 6px;
-      overflow: hidden;
+    overflow: hidden;
     white-space: nowrap;
 }
 
@@ -10903,7 +10914,7 @@ header.masthead h1 {
     /*color: white;*/
 }
 
-.slider_box h6{
+.slider_box h6 {
     padding-left: 10px;
 }
 
@@ -10918,7 +10929,7 @@ header.masthead h1 {
     text-align: center;
     box-sizing: border-box;
     border-top-width: 0.1px;
-    border-top-style : solid;
+    border-top-style: solid;
     border-top-color: black;
 
 }
@@ -10927,82 +10938,103 @@ header.masthead h1 {
     /*background: #6C63FF;*/
     /*color: white;*/
 }
-.wrap{
+
+.wrap {
     padding-top: 15%;
     padding-bottom: 15%;
 }
+
 @media (max-width: 450px) {
     .slider_box {
-            width: 130px;
-    height: 190px;
+        width: 130px;
+        height: 190px;
     }
-    h4{
-        font-size: 
+
+    h4 {
+        font-size:
     }
 }
 
-.main-content{
+.main-content {
     padding
 }
-#chart{
+
+#chart {
     width: 1000px;
     height: 500px;
 }
+
 footer img {
     width: 100%;
     height: 100%;
     max-width: 100%;
     max-height: 100%;
 }
-#row_setting{
+
+#row_setting {
     padding-top: 1.7rem;
 }
-#col-lg-12_setting{
+
+#col-lg-12_setting {
     padding-left: 2rem;
     padding-right: 3.2rem;
 }
 
-.container_setting{
+.container_setting {
     margin: 0 auto;
     text-align: center;
-padding-top: 1rem;
+    padding-top: 1rem;
     padding-bottom: 1rem;
     background: white;
-        box-shadow: 0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
     border-radius: 6px;
 }
 
-.container_setting .setting_start{
-    display : inline-block;
+.container_setting .setting_start {
+    display: inline-block;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
-.container_setting .setting_end{
-    display : inline-block;
-        padding-left: 3.5rem;
+
+.container_setting .setting_end {
+    display: inline-block;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
-.container_setting .setting_capital{
-    display : inline-block;
-        padding-left: 3.5rem;
+
+.container_setting .setting_capital {
+    display: inline-block;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
-.container_setting .setting_volume{
-    display : inline-block;
-        padding-left: 3.5rem;
+
+.container_setting .setting_volume {
+    display: inline-block;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
-.container_setting .setting_time{
-    display : inline-block;
-        padding-left: 3.5rem;
+
+.container_setting .setting_time {
+    display: inline-block;
+    padding-left: 1.5rem;
+    padding-right: 2rem;
     vertical-align: top;
 }
-#algo_text{
+
+#algo_text {
     vertical-align: top;
 }
-.algo_work{
-   
+
+.algo_work {
+
     display: inline-block;
     margin-top: 5px;
 }
 
-input{
+input {
     text-align: center;
-    
-}
 
+}
+.span2{
+    font-weight: 400;
+}
