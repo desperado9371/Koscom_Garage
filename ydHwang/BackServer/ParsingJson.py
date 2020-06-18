@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[31]:
+# In[35]:
 
 
 import asyncio
@@ -331,7 +331,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
     elif group_algo[0]['name'] !='num' and group_algo[2]['name'] =='num':
         print('case2 지표랑 뒷부분의 상수랑 비교시')
         # (case2 지표랑 뒷부분의 상수랑 비교시)
-        if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(int(group_algo[2]['val']))!= True:
+        if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(float(group_algo[2]['val']))!= True:
             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(group_algo[2]['val'])
             print(chk)
             if eval(chk) == True:
@@ -339,7 +339,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
     elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
         print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
-        if math.isnan(int(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
+        if math.isnan(float(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
             chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
             print(chk)
             if eval(chk) == True:
@@ -376,7 +376,7 @@ def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
                 if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
                         algo['algo'][pars]['max']) >= int(group_meet_condtion):
-                    print("충족!")
+                    print("충족!!!")
                     block_meet_condtion = 1
                 else:
                     print("미충족!")
@@ -391,8 +391,10 @@ def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
             print("이날 알고리즘은 완벽하게 충족")
             if hourday_tp == 'day':#일봉인 경우
                 result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
+                print(Prc_history['timestamp'][row][0:10])
             else :#시간봉인경우
                 result_datelist.append([Prc_history['timestamp'][row], bns_tp])
+                print(Prc_history['timestamp'][row])
 
     print(result_datelist)
     return result_datelist
