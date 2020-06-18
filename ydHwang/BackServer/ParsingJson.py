@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[35]:
+# In[37]:
 
 
 import asyncio
@@ -161,7 +161,7 @@ def stoch(df,n=14, d_n=3 ):
     return df
 
 def mfi(df,n=14):
-    indicator_mfi = ta.momentum.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
+    indicator_mfi = ta.volume.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
     df['mfi'] = indicator_mfi.money_flow_index()
     return df
 
