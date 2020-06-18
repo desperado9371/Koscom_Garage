@@ -339,7 +339,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
     elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
         # print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
-        if math.isnan(int(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
+        if math.isnan(float(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
             chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
             # print(chk)
             if eval(chk) == True:
