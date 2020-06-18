@@ -96,8 +96,8 @@ def test(request):
     btc_bal = 0
     avg_prc = 0
 
-    ttt = pd.DataFrame(result)
-    ttt.to_csv(algo_name+"tradelist.csv")
+    # ttt = pd.DataFrame(result)
+    # ttt.to_csv(algo_name+"tradelist.csv")
 
     # 백테스트 실행
     if not result:
@@ -163,6 +163,28 @@ def test(request):
         data.append(temp)
     # print( upbit_min['close'][-30:].tolist())
 
+    total_prof = final_balance-init_krw_bal
+    eval_prof = (int(closes[len(closes)-1]) - avg_prc) * btc_bal
+    real_prof = total_prof - eval_prof
+
+    eval_prof = str(int(eval_prof))
+    real_prof = str(int(real_prof))
+    if len(eval_prof) > 6:
+        if len(eval_prof) == 7 and eval_prof[0] == '-':
+            eval_prof = eval_prof[0:-3] + ',' + eval_prof[-3:]
+        else:
+            eval_prof = eval_prof[0:-6]+','+eval_prof[-6:-3]+','+eval_prof[-3:]
+    elif len(eval_prof) > 3:
+        eval_prof = eval_prof[0:-3] + ',' + eval_prof[-3:]
+
+    if len(real_prof) > 6:
+        if len(real_prof) == 7 and real_prof[0] == '-':
+            real_prof = real_prof[0:-3] + ',' + real_prof[-3:]
+        else:
+            real_prof = real_prof[0:-6]+','+real_prof[-6:-3]+','+real_prof[-3:]
+    elif len(real_prof)>3:
+        real_prof = real_prof[0:-3] + ',' + real_prof[-3:]
+
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = str(bal_diff)
     if len(bal_diff) > 6:
@@ -170,7 +192,7 @@ def test(request):
             bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
         else:
             bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
-    else:
+    elif len(bal_diff)>3:
         bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
 
     krw_bal = int(krw_bal)
@@ -234,6 +256,18 @@ def test(request):
 
     trade_num = len(trade_temp)
 
+    buy_num = 0
+    sell_num = 0
+
+    for i in trade_temp:
+        if i[1] == 'buy':
+            buy_num = buy_num + 1
+        else:
+            sell_num = sell_num + 1
+
+
+
+
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
                                                 'trades': trade_temp,
@@ -253,6 +287,10 @@ def test(request):
                                                 'algoname': request.GET.get('algoname'),
                                                 'algoreal': algo_realname,
                                                 'signal': trade_list,
+                                                'buy_num': buy_num,
+                                                'sell_num': sell_num,
+                                                'eval_prof': eval_prof,
+                                                'real_prof': real_prof,
                                                 })
 
 
