@@ -169,6 +169,18 @@ def test(request):
 
     eval_prof = str(int(eval_prof))
     real_prof = str(int(real_prof))
+
+    btc_exch = btc_bal * (int(closes[len(closes)-1]))
+    btc_exch = str(int(btc_exch))
+
+    if len(btc_exch) > 9:
+        btc_exch = btc_exch[0:-9] + ',' + btc_exch[-9:-6] + ',' + btc_exch[-6:-3] + ',' + btc_exch[-3:]
+    elif len(btc_exch) > 6:
+        btc_exch = btc_exch[0:-6]+','+btc_exch[-6:-3] + ',' + btc_exch[-3:]
+    elif len(btc_exch) > 3:
+        btc_exch = btc_exch[0:-3] + ',' + btc_exch[-3:]
+
+
     if len(eval_prof) > 6:
         if len(eval_prof) == 7 and eval_prof[0] == '-':
             eval_prof = eval_prof[0:-3] + ',' + eval_prof[-3:]
@@ -291,6 +303,7 @@ def test(request):
                                                 'sell_num': sell_num,
                                                 'eval_prof': eval_prof,
                                                 'real_prof': real_prof,
+                                                'btc_exch': btc_exch,
                                                 })
 
 
