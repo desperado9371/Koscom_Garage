@@ -187,7 +187,7 @@ def fi(df,n=13):
     return df
 
 def mfi(df,n=14):
-    indicator_mfi = ta.momentum.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
+    indicator_mfi = ta.volume.MFIIndicator(high=df['high'], low=df['low'], close=df['close'], volume =df['volume'],n=n)
     df['mfi'] = indicator_mfi.money_flow_index()
     return df
 
@@ -331,7 +331,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
     elif group_algo[0]['name'] !='num' and group_algo[2]['name'] =='num':
         # print('case2 지표랑 뒷부분의 상수랑 비교시')
         # (case2 지표랑 뒷부분의 상수랑 비교시)
-        if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(int(group_algo[2]['val']))!= True:
+        if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(float(group_algo[2]['val']))!= True:
             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(group_algo[2]['val'])
             # print(chk)
             if eval(chk) == True:
@@ -339,7 +339,7 @@ def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
     elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
         # print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
-        if math.isnan(int(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
+        if math.isnan(float(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
             chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
             # print(chk)
             if eval(chk) == True:
