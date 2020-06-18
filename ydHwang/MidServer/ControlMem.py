@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[18]:
+# In[19]:
 
 
 import glob
@@ -45,14 +45,23 @@ def InsMem(user_id,email):
         result = 'user_id empty'
     
     if result == 'Success':
+        #샘플알고리즘 1 입력
         f = open("../sample_buy_algo1.json", 'r')
         sample_buy = f.read()
         f.close()
         f = open("../sample_sell_algo1.json", 'r')
         sample_sell = f.read()
         f.close()
-        InsAlgoToDB(user_id,'Sample',str(sample_buy),str(sample_sell))
+        InsAlgoToDB(user_id,'Sample1',str(sample_buy),str(sample_sell))
         #InsAlgoToDB(user_id,'Sample','1',data)
+        #샘플알고리즘 2 입력
+        f = open("../sample_buy_algo2.json", 'r')
+        sample_buy = f.read()
+        f.close()
+        f = open("../sample_sell_algo2.json", 'r')
+        sample_sell = f.read()
+        f.close()
+        InsAlgoToDB(user_id,'Sample2',str(sample_buy),str(sample_sell))
         log.info('InsMem:Sample insert Complete')
     
     log.info("InsMem결과: "+ result)
@@ -93,9 +102,9 @@ def UpdTutorial(user_id):
 #     print("start")
 #     InsMem
 
-# if __name__ == "__main__":
-#     print("start")
-#     InsMem('Sample_test_log','test@test.com')
+if __name__ == "__main__":
+    print("start")
+    InsMem('Sample_test2','test@test.com')
 
 
 # In[1]:
