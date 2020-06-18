@@ -125,25 +125,27 @@
         #myBtn {
             background-color: #6C63FF;
             border: none;
-            color: white;
+            color : none;
             padding-top: 6px;
             padding-bottom: 6px;
             padding-right: 15px;
             padding-left: 15px;
             margin-right: 50px;
             border-radius: 2px;
-            box-shadow:  0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0.2rem 0.7rem rgba(0, 0, 0, 0.1);
         }
+
         #myBtn:hover {
             background-color: #24E1E8;
-            color : black;
+            color: black;
         }
 
         #myBtn:focus {
             outline: none;
             background-color: #1CFFF4;
-            color : black;
+            color: black;
         }
+
         #myBtn2 {
             display: none;
             position: fixed;
@@ -159,14 +161,14 @@
             padding: 15px;
             border-radius: 4px;
         }
+
         #myBtn2:hover {
             background-color: #24E1E8;
         }
 
-                #myBtn3 {
+        #myBtn3 {
             background-color: white;
         }
-
 
     </style>
 </head>
@@ -239,26 +241,82 @@
     <!--        </div>-->
     <!--    </section>-->
     <!-- section algorithm-->
-    <section class="page-section-small" id="algorithm" style="width: 100%">
+    <section class="page-section-small" id="backtest_setting" style="width: 100%">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="mt-1 pt-3">
-                        <h4 class="menu" style="font-weight: bold">내 알고리즘</h4>
+                        <h4 class="menu" style="font-weight: bold">백테스트 조건</h4>
                     </div>
                 </div>
             </div>
-{#            <div align="right">#}
-{#                <button id="myBtn">백테스트 설정</button>#}
-{#            </div>#}
+            {#            <div align="right">#}
+            {#                <button id="myBtn">백테스트 설정</button>#}
+            {#            </div>#}
+
+            <div class="container">
+                <div class="row" id="row_setting">
+                    <div class="col-lg-12" id="col-lg-12_setting">
+                      <div class="container_setting">
+                       <div class="setting_start">
+                        <div align="center">
+                            <form action="">
+                                <label for="start">테스트 시작 일자</label><br>
+                                <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
+                                {#            <button type="button" onclick="test(start)"> 설정 </button>#}
+                            </form>
+                        </div>
+                        </div>
+                       <div class="setting_end">
+                        <div align="center">
+                            <form action="">
+                                <label for="end">테스트 종료 일자</label><br>
+                                <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">
+                                {#            <button type="button"> 설정 </button>#}
+                            </form>
+                        </div>
+                        </div>
+                       <div class="setting_capital">
+                        <div align="center" id="setting_capital">
+                            <label for="money">테스트 초기자본</label><br>
+                            <input type="text" onKeyup="inputNumberAutoComma(this);" id="money" name="money" value="500,000,000" style="width: 9em" step="1000000" min="0">
+                            <label for="money">원</label>
+                        </div>
+                        </div>
+                       <div class="setting_volume">
+                        <div align="center">
+                            <label for="coin">주문 1회당 거래량</label><br>
+                            <input type="number" id="coin" name="coin" value="0.25" style="width: 4.5rem" step="0.25" min="0" max="10">
+                            <label for="coin">BTC</label>
+                        </div>
+                        </div>
+                       <div class="setting_time">
+                        <div align="center">
+                            <form action="">
+                               <label for="" id="algo_text">알고리즘 수행 단위</label><br>
+                                <div class="algo_work">
+                                <input type="radio" id="day" name="hourday" value="day" checked="checked">
+                                <label for="day">1일</label>
+                                <input type="radio" id="hour" name="hourday" value="hour">
+                                <label for="hour">1시간</label>
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+    </section>
 
 
+    <!--
             <h3 align="center">백테스트 조건 설정</h3>
             <br>
 
             <div align="center">
                 <form action="">
-                    <label for="start">테스트 시작 일자 :</label>
+                    <label for="start">테스트 시작 일자 :</label><br><br>
                     <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
                     {#            <button type="button" onclick="test(start)"> 설정 </button>#}
                 </form>
@@ -266,7 +324,7 @@
 
             <div align="center">
                 <form action="">
-                    <label for="end">테스트 종료 일자 :</label>
+                    <label for="end">테스트 종료 일자 :</label><br><br>
                     <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">
                     {#            <button type="button"> 설정 </button>#}
                 </form>
@@ -274,19 +332,19 @@
 
 
             <div align="center">
-                <label for="money">테스트 초기자본(원) :</label>
+                <label for="money">테스트 초기자본(원)</label><br><br>
                 <input type="number" id="money" name="money" value="500000000" style="width: 9em" step="1000000" min="0">
                 <label for="money">원</label>
             </div>
             <div align="center">
-                <label for="coin">주문 1회당 거래량(BTC) :</label>
+                <label for="coin">주문 1회당 거래량(BTC)</label><br><br>
                 <input type="number" id="coin" name="coin" value="0.25" style="width: 8em" step="0.25" min="0" max="10">
                 <label for="coin">BTC</label>
             </div>
 
             <div align="center">
                 <form action="">
-                    알고리즘 수행 시간 단위 :
+                    알고리즘 수행 시간 단위<br><br>
                     <input type="radio" id="day" name="hourday" value="day" checked="checked">
                     <label for="day">1일</label>
                     <input type="radio" id="hour" name="hourday" value="hour">
@@ -295,7 +353,16 @@
             </div>
             <br>
 
-
+              -->
+    <section class="page-section-xsmall" id="algorithm" style="width: 100%">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="mt-1 pt-3">
+                        <h4 class="menu" style="font-weight: bold">내 알고리즘</h4>
+                    </div>
+                </div>
+            </div>
             <div style="padding:20px 30px;">
                 <div id="slider-div" href="/loading">
                     {% for name,date,seq,hd,start,end in algo_info %}
@@ -314,7 +381,7 @@
                                 <button class="btn" onClick="changeIframeUrl('{{seq}}')">백테스트</button>
                                 <button class="btn" href="/algomaker" onclick="modify({{ seq }})">수정하기</button>
 
-                                
+
                             </div>
                         </div>
                     </div>
@@ -324,81 +391,7 @@
         </div>
 
     </section>
-    {#<div align="center">백테스트 설정</div>#}
-    {#<br>#}
-    {#<div align="center">#}
-    {#    <form action="">#}
-    {#        <label for="start">시작:</label>#}
-    {#        <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">#}
-    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
-    {#    </form>#}
-    {#</div>#}
-    {##}
-    {#<div align="center">#}
-    {#    <form action="" >#}
-    {#        <label for="end">종료:</label>#}
-    {#        <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-10">#}
-    {#            <button type="button"> 설정 </button>#}
-    {#    </form>#}
-    {#</div>#}
-    {##}
-    {#<div align="center">#}
-    {#    <label for="money">초기자본(원):</label>#}
-    {#    <input type="number" id="money" name="money" value="500000000">#}
-    {#</div>#}
-    {#<div align="center">#}
-    {#    <label for="coin">1회 거래량(BTC):</label>#}
-    {#    <input type="number" id="coin" name="coin" value="0.25">#}
-    {#</div>#}
 
-{#    <!-- The Modal -->#}
-{#    <div id="myModal" class="modal">#}
-{##}
-{#        <!-- Modal content -->#}
-{#        <div class="modal-content">#}
-{#            <span class="close">&times;</span>#}
-{#            <h2 align="center">백테스트 조건 설정</h2>#}
-{#            <br>#}
-{#            <div align="center">#}
-{#                <form action="">#}
-{#                    <label for="start">테스트 시작 일자 :</label>#}
-{#                    <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">#}
-                    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
-{#                </form>#}
-{#            </div>#}
-{##}
-{#            <div align="center">#}
-{#                <form action="">#}
-{#                    <label for="end">테스트 종료 일자 :</label>#}
-{#                    <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">#}
-                    {#            <button type="button"> 설정 </button>#}
-{#                </form>#}
-{#            </div>#}
-{##}
-{#            <div align="center">#}
-{#                <label for="money">테스트 초기자본(원) :</label>#}
-{#                <input type="number" id="money" name="money" value="500000000" style="width: 9em" step="1000000" min="0">#}
-{#                <label for="money">원</label>#}
-{#            </div>#}
-{#            <div align="center">#}
-{#                <label for="coin">주문 1회당 거래량(BTC) :</label>#}
-{#                <input type="number" id="coin" name="coin" value="0.25" style="width: 8em" step="0.25" min="0" max="10">#}
-{#                <label for="coin">BTC</label>#}
-{#            </div>#}
-{##}
-{#            <div align="center">#}
-{#                <form action="">#}
-{#                    알고리즘 수행 시간 단위 :#}
-{#                    <input type="radio" id="day" name="hourday" value="day" checked="checked">#}
-{#                    <label for="day">1일</label>#}
-{#                    <input type="radio" id="hour" name="hourday" value="hour">#}
-{#                    <label for="hour">1시간</label>#}
-{#                </form>#}
-{#            </div>#}
-{#            <br>#}
-{#        </div>#}
-{##}
-{#    </div>#}
 
     <script>
         //Get the button
@@ -451,6 +444,36 @@
                 modal.style.display = "none";
             }
         }
+
+   function inputNumberAutoComma(obj) {
+
+        // 콤마( , )의 경우도 문자로 인식되기때문에 콤마를 따로 제거한다.
+        var deleteComma = obj.value.replace(/\,/g, "");
+
+        // 콤마( , )를 제외하고 문자가 입력되었는지를 확인한다.
+        if(isFinite(deleteComma) == false) {
+            alert("문자는 입력하실 수 없습니다.");
+            obj.value = "";
+            return false;
+        }
+       
+        // 기존에 들어가있던 콤마( , )를 제거한 이 후의 입력값에 다시 콤마( , )를 삽입한다.
+        obj.value = inputNumberWithComma(inputNumberRemoveComma(obj.value));
+    }
+   
+    // 천단위 이상의 숫자에 콤마( , )를 삽입하는 함수
+    function inputNumberWithComma(str) {
+
+        str = String(str);
+        return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
+    }
+
+    // 콤마( , )가 들어간 값에 콤마를 제거하는 함수
+    function inputNumberRemoveComma(str) {
+
+        str = String(str);
+        return str.replace(/[^\d]+/g, "");
+    }
 
     </script>
 

@@ -22,7 +22,9 @@ def test(request):
     # 백테스트 수행 관련
 
     # my알고리즘 페이지에서 입력한 백테스트 조건 설정에서 GET방식으로 보내준 조건 읽어서 사용
-    init_krw_bal = int(request.GET.get('money'))
+    money = request.GET.get('money')
+    money = money.replace(',','')
+    init_krw_bal =int(money)
     order_quantity = float(request.GET.get('coin'))
     final_balance = 0
     final_profit = 0
@@ -93,6 +95,9 @@ def test(request):
     krw_bal = 0
     btc_bal = 0
     avg_prc = 0
+
+    ttt = pd.DataFrame(result)
+    ttt.to_csv(algo_name+"tradelist.csv")
 
     # 백테스트 실행
     if not result:
@@ -170,13 +175,16 @@ def test(request):
 
     krw_bal = int(krw_bal)
     krw_bal = str(krw_bal)
-    if len(krw_bal) > 6:
+    if len(krw_bal) > 9:
+        krw_bal = krw_bal[0:-9] + ',' + krw_bal[-9:-6] + ',' + krw_bal[-6:-3] + ',' + krw_bal[-3:]
+    elif len(krw_bal) > 6:
         krw_bal = krw_bal[0:-6]+','+krw_bal[-6:-3] + ',' + krw_bal[-3:]
     elif len(krw_bal) > 3:
         krw_bal = krw_bal[0:-3] + ',' + krw_bal[-3:]
 
     avg_prc = int(avg_prc)
     avg_prc = str(avg_prc)
+
     if len(avg_prc) > 6:
         avg_prc = avg_prc[0:-6] + ',' + avg_prc[-6:-3] + ',' + avg_prc[-3:]
     elif len(avg_prc) > 3:
@@ -198,7 +206,9 @@ def test(request):
 
     init_bal = int(init_krw_bal)
     init_bal = str(init_bal)
-    if len(init_bal) > 6:
+    if len(init_bal) > 9:
+        init_bal = init_bal[0:-9] + ',' + init_bal[-9:-6] + ',' + init_bal[-6:-3] + ',' + init_bal[-3:]
+    elif len(init_bal) > 6:
         init_bal = init_bal[0:-6] + ',' + init_bal[-6:-3] + ',' + init_bal[-3:]
     elif len(init_bal) > 3:
         init_bal = init_bal[0:-3] + ',' + init_bal[-3:]
@@ -302,11 +312,13 @@ def mypage(request):
     # print(algo_dates)
     # print(len(json_data['items']))
     temp_name = algo_names[0]
+    realmoney = 0
     return render(request, 'garage/mypage.html',{'algo_names': algo_names,
                                                  'algo_dates': algo_dates,
                                                  'algo_info': algo_info,
                                                  'algo_num': algo_num,
                                                  'name0': temp_name,
+                                                 'realmoney': realmoney,
                                                  })
 
 
