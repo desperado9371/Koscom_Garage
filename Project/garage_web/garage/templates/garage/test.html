@@ -264,12 +264,12 @@
 
         .tooltip2 .tooltiptext {
             visibility: hidden;
-            width: 150px;
-            top: 100%;
-            left: 50%;
+            width: 60px;
+            top: -10%;
+            left: 140%;
             margin-left: -60px;
-            background-color: black;
-            color: #fff;
+            background-color: white;
+            color: #6C63FF;
             text-align: center;
             border-radius: 6px;
             padding: 5px 0;
@@ -475,8 +475,13 @@
                                         <div class="text">
                                             <h5 style="color: #6C63FF">
                                                 원화 잔고 {{krw_bal|safe}}원<br></h5>
-                                                 <h5 style="color: #6C63FF">
-                                                BTC 잔고 {{btc_exch|safe}}원</h5>
+                                                 <h5 class="tooltip2" style="color: #6C63FF">
+                                                BTC 잔고 {{btc_exch|safe}}원
+                                                     <span class="tooltiptext" style="color: #6C63FF">
+                                                         {{btc_bal|safe}}BTC
+                                                     </span>
+                                                 </h5>
+                                            <br>
                                                 <span>&nbsp&nbsp- 매입 단가 : {{avg_prc|safe}}원<br>
                                                 &nbsp&nbsp- 금일 종가 : {{cur_prc|safe}}원
                                             </span>

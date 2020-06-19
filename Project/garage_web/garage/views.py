@@ -167,85 +167,32 @@ def test(request):
     eval_prof = (int(closes[len(closes)-1]) - avg_prc) * btc_bal
     real_prof = total_prof - eval_prof
 
-    eval_prof = str(int(eval_prof))
-    real_prof = str(int(real_prof))
+    eval_prof = int(eval_prof)
+    real_prof = int(real_prof)
 
-    btc_exch = btc_bal * (int(closes[len(closes)-1]))
-    btc_exch = str(int(btc_exch))
+    btc_exch = int(btc_bal * (int(closes[len(closes)-1])))
+    btc_exch = f"{btc_exch:,}"
 
-    if len(btc_exch) > 9:
-        btc_exch = btc_exch[0:-9] + ',' + btc_exch[-9:-6] + ',' + btc_exch[-6:-3] + ',' + btc_exch[-3:]
-    elif len(btc_exch) > 6:
-        btc_exch = btc_exch[0:-6]+','+btc_exch[-6:-3] + ',' + btc_exch[-3:]
-    elif len(btc_exch) > 3:
-        btc_exch = btc_exch[0:-3] + ',' + btc_exch[-3:]
-
-
-    if len(eval_prof) > 6:
-        if len(eval_prof) == 7 and eval_prof[0] == '-':
-            eval_prof = eval_prof[0:-3] + ',' + eval_prof[-3:]
-        else:
-            eval_prof = eval_prof[0:-6]+','+eval_prof[-6:-3]+','+eval_prof[-3:]
-    elif len(eval_prof) > 3:
-        eval_prof = eval_prof[0:-3] + ',' + eval_prof[-3:]
-
-    if len(real_prof) > 6:
-        if len(real_prof) == 7 and real_prof[0] == '-':
-            real_prof = real_prof[0:-3] + ',' + real_prof[-3:]
-        else:
-            real_prof = real_prof[0:-6]+','+real_prof[-6:-3]+','+real_prof[-3:]
-    elif len(real_prof)>3:
-        real_prof = real_prof[0:-3] + ',' + real_prof[-3:]
+    eval_prof = f"{eval_prof:,}"
+    real_prof = f"{real_prof:,}"
 
     bal_diff = int(final_balance-init_krw_bal)
-    bal_diff = str(bal_diff)
-    if len(bal_diff) > 6:
-        if len(bal_diff) == 7 and bal_diff[0] == '-':
-            bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
-        else:
-            bal_diff = bal_diff[0:-6]+','+bal_diff[-6:-3]+','+bal_diff[-3:]
-    elif len(bal_diff)>3:
-        bal_diff = bal_diff[0:-3] + ',' + bal_diff[-3:]
+    bal_diff = f"{bal_diff:,}"
 
     krw_bal = int(krw_bal)
-    krw_bal = str(krw_bal)
-    if len(krw_bal) > 9:
-        krw_bal = krw_bal[0:-9] + ',' + krw_bal[-9:-6] + ',' + krw_bal[-6:-3] + ',' + krw_bal[-3:]
-    elif len(krw_bal) > 6:
-        krw_bal = krw_bal[0:-6]+','+krw_bal[-6:-3] + ',' + krw_bal[-3:]
-    elif len(krw_bal) > 3:
-        krw_bal = krw_bal[0:-3] + ',' + krw_bal[-3:]
+    krw_bal = f"{krw_bal:,}"
 
     avg_prc = int(avg_prc)
-    avg_prc = str(avg_prc)
-
-    if len(avg_prc) > 6:
-        avg_prc = avg_prc[0:-6] + ',' + avg_prc[-6:-3] + ',' + avg_prc[-3:]
-    elif len(avg_prc) > 3:
-        avg_prc = avg_prc[0:-3] + ',' + avg_prc[-3:]
+    avg_prc = f"{avg_prc:,}"
 
     cur_prc = int(closes[len(closes)-1])
-    cur_prc = str(cur_prc)
-    if len(cur_prc) > 6:
-        cur_prc = cur_prc[0:-6] + ',' + cur_prc[-6:-3] + ',' + cur_prc[-3:]
-    elif len(cur_prc) > 3:
-        cur_prc = cur_prc[0:-3] + ',' + cur_prc[-3:]
+    cur_prc = f"{cur_prc:,}"
 
     fin_bal = int(final_balance)
-    fin_bal = str(fin_bal)
-    if len(fin_bal) > 6:
-        fin_bal = fin_bal[0:-6] + ',' + fin_bal[-6:-3] + ',' + fin_bal[-3:]
-    elif len(fin_bal) > 3:
-        fin_bal = fin_bal[0:-3] + ',' + fin_bal[-3:]
+    fin_bal = f"{fin_bal:,}"
 
     init_bal = int(init_krw_bal)
-    init_bal = str(init_bal)
-    if len(init_bal) > 9:
-        init_bal = init_bal[0:-9] + ',' + init_bal[-9:-6] + ',' + init_bal[-6:-3] + ',' + init_bal[-3:]
-    elif len(init_bal) > 6:
-        init_bal = init_bal[0:-6] + ',' + init_bal[-6:-3] + ',' + init_bal[-3:]
-    elif len(init_bal) > 3:
-        init_bal = init_bal[0:-3] + ',' + init_bal[-3:]
+    init_bal = f"{init_bal:,}"
 #########################################################
 
     start_date = srt_date
