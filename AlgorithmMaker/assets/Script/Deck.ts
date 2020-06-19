@@ -9,6 +9,7 @@ import HandItem from "./HandItem";
 import Card from "./Card";
 import HandManager from "./HandManager";
 import FileManager from "./FileManager";
+import TutorialManager from "./TutorialManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -46,6 +47,11 @@ export default class Deck extends HandItem {
         var hm = HandManager.getInstance();
         hm.setNextHand(this.package);
         hm.displayNextHand();
+
+        TutorialManager.getInstance().hideHighlight();
+        hm.scheduleOnce(function(){
+            TutorialManager.getInstance().nextTutorialByIndex(2);
+        }, 1);
         
     }
     category = null;

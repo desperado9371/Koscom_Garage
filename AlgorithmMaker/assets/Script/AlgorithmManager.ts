@@ -4,6 +4,7 @@ import Block from "./Block";
 import Card from "./Card";
 import LineList from "./LineList";
 import BlockList from "./BlockList";
+import TutorialManager from "./TutorialManager";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -63,6 +64,11 @@ export default class AlgorithmManager extends cc.Component {
     }
     showSavePopup(){
         cc.instantiate(this.popupSave).setParent(this.popupParent);
+        this.schedule(function() {
+            // Here `this` is referring to the component
+            TutorialManager.getInstance().nextTutorialByIndex(11);
+        }, 0.1);
+        
     }
 
     switchToBuy(){
@@ -70,6 +76,7 @@ export default class AlgorithmManager extends cc.Component {
     }
 
     switchToSell(){
+        TutorialManager.getInstance().nextTutorialByIndex(6);
         this.switchBuySell(false);
     }
 
@@ -96,10 +103,7 @@ export default class AlgorithmManager extends cc.Component {
 
         this.isBuy = false;
         this.switchToBuy();
-        var loadSeq = this.getCookie('algo_seq');
-        if(loadSeq != null){
-            this.loadAlgorithm(loadSeq);
-        }
+
     }
 
     addBlockWithEvent(event, cardInfo :Card): Block{
@@ -133,6 +137,10 @@ export default class AlgorithmManager extends cc.Component {
             })[0] || null;
     }
 
+    deleteCookie(name: string){
+        document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+    }
+
 
     SaveAlgorithm(algorithmName :string ){
 
@@ -158,6 +166,10 @@ export default class AlgorithmManager extends cc.Component {
             }
         }
         json.algo =jsonIn;
+
+        if(algoLines.length == 0){
+            json = null;
+        }
         
         var sellJson : any = {} ;
         var sellJsonIn : any = {}
@@ -170,6 +182,8 @@ export default class AlgorithmManager extends cc.Component {
         sellJsonIn.hourday_tp = "hour";
         
         var sellAlgoLines = this.sellLineParent.getComponentsInChildren(AlgorithmLine);
+        
+        
         for(var k = 0; k < sellAlgoLines.length; k++){
             var j = sellAlgoLines[k].toJson();
             if(j != null){
@@ -177,6 +191,10 @@ export default class AlgorithmManager extends cc.Component {
             }
         }
         sellJson.algo =sellJsonIn;
+
+        if(sellAlgoLines.length == 0){
+            sellJson = null;
+        }
         
         var user_id = this.getCookie('username');
         if(user_id == null){
@@ -191,14 +209,24 @@ export default class AlgorithmManager extends cc.Component {
         WebSocketConnect.getSock().send('Indicators');
     }
 
+    sending = false;
     loadAlgorithm(seq){
         //WebSocketConnect.getSock().send('load|test_user|12', this, 'load');
-        WebSocketConnect.getSock().send('load|test_user|' + seq, this, 'load');
+        this.sending = true;
+        var user_id = this.getCookie('username');
+        if(user_id == null){
+            user_id = 'test_user';
+        }
+        WebSocketConnect.getSock().send('load|'+user_id+'|' + seq, this, 'load');
 
     }
 
     testLoadAlgorithm(){
-        WebSocketConnect.getSock().send('load|test_user|all', this, 'load');
+        var user_id = this.getCookie('username');
+        if(user_id == null){
+            user_id = 'test_user';
+        }
+        WebSocketConnect.getSock().send('load|'+user_id+'|all', this, 'load');
     }
 
     parseAlgorithm(algorithm : string,  algorithmName : string = ''){
@@ -280,7 +308,7 @@ export default class AlgorithmManager extends cc.Component {
 
                     
                     newBlock.init(0,0, cardName, '');
-                    if(cardName == '숫자카드'){
+                    if(cardName == 'num'){
                         newBlock.setBodyString(variables);
                     }
                     else{
@@ -356,7 +384,7 @@ export default class AlgorithmManager extends cc.Component {
 
                     
                     newBlock.init(0,0, cardName, '');
-                    if(cardName == '숫자카드'){
+                    if(cardName == 'num'){
                         newBlock.setBodyString(variables);
                     }
                     else{
@@ -381,6 +409,8 @@ export default class AlgorithmManager extends cc.Component {
                 }*/
             }
         }
+        this.loaded = true;
+        this.deleteCookie('algo_seq');
     }
 
 
@@ -394,6 +424,18 @@ export default class AlgorithmManager extends cc.Component {
         
     }
 
+    loaded = false;
+    tryTime = 0;
+    update (dt) {
+        this.tryTime += dt;
+        if(this.tryTime > 2 && this.loaded == false){
+            this.tryTime = 0;
+            this.sending = false;
+            var loadSeq = this.getCookie('algo_seq');
+            if(loadSeq != null && this.sending == false){
+                this.loadAlgorithm(loadSeq);
+            }
+        }
 
-    // update (dt) {}
+    }
 }

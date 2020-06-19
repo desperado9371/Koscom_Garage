@@ -2,6 +2,7 @@ import MouseManager from "./MouseManager";
 import DockingSlot from "./DockingSlot"
 import PropertyBox from "./PropertyBox";
 import BlockGroup from "./BlockGroup";
+import TutorialManager from "./TutorialManager";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -98,16 +99,16 @@ export default class Block extends cc.Component {
             val.low = "13";
         }
         else if(cardName.includes("볼린저밴드")){
-            if(cardName.includes("상단")){
+            if(cardName.includes("상한선")){
                 json.name = 'bollinger_hband';
             }
-            else if(cardName.includes("하단")){
+            else if(cardName.includes("하한선")){
                 json.name = 'bollinger_lband';
             }
-            else if(cardName.includes("중심")){
+            else if(cardName.includes("중심선")){
                 json.name = 'bollinger_mband';
             }
-            else if(cardName.includes("너비")){
+            else if(cardName.includes("밴드폭")){
                 json.name = 'bollinger_wband';
             }
             val.period = this.getBodyString();
@@ -199,7 +200,19 @@ export default class Block extends cc.Component {
             this.body.active = false;
         }
         else if(cardName == 'rsi' ){
+            var tm = TutorialManager.getInstance();
+            if(tm.isTutorial){
+                if(tm.index == 5){
+                    this.relationSymbol.getComponent(cc.Label).string = "<";
+                    this.setBodyString(20);
 
+                }
+                if(tm.index == 8){
+                    this.relationSymbol.getComponent(cc.Label).string = "<";
+                    this.setBodyString(80);
+
+                }
+            }
             this.setBodyString('14');
         }
         else if(cardName == 'obv'){
@@ -402,6 +415,16 @@ export default class Block extends cc.Component {
             this.isDown = false;
             this.propertyBox.onBlockClick(this);
         }
+        if(this.connedtedMode == 'firstSlot'){
+            TutorialManager.getInstance().nextTutorialByIndex(3);
+            TutorialManager.getInstance().nextTutorialByIndex(8);
+
+        }
+        else if(this.connedtedMode == 'slot'){
+            TutorialManager.getInstance().nextTutorialByIndex(10);
+            TutorialManager.getInstance().nextTutorialByIndex(5);
+
+        }
     }
 
     mouseDownEventHandler(event){
@@ -424,6 +447,7 @@ export default class Block extends cc.Component {
         if(this.mouseManager == null){
             this.mouseManager = MouseManager.getInstance();
         }
+        this.mouseManager.movingBlock = this;
         if(this.isDown == false){
             this.stuckPos.x = this.mouseManager.getMousePos().x;
             this.stuckPos.y = this.mouseManager.getMousePos().y;
@@ -441,6 +465,24 @@ export default class Block extends cc.Component {
 
 
         console.debug("mouse down called");
+    }
+
+    mouseRemoteUpEventHandler(event){
+        if(this.isDown == true){
+            console.debug("mouse up called");
+            this.isDown = false;
+            this.propertyBox.onBlockClick(this);
+        }
+        if(this.connedtedMode == 'firstSlot'){
+            TutorialManager.getInstance().nextTutorialByIndex(3);
+            TutorialManager.getInstance().nextTutorialByIndex(8);
+
+        }
+        else if(this.connedtedMode == 'slot'){
+            TutorialManager.getInstance().nextTutorialByIndex(10);
+            TutorialManager.getInstance().nextTutorialByIndex(5);
+
+        }
     }
 
     connedtedMode = '';

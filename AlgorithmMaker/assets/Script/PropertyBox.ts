@@ -60,6 +60,9 @@ export default class PropertyBox extends cc.Component {
         if(this.cardData == null){
             this.cardData =  FileManager.getInstance().cardData;
         }
+        if(cardName.includes("\r\n")){
+            cardName = cardName.replace("\r\n", "|");
+        }
         if(this.cardData[cardName] == null){
             return;
         }

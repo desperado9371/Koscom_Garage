@@ -23,6 +23,13 @@ export default class Card extends HandItem {
     @property(cc.Label)
     lblCardName : cc.Label = null;
 
+    @property(String)
+    initCardName : String = "";
+
+    @property(Boolean)
+    selfInit : Boolean = false;
+
+    inited = false;
     blockList : BlockList = null;
     cardName = "";
     
@@ -46,6 +53,7 @@ export default class Card extends HandItem {
         this.cardName = name;
     }
     init(name){
+
         this.cardName = name;
         
         if(name.includes("|")){
@@ -68,6 +76,7 @@ export default class Card extends HandItem {
         }
         else if(cardName.includes('macd') ){
             name = 'MACD|시그널';
+            this.cardName = 'MACD|시그널';
             this.lblCardName.string = 'MACD\r\n시그널';
         }
         else if(cardName == 'adi') {
@@ -95,16 +104,24 @@ export default class Card extends HandItem {
         }
         else if(cardName.includes("bollinger")) {
             if(cardName.includes("hband")){
+                name = '볼린저밴드\r\n상한선';
+                this.cardName = '볼린저밴드\r\n상한선';
                 this.lblCardName.string  = '볼린저밴드\r\n상한선';
             }
             else if(cardName.includes("lband")){
+                name = '볼린저밴드\r\n하한선';
+                this.cardName = '볼린저밴드\r\n하한선';
                 this.lblCardName.string  = '볼린저밴드\r\n하한선';
             }
             else if(cardName.includes("mband")){
+                name = '볼린저밴드\r\n중심선';
+                this.cardName = '볼린저밴드\r\n중심선';
                 this.lblCardName.string  = '볼린저밴드\r\n중심선';
             }
             else if(cardName.includes("wband")){
-                this.lblCardName.string  = '볼린저밴드\r\n너비';
+                name = '볼린저밴드\r\n밴드폭';
+                this.cardName = '볼린저밴드\r\n밴드폭';
+                this.lblCardName.string  = '볼린저밴드\r\n밴드폭';
             }
         }
         else if(cardName == 'cci' || cardName == 'cmf'){
@@ -146,8 +163,9 @@ export default class Card extends HandItem {
             this.imgCardImage.spriteFrame = FileManager.getInstance().cardPrice;
             
         }
-        
-        
+
+        this.onLoad();
+
     }
     testInit(){
         this.description = 'z';
@@ -163,58 +181,58 @@ export default class Card extends HandItem {
     onLoad () {
          //Getting Car Node
   
-    let mouseDown = false;
-    //Record mouse click status when user clicks
-    this.node.on(cc.Node.EventType.MOUSE_DOWN, (event)=>{
-        PropertyBox.getInstance().onCardClick(this);
-        mouseDown = true;
-    });
+        let mouseDown = false;
+        //Record mouse click status when user clicks
+        this.node.on(cc.Node.EventType.MOUSE_DOWN, (event)=>{
+            PropertyBox.getInstance().onCardClick(this);
+            mouseDown = true;
+        });
 
-    this.node.on(cc.Node.EventType.MOUSE_LEAVE, (event)=>{
-        this.createdBlock = null;
-        mouseDown = false;
-    });
-
-    
-    //Drag and drop only when the user presses the mouse
-    this.node.on(cc.Node.EventType.MOUSE_MOVE, (event)=>{
-        if(!mouseDown) return;
-        //Get the information of the last point of the mouse distance
-        let delta = event.getDelta();
-        //Adding qualifications
-        this.createThreshold += delta.y;
-        //console.log(this.createThreshold);
-        
-        if(this.createThreshold > 25 && this.createdBlock == null){
-            this.createdBlock = this.createdBlock = AlgorithmManager.getInstance().addBlockWithEvent(event, this);
-
-            //this.createThreshold = 0;
-            //mouseDown = false;
-            this.draggedUp = true;
-            console.log("block created");
-        }
-        else if(this.draggedUp && this.createThreshold < 25 && this.createdBlock != null){
-            this.createdBlock.node.destroy();
+        this.node.on(cc.Node.EventType.MOUSE_LEAVE, (event)=>{
             this.createdBlock = null;
-            this.draggedUp = false;
-            console.log("block destroied");
-        }
-        else if(this.createThreshold < 25){
-            this.draggedUp = false;
-        }
+            mouseDown = false;
+        });
+
+        
+        //Drag and drop only when the user presses the mouse
+        this.node.on(cc.Node.EventType.MOUSE_MOVE, (event)=>{
+            if(!mouseDown) return;
+            //Get the information of the last point of the mouse distance
+            let delta = event.getDelta();
+            //Adding qualifications
+            this.createThreshold += delta.y;
+            //console.log(this.createThreshold);
+            
+            if(this.createThreshold > 25 && this.createdBlock == null){
+                this.createdBlock = this.createdBlock = AlgorithmManager.getInstance().addBlockWithEvent(event, this);
+
+                //this.createThreshold = 0;
+                //mouseDown = false;
+                this.draggedUp = true;
+                console.log("block created");
+            }
+            else if(this.draggedUp && this.createThreshold < 25 && this.createdBlock != null){
+                this.createdBlock.node.destroy();
+                this.createdBlock = null;
+                this.draggedUp = false;
+                console.log("block destroied");
+            }
+            else if(this.createThreshold < 25){
+                this.draggedUp = false;
+            }
 
 
-    });
-    //Restore state when mouse is raised
-    this.node.on(cc.Node.EventType.MOUSE_UP, (event)=>{
-        if(this.createdBlock != null){
-            this.createdBlock.mouseUpEventHandler(event);
-        }
-        mouseDown = false;
-        this.createThreshold = 0;
-        this.draggedUp = false;
-        this.createdBlock = null;
-    });
+        });
+        //Restore state when mouse is raised
+        this.node.on(cc.Node.EventType.MOUSE_UP, (event)=>{
+            if(this.createdBlock != null){
+                this.createdBlock.mouseUpEventHandler(event);
+            }
+            mouseDown = false;
+            this.createThreshold = 0;
+            this.draggedUp = false;
+            this.createdBlock = null;
+        });
     }
 
     start () {

@@ -7,6 +7,7 @@
 
 import Block from "./Block";
 import Card from "./Card";
+import AlgorithmManager from "./AlgorithmManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -49,6 +50,7 @@ export default class BlockList extends cc.Component {
     }
 
     addBlockWithEvent(event, cardInfo :Card): Block{
+
         var blk = cc.instantiate(this.block);
         var comp = blk.getComponent(Block);
         var eventLoc = event.getLocation();

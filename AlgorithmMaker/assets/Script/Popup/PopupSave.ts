@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import AlgorithmManager from "../AlgorithmManager";
+import TutorialManager from "../TutorialManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -30,11 +31,17 @@ export default class PopupSave extends cc.Component {
         am.SaveAlgorithm(this.algoName.string);
         am.showSaveTooltip();
 
+        TutorialManager.getInstance().nextTutorialByIndex(12);
         this.close();
     }
 
     start () {
-
+        var tuto = TutorialManager.getInstance();
+        if(tuto != null){
+            if(tuto.isTutorial == true){
+                this.algoName.string = "RSI 튜토리얼";
+            }
+        }
     }
 
     // update (dt) {}

@@ -1,4 +1,5 @@
 import EventHandler from "./EventHandler"
+import Block from "./Block";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -17,6 +18,8 @@ export default class MouseManager extends cc.Component {
         return MouseManager.instance;
 
     }
+
+    movingBlock :Block = null;
 
     mouseEvent : cc.Event.EventMouse;
     mousePos : cc.Vec2 = new cc.Vec2();
@@ -66,6 +69,11 @@ export default class MouseManager extends cc.Component {
                 this.downObject.touchUpHandler(event);
             }
         }*/
+        if(this.movingBlock != null){
+            this.movingBlock.mouseRemoteUpEventHandler(event);
+            this.movingBlock = null;
+        }
+
         
     }
 

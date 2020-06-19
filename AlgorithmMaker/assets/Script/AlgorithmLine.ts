@@ -9,6 +9,7 @@ import Block from "./Block";
 import LineList from "./LineList";
 import LinkedList from "./Collections/LinkedList"
 import BlockGroup from "./BlockGroup";
+import TutorialManager from "./TutorialManager";
 
 
 const {ccclass, property} = cc._decorator;
@@ -27,8 +28,8 @@ export default class AlgorithmLine extends cc.Component {
     @property(cc.Node)
     minusButton: cc.Node = null;
 
-    @property(cc.Node)
-    emptyGroup: cc.Node = null;
+    @property(cc.Prefab)
+    emptyGroup: cc.Prefab = null;
 
     @property(cc.Node)
     bodyBackground : cc.Node = null;
@@ -157,6 +158,9 @@ export default class AlgorithmLine extends cc.Component {
 
     }
     onPlusButtonClick(){
+        TutorialManager.getInstance().nextTutorialByIndex(7);
+        TutorialManager.getInstance().nextTutorialByIndex(1);
+        
         this.group.active = true;
         this.bodyBackground.color = cc.color(255,255,255,255);
         this.plusButton.active = false;
