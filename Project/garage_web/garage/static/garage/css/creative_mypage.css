@@ -11041,3 +11041,10 @@ input {
 .h5-padding{
     padding-top: 5px;
 }
+#h5-n-m-b{
+    margin-bottom: 0.2rem;
+}
+#h5-m-t-n-m-b{
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+}
