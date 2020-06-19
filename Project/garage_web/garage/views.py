@@ -315,11 +315,18 @@ def home(request):
     :return:
     """
     if request.user.is_authenticated:
-        if request.COOKIES.get('username') == None:
+        if request.COOKIES.get('username') is None:
             response = redirect('/')
             response.set_cookie('username', request.user.username)
             return response
         print(request.user.username)
+
+    if request.COOKIES.get('algo_seq') is not None:
+        response = redirect('/')
+        print('cookie delete')
+        response.delete_cookie('algo_seq')
+        return response
+
     return render(request, 'garage/index.html', {})
 
 
