@@ -279,8 +279,8 @@ def test(request):
                                                 'bal_diff': bal_diff,   # 계좌수익금
                                                 'fin_prf': final_profit,    # 수익률
                                                 'fin_inc': final_increase,  # 수익률
-                                                'st_date': start_date,  # 시작날짜
-                                                'end_date': end_date,   # 종료날짜
+                                                'st_date': request.GET.get('start'),  # 시작날짜
+                                                'end_date': request.GET.get('end'),   # 종료날짜
                                                 'trade_num': trade_num, # 거래횟수
                                                 'krw_bal': krw_bal,     # 원화 잔고
                                                 'btc_bal': btc_bal,     # 빗코 잔고
