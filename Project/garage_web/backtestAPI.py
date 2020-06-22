@@ -277,12 +277,16 @@ class BacktestAPI:
         :return:
         """
         bitcoin_dt = bitcoin_dt
+
+        # temp_dt = bitcoin_dt
+        # temp_dt = temp_dt.set_index('timestamp')
+        # close_dt = temp_dt['close']
+        # price = close_dt[target_date]
+
         if hourday == 'day':
             target_date = datetime.strptime(target_date, "%Y%m%d")
         else:
             target_date = datetime.strptime(target_date, "%Y%m%dT%H:%M:%S")
-
-        price = -1
 
         dt_index = 0
 
@@ -303,7 +307,7 @@ class BacktestAPI:
             if (price * quantity) <= krw_balance:
                 krw_balance = krw_balance - (price * quantity)
                 btc_balance = btc_balance + quantity
-                average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
+                average_price = (old_total + price * quantity) / ( old_btc_bal + quantity)
             #     print("주문 성공 : 구매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
             #           format(bitcoin_dt['timestamp'][dt_index],
             #                  float(bitcoin['close']),
@@ -322,7 +326,7 @@ class BacktestAPI:
                 if btc_balance == 0:
                     average_price = 0
                 else:
-                    average_price = (old_total + float(bitcoin['close'])* quantity) / ( old_btc_bal + quantity)
+                    average_price = (old_total + price * quantity) / ( old_btc_bal + quantity)
             #     print("주문 성공 : 판매 ({}) -  btckrw:{}원, 수량:{}개, 원화잔고:{}원, 비트코인잔고:{}BTC, 평균단가:{}원, 총잔고평가금액:{}원".
             #           format(bitcoin_dt['timestamp'][dt_index],
             #                  float(bitcoin['close']),
@@ -332,10 +336,10 @@ class BacktestAPI:
             #                  krw_balance + (btc_balance) * float(bitcoin['close'])))
             # else:
             #     print("주문실패(매도) : BTC 잔고부족 ({})".format(bitcoin_dt['timestamp'][dt_index]))
-        if average_price ==0:
-            return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, 0
+        if average_price == 0:
+            return target_date, order_type, price, krw_balance, btc_balance, average_price, 0
         else:
-            return target_date, order_type, bitcoin['close'], krw_balance, btc_balance, average_price, (bitcoin['close']-average_price)/average_price*100,
+            return target_date, order_type, price, krw_balance, btc_balance, average_price, (price-average_price)/average_price*100,
 
     def execute_backtest(self,bitcoin_dt, init_krw_bal=100000000, init_btc_bal=0, order_quantity=5,
                          date_list=['2019-01-11', '2019-02-11', '2019-02-20', '2019-06-11', '2019-07-11', '2019-07-20'],

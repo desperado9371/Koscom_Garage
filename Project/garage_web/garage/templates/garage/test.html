@@ -176,8 +176,8 @@
             data.addColumn('string', '거래유형');
             data.addColumn('number', '가격');
             data.addColumn('number', '수량');
-            data.addColumn('number', '수익률');
-            data.addColumn('number', '자산증감률');
+            data.addColumn('number', '평가수익률');
+            data.addColumn('number', '누적수익률');
             data.addColumn('number', '전체잔고');
             //data.addRows([ ['2019-01-11', 'buy', '', '0.1%', '1.1%', '12345'],])
             data.addRows( {{trades|safe}} );
