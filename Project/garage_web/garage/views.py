@@ -13,6 +13,7 @@ from backtestAPI import BacktestAPI
 import asyncio
 from websocket import create_connection
 import ParsingJson
+import timeit
 
 @login_required
 def test(request):
@@ -22,13 +23,20 @@ def test(request):
     # 백테스트 수행 관련
 
     # my알고리즘 페이지에서 입력한 백테스트 조건 설정에서 GET방식으로 보내준 조건 읽어서 사용
+
+    # 백테스트 초기자본 셋팅
     money = request.GET.get('money')
     money = money.replace(',','')
     init_krw_bal =int(money)
+
+    # 백테스트 1회 거래량 셋팅
     order_quantity = float(request.GET.get('coin'))
+
     final_balance = 0
     final_profit = 0
     result = []
+
+    # 사용자의 이름과 요청한 알고리즘 이름 셋팅
     username = request.user.username
     algo_name = request.GET.get('algoname')
 
@@ -67,10 +75,10 @@ def test(request):
     # 파싱 보내기전 필요한 정보들 로드
     # 현재 알고리즘에 저장된 시작일, 종료일, 시간/일 봉 등의 정보보다 웹에서 설정한게 우선순위를 갖고있음
     market = json_data1['algo']['market']
-    hourday_tp = json_data1['algo']['hourday_tp']
+    # hourday_tp = json_data1['algo']['hourday_tp']
+    # srt_date = json_data1['algo']['srt_date']
+    # end_date = json_data1['algo']['end_date']
     hourday_tp = request.GET.get('hourday')
-    srt_date = json_data1['algo']['srt_date']
-    end_date = json_data1['algo']['end_date']
     srt_date = request.GET.get('start').replace('-', '')
     end_date = request.GET.get('end').replace('-', '')
     srt_time = json_data1['algo']['srt_time']
@@ -78,7 +86,25 @@ def test(request):
     bns_tp = json_data1['algo']['buysell']
 
     # 파싱요청
-    result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time, hourday_tp)
+    timer_start = timeit.default_timer() # 시작시간 체크
+    temp_result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time, hourday_tp)
+    timer_end = timeit.default_timer()
+    print("알고리즘 파싱 {}초 소요".format( timer_end - timer_start))
+
+    # 매수/매도 동시에 뜨면 무시하는 로직
+    result = []
+    ind = 0
+    while ind < len(temp_result):
+        if ind < len(temp_result) - 1:
+            if temp_result[ind][0] != temp_result[ind + 1][0]:
+                result.append(temp_result[ind])
+                ind = ind + 1
+            else:
+                ind = ind + 2
+        else:
+            result.append(temp_result[ind])
+            ind = ind + 1
+
 
     # 그래프 표시를 위해 시가 데이터 요청
     if hourday_tp == 'day':  # 일봉일 경우
@@ -86,6 +112,8 @@ def test(request):
     else:  # 시간봉일 경우
         bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
         bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+
+
 
     # 거래 내역을 관리하기위한 변수
     trade_list = []
@@ -100,6 +128,8 @@ def test(request):
     # ttt.to_csv(algo_name+"tradelist.csv")
 
     # 백테스트 실행
+    timer_start = timeit.default_timer()  # 시작시간 체크
+
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
     else:
@@ -109,10 +139,16 @@ def test(request):
             bitcoin_dt=bitcoin_dt, init_krw_bal=init_krw_bal, order_quantity=order_quantity, date_list=date_list, type_list=type_list, hourday=hourday_tp)
         final_increase = "%.2f" % final_increase
         final_profit = "%.2f" % final_profit
+
+    timer_end = timeit.default_timer()
+    print("백테스트 {}초 소요".format(timer_end - timer_start))
 ######################################################################
 # 차트 관련
+
+    # 위에서 가져온 비트코인 시세를 그대로 사용
     upbit_min = bitcoin_dt
 
+    # 일봉인지 시간봉인지에 맞추어 날짜 포맷 셋팅
     if hourday_tp == 'day':
         for i in range(len(upbit_min)):
             temp = datetime.strptime(upbit_min['timestamp'][i],"%Y%m%d")
@@ -124,6 +160,7 @@ def test(request):
             temp = temp.strftime("%Y-%m-%dT%H:%M:%S")
             upbit_min['timestamp'][i] = temp
 
+    # 데이터 셋팅
     timestamps = upbit_min['timestamp']
     opens = upbit_min['open']
     closes = upbit_min['close']
@@ -163,34 +200,40 @@ def test(request):
         data.append(temp)
     # print( upbit_min['close'][-30:].tolist())
 
-    total_prof = final_balance-init_krw_bal
-    eval_prof = (int(closes[len(closes)-1]) - avg_prc) * btc_bal
-    real_prof = total_prof - eval_prof
-
+    # 그래프에 표시할 값 계산 후 천단위 콤마 삽입
+    total_prof = final_balance-init_krw_bal     # 계좌 수익금(원)
+    eval_prof = (int(closes[len(closes)-1]) - avg_prc) * btc_bal  # 평가 수익금(원)
+    real_prof = total_prof - eval_prof          # 실현 수익금(원)
     eval_prof = int(eval_prof)
     real_prof = int(real_prof)
-
-    btc_exch = int(btc_bal * (int(closes[len(closes)-1])))
-    btc_exch = f"{btc_exch:,}"
-
     eval_prof = f"{eval_prof:,}"
     real_prof = f"{real_prof:,}"
 
+    # 비트코인 잔고 환산(원)
+    btc_exch = int(btc_bal * (int(closes[len(closes)-1])))
+    btc_exch = f"{btc_exch:,}"
+
+    # 계좌 수익금(원)
     bal_diff = int(final_balance-init_krw_bal)
     bal_diff = f"{bal_diff:,}"
 
+    # 원화 잔고(원)
     krw_bal = int(krw_bal)
     krw_bal = f"{krw_bal:,}"
 
+    # 비트코인 평단(원)
     avg_prc = int(avg_prc)
     avg_prc = f"{avg_prc:,}"
 
+    # 비트코인 현재가
     cur_prc = int(closes[len(closes)-1])
     cur_prc = f"{cur_prc:,}"
 
+    # 최종 잔고
     fin_bal = int(final_balance)
     fin_bal = f"{fin_bal:,}"
 
+    # 초기 금액
     init_bal = int(init_krw_bal)
     init_bal = f"{init_bal:,}"
 #########################################################
@@ -198,10 +241,9 @@ def test(request):
     start_date = srt_date
     end_date = end_date
 
+    # 매수/매도 동시에 뜨면 무시하는 로직
     trade_temp = []
-
     ind = 0
-
     while ind < len(trade_list):
         if ind < len(trade_list) - 1:
             if trade_list[ind][0] != trade_list[ind+1][0]:
@@ -213,11 +255,12 @@ def test(request):
             trade_temp.append(trade_list[ind])
             ind = ind + 1
 
+    # 거래 횟수
     trade_num = len(trade_temp)
 
+    # 매수/매도 횟수
     buy_num = 0
     sell_num = 0
-
     for i in trade_temp:
         if i[1] == 'buy':
             buy_num = buy_num + 1
@@ -231,26 +274,26 @@ def test(request):
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
                                                 'trades': trade_temp,
                                                 'datas': data,
-                                                'init_bal': init_bal,
-                                                'fin_bal': fin_bal,
-                                                'bal_diff': bal_diff,
-                                                'fin_prf': final_profit,
-                                                'fin_inc': final_increase,
-                                                'st_date': start_date,
-                                                'end_date': end_date,
-                                                'trade_num': trade_num,
-                                                'krw_bal': krw_bal,
-                                                'btc_bal': btc_bal,
-                                                'avg_prc': avg_prc,
-                                                'cur_prc': cur_prc,
+                                                'init_bal': init_bal,   # 초기자본
+                                                'fin_bal': fin_bal,     # 최종잔고
+                                                'bal_diff': bal_diff,   # 계좌수익금
+                                                'fin_prf': final_profit,    # 수익률
+                                                'fin_inc': final_increase,  # 수익률
+                                                'st_date': start_date,  # 시작날짜
+                                                'end_date': end_date,   # 종료날짜
+                                                'trade_num': trade_num, # 거래횟수
+                                                'krw_bal': krw_bal,     # 원화 잔고
+                                                'btc_bal': btc_bal,     # 빗코 잔고
+                                                'avg_prc': avg_prc,     # 빗코 평단가
+                                                'cur_prc': cur_prc,     # 빗코 현재가
                                                 'algoname': request.GET.get('algoname'),
                                                 'algoreal': algo_realname,
-                                                'signal': trade_list,
-                                                'buy_num': buy_num,
-                                                'sell_num': sell_num,
-                                                'eval_prof': eval_prof,
-                                                'real_prof': real_prof,
-                                                'btc_exch': btc_exch,
+                                                'signal': trade_list,   # 거래내역
+                                                'buy_num': buy_num,     # 매수횟수
+                                                'sell_num': sell_num,   # 매도 횟수
+                                                'eval_prof': eval_prof, # 평가 손익
+                                                'real_prof': real_prof, # 실현 손익
+                                                'btc_exch': btc_exch,   # 빗코 환전
                                                 })
 
 
@@ -261,6 +304,8 @@ def home(request):
     :param request:
     :return:
     """
+
+    # 유저 세션이 존재하지만 쿠키가 없을 경우 쿠키 새로 생성
     if request.user.is_authenticated:
         if request.COOKIES.get('username') is None:
             response = redirect('/')
@@ -268,6 +313,7 @@ def home(request):
             return response
         print(request.user.username)
 
+    # 알고리즘 로드를 위한 쿠키가 아직 남아있을 경우 삭제
     if request.COOKIES.get('algo_seq') is not None:
         response = redirect('/')
         print('cookie delete')
@@ -291,19 +337,27 @@ def intro(request):
 def mypage(request):
     # username = request.COOKIES.get('username')
 
+    # 알고리즘 로드를 위한 쿠키가 아직 남아있을경우 삭제
     if request.COOKIES.get('algo_seq') is not None:
         response = redirect('/mypage')
         print('cookie delete')
         response.delete_cookie('algo_seq')
         return response
 
-
+    # 사용자 이름 세션에서 로드
     username = request.user.username
+
+    # 미들웨어와 웹소켓 방식으로 연결
     ws = create_connection("ws://13.124.102.83:80/Cocos")
+
+    # 해당사용자의 모든 알고리즘 조회 요청
     ws.send("load|{}|all".format(username))
+
+    # 데이터 수신 및 파싱
     json_data = ws.recv()
     json_data = eval(json_data)
 
+    # 알고리즘 정보를 위한 변수
     algo_names = []
     algo_dates = []
     algo_info = []
@@ -326,12 +380,16 @@ def mypage(request):
     # print(len(json_data['items']))
     temp_name = algo_names[0]
     realmoney = 0
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    print(today)
     return render(request, 'garage/mypage.html',{'algo_names': algo_names,
                                                  'algo_dates': algo_dates,
-                                                 'algo_info': algo_info,
+                                                 'algo_info': algo_info,    # 알고리즘 정보
                                                  'algo_num': algo_num,
                                                  'name0': temp_name,
                                                  'realmoney': realmoney,
+                                                 'today': today,
                                                  })
 
 
