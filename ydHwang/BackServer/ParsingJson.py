@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[37]:
+# In[9]:
 
 
 import asyncio
@@ -316,59 +316,100 @@ def vortex_indicator_pos(df,n=14):
 
 #  ----- Chk_Meet_Condition 함수
 #  ----- input 으로 들어온 값들의 
-def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
-    print("Chk_Meet_Condition 시작:" )
-    #print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
-    meet_condtion= int(meet_condtion)
-    # (case1 지표끼리 비교시)
-    if group_algo[0]['name'] !='num' and group_algo[2]['name'] !='num':
-        if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True:
-            print('case1 지표끼리 비교시')
-            chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
-            print(chk)
-            if eval(chk) == True:
-                meet_condtion = meet_condtion + 1
-    elif group_algo[0]['name'] !='num' and group_algo[2]['name'] =='num':
-        print('case2 지표랑 뒷부분의 상수랑 비교시')
-        # (case2 지표랑 뒷부분의 상수랑 비교시)
-        if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(float(group_algo[2]['val']))!= True:
-            chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(group_algo[2]['val'])
-            print(chk)
-            if eval(chk) == True:
-                meet_condtion = meet_condtion + 1
-    elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
-        print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
-        # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
-        if math.isnan(float(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
-            chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
-            print(chk)
-            if eval(chk) == True:
-                meet_condtion = meet_condtion + 1
+# def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
+#     #print("Chk_Meet_Condition 시작:" )
+#     #print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
+#     print(group_algo[0]['name'] + " " + group_algo[1]['val'] + " "+ group_algo[2]['name'])
+#     meet_condtion= int(meet_condtion)
+#     # (case1 지표끼리 비교시)
+#     if group_algo[0]['name'] !='num' and group_algo[2]['name'] !='num':
+#         if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True:
+#             #print('case1 지표끼리 비교시')
+#             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
+#             print(chk)
+#             if eval(chk) == True:
+#                 print("해당조건 충족")
+#                 meet_condtion = meet_condtion + 1
+#             else :
+#                 print("해당조건 미충족")
+#         else : 
+#              print("NaN값이 있어서 해당조건 Pass합니다")
+#     elif group_algo[0]['name'] !='num' and group_algo[2]['name'] =='num':
+#         #print('case2 지표랑 뒷부분의 상수랑 비교시')
+#         # (case2 지표랑 뒷부분의 상수랑 비교시)
+#         if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(float(group_algo[2]['val']))!= True:
+#             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(group_algo[2]['val'])
+#             print(chk)
+#             if eval(chk) == True:
+#                 print("해당조건 충족")
+#                 meet_condtion = meet_condtion + 1
+#             else :
+#                 print("해당조건 미충족")
+#         else : 
+#              print("NaN값이 있어서 해당조건 Pass합니다")                
+#     elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
+#         #print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
+#         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
+#         if math.isnan(float(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
+#             chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
+#             print(chk)
+#             if eval(chk) == True:
+#                 print("해당조건 충족")
+#                 meet_condtion = meet_condtion + 1
+#             else :
+#                 print("해당조건 미충족")
+#         else : 
+#              print("NaN값이 있어서 해당조건 Pass합니다")                
+#     return meet_condtion
+
+def Set_Pricelist(chk_list,group_algo,Prc_history,row):
+    #지표값 세팅
+    Prc_history = Make_indicat(group_algo,Prc_history)
+    if group_algo['name'] == 'num' or group_algo['name'] == 'sig':
+        chk_list = chk_list + str(group_algo['val'])
+    else :
+        chk_list = chk_list + str(Prc_history[group_algo['name']][row])
+    return chk_list
+
+def Chk_Meet_Condition(chk_list,meet_condtion):
+    if eval(chk_list) == True:
+        print("해당조건 충족")
+        meet_condtion = meet_condtion + 1
+    else :
+        print("해당조건 미충족")
     return meet_condtion
-        
+
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
+def Fet_Algo(Prc_history, algo, bns_tp, hourday_tp):
     result_datelist = []
-
+    chk_list =''
     for row in range(len(Prc_history)):
         group_meet_condtion = 0  # 각 그룹의 충족갯수
         block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
+        
         # 알고리즘 확인후 각 일자별로 충족하는지 확인
         for pars in algo['algo']:
             if pars[0:5] == 'block':
                 group_meet_condtion = 0  # 그룹 충족 갯수 초기화
+                print("날짜:" + Prc_history['timestamp'][row])
                 for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
+                        chk_list =''
                         print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
                         for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
-                            Prc_history = Make_indicat(group_algo, Prc_history)
-                        print(Prc_history)
-                        group_meet_condtion = Chk_Meet_Condition(Prc_history, algo['algo'][pars][search_group], row,
-                                                                 group_meet_condtion)
+                            chk_list = Set_Pricelist(chk_list,group_algo, Prc_history,row)
+                            
+                        #비교대상값들이 chk_list 에 세팅 완료 되면 그 비교값들이 맞는지 연산
+                        #값중에 nan 이 잇을경우 그냥 패스
+                        print(chk_list)
+                        if 'nan' in chk_list:
+                            print('nan 있으므로 비교 연산 패스')
+                        else :
+                            group_meet_condtion = Chk_Meet_Condition(chk_list,group_meet_condtion)
 
                 print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(
                     algo['algo'][pars]['max']))
@@ -389,10 +430,10 @@ def Fet_Algo(Prc_history, algo,bns_tp,hourday_tp):
         if block_meet_condtion == 1:
             # 충족시 일자를 리스트에 추가
             print("이날 알고리즘은 완벽하게 충족")
-            if hourday_tp == 'day':#일봉인 경우
+            if hourday_tp == 'day':  # 일봉인 경우
                 result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
                 print(Prc_history['timestamp'][row][0:10])
-            else :#시간봉인경우
+            else:  # 시간봉인경우
                 result_datelist.append([Prc_history['timestamp'][row], bns_tp])
                 print(Prc_history['timestamp'][row])
 
@@ -487,13 +528,13 @@ if __name__ == '__main__':
     result = []
     with open('buy.json', 'r') as f:
         json_data_buy = json.load(f)
-    market = json_data['algo']['market']
-    hourday_tp = json_data['algo']['hourday_tp']
-    srt_date = json_data['algo']['srt_date']
-    end_date = json_data['algo']['end_date']
-    srt_time = json_data['algo']['srt_time']
-    end_time = json_data['algo']['end_time']
-    bns_tp = json_data['algo']['buysell']
+    market = json_data_buy['algo']['market']
+    hourday_tp = json_data_buy['algo']['hourday_tp']
+    srt_date = json_data_buy['algo']['srt_date']
+    end_date = json_data_buy['algo']['end_date']
+    srt_time = json_data_buy['algo']['srt_time']
+    end_time = json_data_buy['algo']['end_time']
+    bns_tp = json_data_buy['algo']['buysell']
     
     with open('sell.json', 'r') as f:
         json_data_sell = json.load(f)
