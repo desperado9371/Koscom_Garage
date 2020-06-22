@@ -278,10 +278,10 @@ class BacktestAPI:
         """
         bitcoin_dt = bitcoin_dt
 
-        # temp_dt = bitcoin_dt
-        # temp_dt = temp_dt.set_index('timestamp')
-        # close_dt = temp_dt['close']
-        # price = close_dt[target_date]
+        temp_dt = bitcoin_dt
+        temp_dt = temp_dt.set_index('timestamp')
+        close_dt = temp_dt['close']
+        price = close_dt[target_date]
 
         if hourday == 'day':
             target_date = datetime.strptime(target_date, "%Y%m%d")
@@ -293,15 +293,15 @@ class BacktestAPI:
         old_btc_bal = btc_balance
         old_total = old_btc_bal * average_price
 
-        for index, bitcoin in bitcoin_dt.iterrows():
-            if hourday == 'day':
-                temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%d")
-            else:
-                temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%dT%H:%M:%S")
-            if temp == target_date:
-                price = float(bitcoin['close'])
-                dt_index = index
-                break
+        # for index, bitcoin in bitcoin_dt.iterrows():
+        #     if hourday == 'day':
+        #         temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%d")
+        #     else:
+        #         temp = datetime.strptime(bitcoin['timestamp'], "%Y%m%dT%H:%M:%S")
+        #     if temp == target_date:
+        #         price = float(bitcoin['close'])
+        #         dt_index = index
+        #         break
 
         if order_type == 'buy':
             if (price * quantity) <= krw_balance:
