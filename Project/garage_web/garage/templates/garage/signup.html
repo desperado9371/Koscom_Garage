@@ -62,6 +62,14 @@
 					<span class="login100-form-title p-b-51">
 						회원가입
 					</span>
+					{% block error %}
+					{% if error %}
+
+					<p style="color:red;font-size:10pt;"> {{ error }} </p>
+					<br>
+
+					{% endif %}
+					{% endblock %}
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "아이디를 입력해주세요">
 						<input class="input100" type="text" name="username" placeholder="아이디">

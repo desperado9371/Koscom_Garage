@@ -415,7 +415,7 @@ def login(request):
         # 로그인 실패
         else:
             print("login fail")
-            return render(request, 'garage/login.html', {'error': 'username or password is incorrect!'})
+            return render(request, 'garage/login.html', {'error': '아이디 혹은 비밀번호가 잘못 입력되었습니다.'})
 
     # 첫 로드시 바로 페이지 반환
     return render(request, 'garage/login.html', {})
@@ -431,18 +431,21 @@ def signup(request):
     # post 요청이 있을 시
     if request.method == "POST":
         # 입력한 두개의 패스워드가 같으면
-        if request.POST["password1"] == request.POST["password2"]:
-            # DB에 신규유저 추가
-            user = User.objects.create_user(
-                username=request.POST["username"], password=request.POST["password1"], email=request.POST["email"])
-            # 해당 유저로 로그인 처리
-            auth.login(request, user)
-            ws = create_connection("ws://13.124.102.83:80/JoinMem")
-            ws.send("save|{}|{}".format(user.username, user.email))
-            response = redirect('/')
-            response.set_cookie('username', request.POST["username"])
-            # print("login as "+username)
-            return response
+        try:
+            if request.POST["password1"] == request.POST["password2"]:
+                # DB에 신규유저 추가
+                user = User.objects.create_user(
+                    username=request.POST["username"], password=request.POST["password1"], email=request.POST["email"])
+                # 해당 유저로 로그인 처리
+                auth.login(request, user)
+                ws = create_connection("ws://13.124.102.83:80/JoinMem")
+                ws.send("save|{}|{}".format(user.username, user.email))
+                response = redirect('/')
+                response.set_cookie('username', request.POST["username"])
+                # print("login as "+username)
+                return response
+        except:
+            return render(request, 'garage/signup.html', {'error': '이미 가입된 아이디 입니다. '})
         return render(request, 'garage/signup.html', {})
 
     # 첫 로드시 바로 페이지 반환
