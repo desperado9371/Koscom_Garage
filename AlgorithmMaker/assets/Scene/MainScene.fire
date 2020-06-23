@@ -347,7 +347,7 @@
       "array": [
         0,
         0,
-        535.1958028836318,
+        456.3953877943992,
         0,
         0,
         0,
@@ -5962,7 +5962,7 @@
     "offset": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -20
+      "y": 0
     },
     "_id": "ef7de8VL9OrKaVh3oZU8hP"
   },
@@ -10422,7 +10422,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 160,
+    "_opacity": 44,
     "_color": {
       "__type__": "cc.Color",
       "r": 0,
@@ -11038,7 +11038,7 @@
       "__id__": 4
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 269

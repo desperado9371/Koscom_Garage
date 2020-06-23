@@ -56,7 +56,8 @@ export default class TutorialManager extends cc.Component {
         this.ws.onopen = this.onOpen;
         this.ws.onmessage = this.onRecieve;
         this.ws.onclose = this.onClose;
-
+        
+        //this.tutorialStart();
         
     }
 
@@ -90,7 +91,7 @@ export default class TutorialManager extends cc.Component {
         this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/FilledGroup')
         this.tutorialList.add('AlgorithmMain/btnSell');
         this.tutorialList.add('AlgorithmMain/sellView/sellLineParent/[0]');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup');
+        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/BlankGroup');
         this.tutorialList.add('HandScroll/scrollview/view/content/[1]');
         this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/FilledGroup');
         this.tutorialList.add('AlgorithmMain/btnSave');

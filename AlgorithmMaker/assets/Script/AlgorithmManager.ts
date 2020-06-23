@@ -167,8 +167,8 @@ export default class AlgorithmManager extends cc.Component {
         }
         json.algo =jsonIn;
 
-        if(algoLines.length == 0){
-            json = null;
+        if(algoLines.length == 1 && algoLines[0].isEmpty() == true){
+            json = "";
         }
         
         var sellJson : any = {} ;
@@ -192,8 +192,8 @@ export default class AlgorithmManager extends cc.Component {
         }
         sellJson.algo =sellJsonIn;
 
-        if(sellAlgoLines.length == 0){
-            sellJson = null;
+        if(sellAlgoLines.length == 1 && sellAlgoLines[0].isEmpty() == true){
+            sellJson = "";
         }
         
         var user_id = this.getCookie('username');
@@ -201,7 +201,11 @@ export default class AlgorithmManager extends cc.Component {
             user_id = 'test_user';
         }
 
-        WebSocketConnect.getSock().send('save|'+user_id+'|'+algorithmName+'|'+JSON.stringify(json)+'|'+JSON.stringify(sellJson));
+        var buy = json == "" ? '' : JSON.stringify(json);
+        var sell = sellJson == "" ? '' : JSON.stringify(sellJson);
+
+
+        WebSocketConnect.getSock().send('save|'+user_id+'|'+algorithmName+'|'+buy+'|'+sell);
 
     }
     

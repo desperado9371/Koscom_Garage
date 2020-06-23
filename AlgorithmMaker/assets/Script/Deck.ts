@@ -51,6 +51,7 @@ export default class Deck extends HandItem {
         TutorialManager.getInstance().hideHighlight();
         hm.scheduleOnce(function(){
             TutorialManager.getInstance().nextTutorialByIndex(2);
+            TutorialManager.getInstance().nextTutorialByIndex(9);
         }, 1);
         
     }

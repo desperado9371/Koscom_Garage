@@ -22,8 +22,10 @@ export default class LineList extends cc.Component {
 
     // onLoad () {}
 
+    number = 1;
     start () {
         this.addLine();
+
     }
     
     addLine(){
@@ -32,6 +34,8 @@ export default class LineList extends cc.Component {
         newLine.setParent(this.node);
         var lineComp = newLine.getComponent(AlgorithmLine);
         lineComp.init(this.node, this.blockParent);
+        lineComp.setConditionNumber(this.number);
+        this.number++;
         newLine.active= true;
         newLine.position = new cc.Vec3(0,0,0);
 

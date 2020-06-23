@@ -18,6 +18,8 @@ const {ccclass, property} = cc._decorator;
 export default class AlgorithmLine extends cc.Component {
 
 
+    @property(cc.Label)
+    lblNumCondition : cc.Label = null;
 
     @property(cc.Node)
     group: cc.Node = null;
@@ -44,6 +46,10 @@ export default class AlgorithmLine extends cc.Component {
     static xSpacing = 50;
     static xThreshold = 800;
     static baseHeight = 340;
+
+    setConditionNumber(number){
+        this.lblNumCondition.string = '조건 ' + number;
+    }
 
     groupList : LinkedList<BlockGroup> = new LinkedList<BlockGroup>();
     condition : string = 'all';
@@ -86,6 +92,19 @@ export default class AlgorithmLine extends cc.Component {
 
 
         return json;
+    }
+    isEmpty() : boolean{
+        if(this.groupList.size() == 0){
+            return true;
+        }
+        if(this.groupList.size() < 2 ){
+            
+            if(this.groupList.elementAtIndex(0).targetBlock == null){
+                return true;
+            }
+            
+        }
+        return false;
     }
     addEmptyGroup(){
         var newNode = cc.instantiate(this.emptyGroup);
@@ -158,13 +177,13 @@ export default class AlgorithmLine extends cc.Component {
 
     }
     onPlusButtonClick(){
-        TutorialManager.getInstance().nextTutorialByIndex(7);
-        TutorialManager.getInstance().nextTutorialByIndex(1);
         
         this.group.active = true;
         this.bodyBackground.color = cc.color(255,255,255,255);
         this.plusButton.active = false;
         this.addEmptyGroup();
+        TutorialManager.getInstance().nextTutorialByIndex(7);
+        TutorialManager.getInstance().nextTutorialByIndex(1);
     }
    
     
