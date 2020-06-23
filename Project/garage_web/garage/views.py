@@ -27,7 +27,7 @@ def test(request):
     # 백테스트 초기자본 셋팅
     money = request.GET.get('money')
     money = money.replace(',','')
-    init_krw_bal =int(money)
+    init_krw_bal = int(money)
 
     # 백테스트 1회 거래량 셋팅
     order_quantity = float(request.GET.get('coin'))
@@ -105,15 +105,12 @@ def test(request):
             result.append(temp_result[ind])
             ind = ind + 1
 
-
     # 그래프 표시를 위해 시가 데이터 요청
     if hourday_tp == 'day':  # 일봉일 경우
         bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
     else:  # 시간봉일 경우
         bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
         bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
-
-
 
     # 거래 내역을 관리하기위한 변수
     trade_list = []
@@ -140,7 +137,7 @@ def test(request):
         final_increase = "%.2f" % final_increase
         final_profit = "%.2f" % final_profit
 
-    timer_end = timeit.default_timer()
+    timer_end = timeit.default_timer()  # 종료시간 체크
     print("백테스트 {}초 소요".format(timer_end - timer_start))
 ######################################################################
 # 차트 관련
@@ -167,6 +164,7 @@ def test(request):
     highs = upbit_min['high']
     lows = upbit_min['low']
 
+    # html에 넘겨줄 리스트 선언
     data = list()
     tooltips = list()
     for i in range(len(timestamps)):
@@ -179,6 +177,7 @@ def test(request):
         if i % 2 == 0:
             tooltips.append('')
 
+    # 리스트에 데이터 삽입
     for i in range(len(timestamps)):
         temp = list()
         year = timestamps[i][:4]
@@ -266,9 +265,6 @@ def test(request):
             buy_num = buy_num + 1
         else:
             sell_num = sell_num + 1
-
-
-
 
     return render(request, 'garage/test.html', {'data': upbit_min['close'][-30:].tolist(),
                                                 'labels': upbit_min['timestamp'][-30:].tolist(),
@@ -383,7 +379,7 @@ def mypage(request):
 
     today = datetime.now().strftime("%Y-%m-%d")
     print(today)
-    return render(request, 'garage/mypage.html',{'algo_names': algo_names,
+    return render(request, 'garage/mypage.html', {'algo_names': algo_names,
                                                  'algo_dates': algo_dates,
                                                  'algo_info': algo_info,    # 알고리즘 정보
                                                  'algo_num': algo_num,
@@ -419,7 +415,7 @@ def login(request):
         # 로그인 실패
         else:
             print("login fail")
-            return render(request, 'garage/login.html', { 'error':'username or password is incorrect!'})
+            return render(request, 'garage/login.html', {'error': 'username or password is incorrect!'})
 
     # 첫 로드시 바로 페이지 반환
     return render(request, 'garage/login.html', {})
@@ -504,4 +500,4 @@ def loading(request):
 
 
 def ready(request):
-    return render(request,'garage/ready.html',)
+    return render(request, 'garage/ready.html',)

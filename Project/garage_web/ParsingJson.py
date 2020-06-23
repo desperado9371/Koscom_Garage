@@ -407,7 +407,8 @@ def Fet_Algo(Prc_history, algo, bns_tp, hourday_tp):
                         #값중에 nan 이 잇을경우 그냥 패스
                         # print(chk_list)
                         if 'nan' in chk_list:
-                            print('nan 있으므로 비교 연산 패스')
+                            te = 3
+                            # print('nan 있으므로 비교 연산 패스')
                         else :
                             group_meet_condtion = Chk_Meet_Condition(chk_list,group_meet_condtion)
 
