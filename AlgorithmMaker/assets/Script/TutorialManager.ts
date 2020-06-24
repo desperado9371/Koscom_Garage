@@ -72,11 +72,11 @@ export default class TutorialManager extends cc.Component {
         this.index = 0;
         if(this.mode == "check"){
             if(event.data == "0"){
-                this.tutorialStart();
+                TutorialManager.getInstance().tutorialStart();
             }
         }
         else{
-            this.tutorialDone();
+            TutorialManager.getInstance().tutorialDone();
         }
     }
 
