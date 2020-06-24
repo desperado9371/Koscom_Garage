@@ -36,7 +36,7 @@ export default class PopupSaveTooltip extends cc.Component {
     }
 
     onYesButton(){
-        
+        location.href = "/mypage";
     }
 
     update (dt) {

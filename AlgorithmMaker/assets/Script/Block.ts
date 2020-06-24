@@ -193,7 +193,7 @@ export default class Block extends cc.Component {
         else if(cardName == 'adi') {
             this.body.active = false;
         }
-        else if(cardName == 'stoch'){
+        else if(cardName == 'stoch' || cardName.includes('스토캐스틱')){
             this.body.active = false;
         }
         else if(cardName == 'tsi' || cardName == 'ao'){
@@ -222,6 +222,13 @@ export default class Block extends cc.Component {
         if(cardName == 'num' || cardName == '숫자카드'){
             this.title.getComponentInChildren(cc.Label).string = '숫자카드';
             this.setBodyString('50');
+            var tutoIndex = TutorialManager.getInstance().index;
+            if(tutoIndex == 5){
+                this.setBodyString('80');
+            }
+            else if(tutoIndex == 8){
+                this.setBodyString('20');
+            }
         }
         else if(cardName.includes("bollinger")) {
             if(cardName.includes("hband")){

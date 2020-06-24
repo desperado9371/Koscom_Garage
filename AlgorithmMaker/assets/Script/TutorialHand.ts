@@ -62,7 +62,7 @@ export default class TutorialHand extends cc.Component {
 
 
         this.tween = cc.tween(this.node)
-        .to(0, {position: fromPos, opacity : 125})
+        .to(0, {position: fromPos, opacity : 255})
         .to(0.5,{ scaleX: 1.1, scaleY : 1.1})
         .to(0.5,{ scaleX: 1.0, scaleY : 1.0})
         .to(2, {position : toPos})

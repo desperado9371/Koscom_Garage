@@ -52,18 +52,35 @@ export default class AlgorithmLine extends cc.Component {
     }
 
     groupList : LinkedList<BlockGroup> = new LinkedList<BlockGroup>();
-    condition : string = 'all';
+    condition : number = 1;
     changeCondition(){
+
+
         
-        if(this.condition == 'all'){
-            this.condition = '1';
-            this.lblCondition.string = '1개 이상 만족';
+        if(this.condition == this.groupList.size() - 1){
+            this.condition = 1;
+            //this.lblCondition.string = '조건 모두 만족';
         }
-        else {
-            this.condition = 'all';
+        else{
+            this.condition++;
+            //this.lblCondition.string = (this.condition+1)+'개 이상 만족';
+        }
+        this.refreshCondition();
+    }
+
+    refreshCondition(){
+        if(this.groupList.size()-1 < this.condition){
+            this.condition = this.groupList.size() - 1;
+        }
+        if(this.condition < 1){
+            this.condition = 1;
+        }
+        if(this.condition >= this.groupList.size()-1){
             this.lblCondition.string = '조건 모두 만족';
         }
-        
+        else{
+            this.lblCondition.string = (this.condition)+'개 이상 만족';
+        }
     }
     toJson(){
         var json : any = {};
@@ -72,13 +89,13 @@ export default class AlgorithmLine extends cc.Component {
             return null;
         }
 
-        if(this.condition == 'all'){
+        if(this.condition >= this.groupList.size()){
             json.min = (this.groupList.size()-1).toString();
             json.max = (this.groupList.size()-1).toString();
 
         }
         else{
-            json.min = 1;
+            json.min = (this.condition);
             json.max = (this.groupList.size()-1).toString();
         }
         json.total_count = (this.groupList.size()-1).toString();
@@ -118,12 +135,15 @@ export default class AlgorithmLine extends cc.Component {
         var xPos = 0;
         var yPos = 0;
         
+        if(this.condition >= this.groupList.size()-1){
+            this.condition++;
+        }
         this.groupList.add(comp);
         newNode.setPosition(xPos, yPos);
         newNode.active = true;
         this.repositionGroups();
         this.resizeLine();
-        
+        this.refreshCondition();
     }
     resizeLine(){
         var firstGroup = this.groupList.first();
@@ -168,10 +188,15 @@ export default class AlgorithmLine extends cc.Component {
             prevGroup = elem;
             
         }
+        this.refreshCondition();
     }
     removeGroup(group : BlockGroup){
         this.groupList.remove(group);
         group.node.destroy();
+        if(this.condition >= this.groupList.size()){
+            this.condition--;
+        }
+        this.refreshCondition();
     }
     repositionStartBlock(){
 

@@ -347,7 +347,7 @@
       "array": [
         0,
         0,
-        456.3953877943992,
+        524.8113946933698,
         0,
         0,
         0,
@@ -3360,7 +3360,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -3571,7 +3571,9 @@
       "__id__": 74
     },
     "_enabled": true,
-    "_normalMaterial": null,
+    "_normalMaterial": {
+      "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+    },
     "_grayMaterial": null,
     "duration": 0.1,
     "zoomScale": 1.2,
@@ -11051,7 +11053,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 107,
+    "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,

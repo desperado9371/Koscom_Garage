@@ -57,7 +57,7 @@ export default class TutorialManager extends cc.Component {
         this.ws.onmessage = this.onRecieve;
         this.ws.onclose = this.onClose;
         
-        //this.tutorialStart();
+        this.tutorialStart();
         
     }
 
@@ -84,18 +84,18 @@ export default class TutorialManager extends cc.Component {
         this.isTutorial = true;
 
         this.tutorialList = new LinkedList<string>();
-        this.tutorialList.add('AlgorithmMain/buyView/buyLineParent/[0]');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[1]');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/BlankGroup');
-        this.tutorialList.add('RedoButton');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/FilledGroup')
-        this.tutorialList.add('AlgorithmMain/btnSell');
-        this.tutorialList.add('AlgorithmMain/sellView/sellLineParent/[0]');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/BlankGroup');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[1]');
-        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/FilledGroup');
-        this.tutorialList.add('AlgorithmMain/btnSave');
-        this.tutorialList.add('PopopParent/[0]/body/btnSave');
+        this.tutorialList.add('AlgorithmMain/buyView/buyLineParent/[0]');//1
+        this.tutorialList.add('HandScroll/scrollview/view/content/[1]');//2
+        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/BlankGroup');//3
+        this.tutorialList.add('RedoButton');//4
+        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/FilledGroup')//5
+        this.tutorialList.add('AlgorithmMain/btnSell');//6
+        this.tutorialList.add('AlgorithmMain/sellView/sellLineParent/[0]');//7
+        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/BlankGroup');//8
+        this.tutorialList.add('HandScroll/scrollview/view/content/[1]');//9
+        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/FilledGroup');//10
+        this.tutorialList.add('AlgorithmMain/btnSave');//11
+        this.tutorialList.add('PopopParent/[0]/body/btnSave');//12
 
 
         this.tutorialParent.active = true;
@@ -221,6 +221,7 @@ export default class TutorialManager extends cc.Component {
         this.ellipseMask.width = widthHeight.x + 100;
         this.ellipseMask.height = widthHeight.y + 50;
 
+
         this.tutorialHand.scrollTween(from, to);
     }
 
@@ -228,6 +229,18 @@ export default class TutorialManager extends cc.Component {
     dragTutorialTest(from: cc.Node, to :cc.Node){
         this.squareMask.active = false;
         this.ellipseMask.active = true;
+
+        if(this.index == 4 || this.index == 9){
+            var fakenode = cc.instantiate(new cc.Node());
+            fakenode.setParent(to);
+            fakenode.anchorX = to.anchorX;
+            fakenode.anchorY = to.anchorY;
+            fakenode.height = to.height;
+            fakenode.width = to.width;
+            fakenode.setPosition(fakenode.width/2,0,0);
+            to = fakenode;
+        }
+
 
         var gPos = from.convertToWorldSpaceAR(cc.Vec2.ZERO);    
         var gPosTo = to.convertToWorldSpace(cc.Vec2.ZERO); 
@@ -280,7 +293,7 @@ export default class TutorialManager extends cc.Component {
         mask.width = length;
         mask.height = 100;
 
-        
+
         this.tutorialHand.scrollTween(from, to);
     }
 
