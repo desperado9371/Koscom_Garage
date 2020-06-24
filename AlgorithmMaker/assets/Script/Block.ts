@@ -202,15 +202,10 @@ export default class Block extends cc.Component {
         else if(cardName == 'rsi' ){
             var tm = TutorialManager.getInstance();
             if(tm.isTutorial){
-                if(tm.index == 5){
-                    this.relationSymbol.getComponent(cc.Label).string = "<";
-                    this.setBodyString(20);
 
-                }
-                if(tm.index == 8){
-                    this.relationSymbol.getComponent(cc.Label).string = "<";
-                    this.setBodyString(80);
+                if(tm.index == 10){
 
+                    this.relationSymbol.getComponent(cc.Label).string = "<";
                 }
             }
             this.setBodyString('14');
@@ -224,10 +219,11 @@ export default class Block extends cc.Component {
             this.setBodyString('50');
             var tutoIndex = TutorialManager.getInstance().index;
             if(tutoIndex == 5){
-                this.setBodyString('80');
+                this.setBodyString(20);
+                this.relationSymbol.getComponent(cc.Label).string = "<";
             }
             else if(tutoIndex == 8){
-                this.setBodyString('20');
+                this.setBodyString(80);
             }
         }
         else if(cardName.includes("bollinger")) {
