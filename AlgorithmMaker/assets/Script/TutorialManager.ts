@@ -57,7 +57,7 @@ export default class TutorialManager extends cc.Component {
         this.ws.onmessage = this.onRecieve;
         this.ws.onclose = this.onClose;
         
-        this.tutorialStart();
+        //this.tutorialStart();
         
     }
 
@@ -72,11 +72,11 @@ export default class TutorialManager extends cc.Component {
         this.index = 0;
         if(this.mode == "check"){
             if(event.data == "0"){
-                this.tutorialStart();
+                TutorialManager.getInstance().tutorialStart();
             }
         }
         else{
-            this.tutorialDone();
+            //TutorialManager.getInstance().tutorialDone();
         }
     }
 
