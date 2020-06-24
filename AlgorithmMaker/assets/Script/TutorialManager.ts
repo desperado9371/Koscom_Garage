@@ -62,7 +62,7 @@ export default class TutorialManager extends cc.Component {
     }
 
     onOpen(event){
-
+        TutorialManager.getInstance().tutorialCheck();
     }
     onClose(event){
 
@@ -70,11 +70,11 @@ export default class TutorialManager extends cc.Component {
     onRecieve(event){
         console.log("Tutorial data recieved : " + event.data);
         this.index = 0;
-        if(this.mode == "check"){
-            if(event.data == "0"){
-                TutorialManager.getInstance().tutorialStart();
-            }
+
+        if(event.data == "0"){
+            TutorialManager.getInstance().tutorialStart();
         }
+        
         else{
             //TutorialManager.getInstance().tutorialDone();
         }
