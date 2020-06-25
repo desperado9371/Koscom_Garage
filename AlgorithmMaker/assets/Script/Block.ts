@@ -226,18 +226,18 @@ export default class Block extends cc.Component {
                 this.setBodyString(80);
             }
         }
-        else if(cardName.includes("bollinger")) {
-            if(cardName.includes("hband")){
+        else if(cardName.includes("bollinger") || cardName.includes("볼린저")) {
+            if(cardName.includes("hband") || cardName.includes('상한선')){
                 this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n상한선';
             }
-            else if(cardName.includes("lband")){
+            else if(cardName.includes("lband")|| cardName.includes('하한선')){
                 this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n하한선';
             }
-            else if(cardName.includes("mband")){
+            else if(cardName.includes("mband")|| cardName.includes('중심선')){
                 this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n중심선';
             }
-            else if(cardName.includes("wband")){
-                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n너비';
+            else if(cardName.includes("wband")|| cardName.includes('밴드폭')){
+                this.title.getComponentInChildren(cc.Label).string = '볼린저밴드\r\n밴드폭';
             }
             this.setBodyString('20');
         }

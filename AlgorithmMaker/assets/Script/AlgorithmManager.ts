@@ -64,7 +64,7 @@ export default class AlgorithmManager extends cc.Component {
     }
     showSavePopup(){
         cc.instantiate(this.popupSave).setParent(this.popupParent);
-        this.schedule(function() {
+        this.scheduleOnce(function() {
             // Here `this` is referring to the component
             TutorialManager.getInstance().nextTutorialByIndex(11);
         }, 0.1);
