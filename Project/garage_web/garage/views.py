@@ -282,8 +282,8 @@ def test(request):
                                                 'btc_bal': btc_bal,     # 빗코 잔고
                                                 'avg_prc': avg_prc,     # 빗코 평단가
                                                 'cur_prc': cur_prc,     # 빗코 현재가
-                                                'algoname': request.GET.get('algoname'),
-                                                'algoreal': algo_realname,
+                                                'algoname': request.GET.get('algoname'),    # 알고리즘 실제이름
+                                                'algoreal': algo_realname,  # 알고리즘 시퀀스넘버
                                                 'signal': trade_list,   # 거래내역
                                                 'buy_num': buy_num,     # 매수횟수
                                                 'sell_num': sell_num,   # 매도 횟수

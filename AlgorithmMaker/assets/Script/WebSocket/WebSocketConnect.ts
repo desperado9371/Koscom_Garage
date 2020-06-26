@@ -18,15 +18,23 @@ export default class WebSocketConnect extends cc.Component {
     static getSock(){
       return WebSocketConnect.sock;
     }
+    
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
 
-    start () {
+    connect(){
       this.ws = new WebSocket("ws://13.124.102.83:80/Cocos");
       this.ws.onopen = this.onOpen;
       this.ws.onmessage = this.onRecieve;
       this.ws.onclose = this.onClose;
+
+      this.schedule(function(){
+        WebSocketConnect.getSock().send(" ");
+      }, 10, cc.macro.REPEAT_FOREVER);
+    }
+    start () {
+      this.connect();
       
       WebSocketConnect.sock = this;
       
@@ -39,6 +47,10 @@ export default class WebSocketConnect extends cc.Component {
     }
 
     onClose(event){
+      console.log('Socket is closed. Reconnect will be attempted in 1 second.', event.reason);
+      setTimeout(function() {
+        WebSocketConnect.getSock().connect();
+      }, 1000);
       this.isOpen = false;
     }
 
@@ -66,6 +78,7 @@ export default class WebSocketConnect extends cc.Component {
       this.sender = sender;
       if(this.isOpen = true){
         try {
+          console.log("send : " + str);
           this.ws.send(str);
         } catch (error) {
           this.tempStr = str;

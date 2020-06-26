@@ -57,12 +57,12 @@ export default class TutorialManager extends cc.Component {
         this.ws.onmessage = this.onRecieve;
         this.ws.onclose = this.onClose;
         
-        this.tutorialStart();
+        //this.tutorialStart();
         
     }
 
     onOpen(event){
-
+        TutorialManager.getInstance().tutorialCheck();
     }
     onClose(event){
 
@@ -70,13 +70,13 @@ export default class TutorialManager extends cc.Component {
     onRecieve(event){
         console.log("Tutorial data recieved : " + event.data);
         this.index = 0;
-        if(this.mode == "check"){
-            if(event.data == "0"){
-                this.tutorialStart();
-            }
+
+        if(event.data == "0"){
+            TutorialManager.getInstance().tutorialStart();
         }
+        
         else{
-            this.tutorialDone();
+            //TutorialManager.getInstance().tutorialDone();
         }
     }
 
