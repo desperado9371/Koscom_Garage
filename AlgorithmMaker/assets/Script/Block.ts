@@ -3,6 +3,7 @@ import DockingSlot from "./DockingSlot"
 import PropertyBox from "./PropertyBox";
 import BlockGroup from "./BlockGroup";
 import TutorialManager from "./TutorialManager";
+import AlgorithmManager from "./AlgorithmManager";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -412,7 +413,12 @@ export default class Block extends cc.Component {
         this.updatePos();
     }
 
+    setScrollActive(active){
+        AlgorithmManager.getInstance().setScrollActive(active);
+    }
+
     mouseUpEventHandler(event){
+        this.setScrollActive(true);
         if(this.isDown == true){
             console.debug("mouse up called");
             this.isDown = false;
@@ -430,10 +436,12 @@ export default class Block extends cc.Component {
         }
     }
 
+
     mouseDownEventHandler(event){
         if(this.mouseManager == null){
             this.mouseManager = MouseManager.getInstance();
         }
+        this.setScrollActive(false);
         if(this.isDown == false){
             this.stuckPos.x = this.mouseManager.getMousePos().x;
             this.stuckPos.y = this.mouseManager.getMousePos().y;
@@ -441,6 +449,7 @@ export default class Block extends cc.Component {
             this.nodePos = this.node.position;
             this.isDown = true;
         }
+
 
 
         console.debug("mouse down called");
@@ -451,6 +460,7 @@ export default class Block extends cc.Component {
             this.mouseManager = MouseManager.getInstance();
         }
         this.mouseManager.movingBlock = this;
+        //this.setScrollActive(false);
         if(this.isDown == false){
             this.stuckPos.x = this.mouseManager.getMousePos().x;
             this.stuckPos.y = this.mouseManager.getMousePos().y;
@@ -476,6 +486,7 @@ export default class Block extends cc.Component {
             this.isDown = false;
             this.propertyBox.onBlockClick(this);
         }
+        //this.setScrollActive(true);
         if(this.connedtedMode == 'firstSlot'){
             TutorialManager.getInstance().nextTutorialByIndex(3);
             TutorialManager.getInstance().nextTutorialByIndex(8);

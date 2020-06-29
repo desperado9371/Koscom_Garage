@@ -23,6 +23,7 @@ export default class LineList extends cc.Component {
     // onLoad () {}
 
     number = 1;
+    parentHeight = 0;
     start () {
         this.addLine();
 
@@ -32,6 +33,8 @@ export default class LineList extends cc.Component {
         var newLine = cc.instantiate(this.line);
         
         newLine.setParent(this.node);
+        this.parentHeight += 400;
+        this.node.parent.height = this.parentHeight;
         var lineComp = newLine.getComponent(AlgorithmLine);
         lineComp.init(this.node, this.blockParent);
         lineComp.setConditionNumber(this.number);

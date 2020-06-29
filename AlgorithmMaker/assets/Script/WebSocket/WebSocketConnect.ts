@@ -29,9 +29,10 @@ export default class WebSocketConnect extends cc.Component {
       this.ws.onmessage = this.onRecieve;
       this.ws.onclose = this.onClose;
 
+      /*
       this.schedule(function(){
         WebSocketConnect.getSock().send(" ");
-      }, 10, cc.macro.REPEAT_FOREVER);
+      }, 10, cc.macro.REPEAT_FOREVER);*/
     }
     start () {
       this.connect();
@@ -48,10 +49,10 @@ export default class WebSocketConnect extends cc.Component {
 
     onClose(event){
       console.log('Socket is closed. Reconnect will be attempted in 1 second.', event.reason);
-      setTimeout(function() {
+      /*setTimeout(function() {
         WebSocketConnect.getSock().connect();
       }, 1000);
-      this.isOpen = false;
+      this.isOpen = false;*/
     }
 
 

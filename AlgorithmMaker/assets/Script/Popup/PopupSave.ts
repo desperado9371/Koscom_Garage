@@ -16,6 +16,9 @@ export default class PopupSave extends cc.Component {
     @property(cc.EditBox)
     algoName: cc.EditBox = null;
 
+    @property(cc.EditBox)
+    memo: cc.EditBox = null;
+
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -28,7 +31,7 @@ export default class PopupSave extends cc.Component {
     onSaveButton(){
         var am = AlgorithmManager.getInstance();
         
-        am.SaveAlgorithm(this.algoName.string);
+        am.SaveAlgorithm(this.algoName.string, this.memo.string);
         am.showSaveTooltip();
 
         TutorialManager.getInstance().nextTutorialByIndex(12);

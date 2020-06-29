@@ -45,13 +45,30 @@ export default class AlgorithmManager extends cc.Component {
     @property(cc.Prefab)
     popupSaveTooltip : cc.Prefab = null;
 
+    @property(cc.ScrollView)
+    buyScrollView :cc.ScrollView = null;
+    @property(cc.ScrollView)
+    sellScrollView :cc.ScrollView = null;
+
+
+    setScrollActive(active){
+        this.buyScrollView.enabled = active;
+        this.sellScrollView.enabled = active;
+
+    }
     isBuy = true;
     switchBuySell(isBuy){
+
         this.isBuy = !isBuy;
- 
+
+        
+        
+        
+        this.buyScrollView.node.active = !this.isBuy;
         this.lineParent.active = !this.isBuy;
         this.blockParent.active = !this.isBuy;
         this.buyUnderline.active = !this.isBuy;
+        this.sellScrollView.node.active = this.isBuy;
         this.sellBlockParent.active = this.isBuy;
         this.sellLineParent.active = this.isBuy;
         this.sellUnderline.active = this.isBuy;
@@ -142,7 +159,7 @@ export default class AlgorithmManager extends cc.Component {
     }
 
 
-    SaveAlgorithm(algorithmName :string ){
+    SaveAlgorithm(algorithmName :string, memo :string){
 
         if(algorithmName == '' || algorithmName == null){
             algorithmName = 'test_algo';
@@ -205,7 +222,7 @@ export default class AlgorithmManager extends cc.Component {
         var sell = sellJson == "" ? '' : JSON.stringify(sellJson);
 
 
-        WebSocketConnect.getSock().send('save|'+user_id+'|'+algorithmName+'|'+buy+'|'+sell);
+        WebSocketConnect.getSock().send('save|'+user_id+'|'+algorithmName+'|'+buy+'|'+sell+'|'+memo);
 
     }
     
