@@ -63,6 +63,9 @@ def test(request):
     # 백테스트 결과 페이지에 보여줄 알고리즘 실제 이름
     algo_realname = json_data['items'][-1]['algo_nm']
 
+    # 알고리즘 설명
+    algo_memo = json_data['items'][-1]['memo']
+
     # 서버 이상시 알고리즘을 파일로 부터 읽을수 있도록 만든 테스트 코드
     # with open('Define_Algo.json', 'r') as f:
     #     json_data1 = json.load(f)
@@ -290,6 +293,7 @@ def test(request):
                                                 'eval_prof': eval_prof, # 평가 손익
                                                 'real_prof': real_prof, # 실현 손익
                                                 'btc_exch': btc_exch,   # 빗코 환전
+                                                'algo_memo': algo_memo  # 메모
                                                 })
 
 
@@ -370,6 +374,10 @@ def mypage(request):
         temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
         temp.append(eval(i['buy_algo'])['algo']['srt_date'])
         temp.append(eval(i['buy_algo'])['algo']['end_date'])
+        if i['memo'] == None:
+            temp.append('-')
+        else:
+            temp.append(i['memo'])
         algo_info.append(temp)
     # print(algo_names)
     # print(algo_dates)
