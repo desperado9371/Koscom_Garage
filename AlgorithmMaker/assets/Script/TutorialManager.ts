@@ -84,16 +84,16 @@ export default class TutorialManager extends cc.Component {
         this.isTutorial = true;
 
         this.tutorialList = new LinkedList<string>();
-        this.tutorialList.add('AlgorithmMain/buyView/buyLineParent/[0]');//1
+        this.tutorialList.add('AlgorithmMain/buyView/scrollview/view/content/buyLineParent/[0]');//1
         this.tutorialList.add('HandScroll/scrollview/view/content/[1]');//2
-        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/BlankGroup');//3
+        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/buyView/scrollview/view/content/buyLineParent/[0]/BlockGroup/BlankGroup');//3
         this.tutorialList.add('RedoButton');//4
-        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/buyView/buyLineParent/[0]/BlockGroup/FilledGroup')//5
+        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/buyView/scrollview/view/content/buyLineParent/[0]/BlockGroup/FilledGroup')//5
         this.tutorialList.add('AlgorithmMain/btnSell');//6
-        this.tutorialList.add('AlgorithmMain/sellView/sellLineParent/[0]');//7
-        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/BlankGroup');//8
+        this.tutorialList.add('AlgorithmMain/sellView/scrollview/view/content/sellLineParent/[0]');//7
+        this.tutorialList.add('HandScroll/scrollview/view/content/[5]|AlgorithmMain/sellView/scrollview/view/content/sellLineParent/[0]/BlockGroup/BlankGroup');//8
         this.tutorialList.add('HandScroll/scrollview/view/content/[1]');//9
-        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/sellView/sellLineParent/[0]/BlockGroup/FilledGroup');//10
+        this.tutorialList.add('HandScroll/scrollview/view/content/[1]|AlgorithmMain/sellView/scrollview/view/content/sellLineParent/[0]/BlockGroup/FilledGroup');//10
         this.tutorialList.add('AlgorithmMain/btnSave');//11
         this.tutorialList.add('PopopParent/[0]/body/btnSave');//12
 
