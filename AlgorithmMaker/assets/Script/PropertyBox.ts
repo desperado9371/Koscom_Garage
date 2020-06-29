@@ -67,7 +67,7 @@ export default class PropertyBox extends cc.Component {
             return;
         }
 
-
+        
         this.insideCard.init(cardName);
         this.lblCategory.string = this.cardData[cardName].category;
         this.lblSummary.string = this.cardData[cardName].summary;
@@ -76,13 +76,16 @@ export default class PropertyBox extends cc.Component {
         this.lblExplanation.string = this.cardData[cardName].explanation;
         this.lblHowToUse.string = this.cardData[cardName].how_to_use;
 
+
+
+
     }
     onCardClick(card : Card){
-        this.lblCategory.node.parent.active = true;
         var cardName = card.getCardName().toLowerCase();
         if(cardName == '숫자카드' || cardName == 'num'){
             return;
         }
+        this.lblCategory.node.parent.active = true;
         if(this.cardData == null){
             this.cardData =  FileManager.getInstance().cardData;
         }

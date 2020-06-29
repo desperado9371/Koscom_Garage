@@ -7381,7 +7381,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 340,
-      "height": 58.67999999999999
+      "height": 20
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -7431,8 +7431,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "OBV\n(On Balance Volume)\n:누적 거래량 지표",
-    "_N$string": "OBV\n(On Balance Volume)\n:누적 거래량 지표",
+    "_string": "",
+    "_N$string": "",
     "_fontSize": 16,
     "_lineHeight": 18,
     "_enableWrapText": true,
