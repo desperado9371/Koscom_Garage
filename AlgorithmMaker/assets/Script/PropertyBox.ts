@@ -80,7 +80,7 @@ export default class PropertyBox extends cc.Component {
     onCardClick(card : Card){
         this.lblCategory.node.parent.active = true;
         var cardName = card.getCardName().toLowerCase();
-        if(cardName == '숫자카드'){
+        if(cardName == '숫자카드' || cardName == 'num'){
             return;
         }
         if(this.cardData == null){
