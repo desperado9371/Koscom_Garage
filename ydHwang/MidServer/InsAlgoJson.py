@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[16]:
+# In[20]:
 
 
 #!/usr/bin/env python
@@ -13,7 +13,7 @@ import mysql.connector as sql
 from datetime import datetime
 
 
-def InsAlgoToDB(user_id,algo_name,buy_algo ='',sell_algo=''):
+def InsAlgoToDB(user_id,algo_name,buy_algo ='',sell_algo='', memo = ' '):
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
     db_cursor = db_connection.cursor()
     
@@ -29,17 +29,17 @@ def InsAlgoToDB(user_id,algo_name,buy_algo ='',sell_algo=''):
         print("buy_algo: "+buy_algo)
         print("sell_algo: "+sell_algo)  
         if buy_algo == '' and sell_algo == '':
-            query = "INSERT INTO algo (algo_seq, id, algo_nm, date_created) VALUES (%s, %s, %s, %s)"
-            val = (str(seq), user_id, algo_name, datetime.today().strftime("%Y%m%d"))  
+            query = "INSERT INTO algo (algo_seq, id, algo_nm, date_created, memo) VALUES (%s, %s, %s, %s, %s)"
+            val = (str(seq), user_id, algo_name, datetime.today().strftime("%Y%m%d"),memo)  
         elif buy_algo == '' and sell_algo !='':
-            query = "INSERT INTO algo (algo_seq, id, algo_nm, sell_algo, date_created) VALUES (%s, %s, %s, %s, %s)"
-            val = (str(seq), user_id, algo_name, sell_algo, datetime.today().strftime("%Y%m%d"))        
+            query = "INSERT INTO algo (algo_seq, id, algo_nm, sell_algo, date_created, memo) VALUES (%s, %s, %s, %s, %s, %s)"
+            val = (str(seq), user_id, algo_name, sell_algo, datetime.today().strftime("%Y%m%d"),memo)        
         elif buy_algo != '' and sell_algo =='' :
-            query = "INSERT INTO algo (algo_seq, id, algo_nm, buy_algo, date_created) VALUES (%s, %s, %s, %s, %s)"
-            val = (str(seq), user_id, algo_name, buy_algo, datetime.today().strftime("%Y%m%d"))        
+            query = "INSERT INTO algo (algo_seq, id, algo_nm, buy_algo, date_created, memo) VALUES (%s, %s, %s, %s, %s, %s)"
+            val = (str(seq), user_id, algo_name, buy_algo, datetime.today().strftime("%Y%m%d"),memo)        
         elif buy_algo != '' and sell_algo !='' :
-            query = "INSERT INTO algo (algo_seq, id, algo_nm, buy_algo, sell_algo, date_created) VALUES (%s, %s, %s, %s, %s, %s)"
-            val = (str(seq), user_id, algo_name, buy_algo, sell_algo, datetime.today().strftime("%Y%m%d"))
+            query = "INSERT INTO algo (algo_seq, id, algo_nm, buy_algo, sell_algo, date_created, memo) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            val = (str(seq), user_id, algo_name, buy_algo, sell_algo, datetime.today().strftime("%Y%m%d"),memo)
             print('var : '+ str(val))
         else : 
             print("알고리즘 데이터가 입력되지 않았습니다")

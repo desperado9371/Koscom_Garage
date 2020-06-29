@@ -47,12 +47,14 @@ def index():
 @sockets.route('/Cocos')
 def Cocos(ws):
     while not ws.closed:
+        
+        
         msg = ws.receive()
-        log.info(f'i WebServer:received:{msg}')
-
-        Key = str(msg).split('|')
-        log.info("WebServer:key: " + Key[0])
-
+        if msg !='':
+            log.info(f'i WebServer:received:{msg}')
+            Key = str(msg).split('|')
+            log.info("WebServer:key: " + Key[0])
+        
         # Indicators 수신시 지표정보 Json 전송
         if Key[0] == 'Indicators':
             with open("/home/ubuntu/ydHwang/Indicators.json", 'r') as f:
@@ -67,7 +69,8 @@ def Cocos(ws):
             log.info("WebServer:Algo_nm: " + Key[2])
             log.info("WebServer:buy_algo: " + Key[3])
             log.info("WebServer:sell_algo: " + Key[4])
-            InsAlgoJson.InsAlgoToDB(Key[1], Key[2], Key[3], Key[4])
+            log.info("WebServer:Memo: " + Key[5])
+            InsAlgoJson.InsAlgoToDB(Key[1], Key[2], Key[3], Key[4],Key[5])
             now = 'Server saved ' + msg + "  " + datetime.datetime.now().isoformat()
             ws.send(now)
 
