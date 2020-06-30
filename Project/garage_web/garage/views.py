@@ -382,7 +382,6 @@ def mypage(request):
     # print(algo_names)
     # print(algo_dates)
     # print(len(json_data['items']))
-    temp_name = algo_names[0]
     realmoney = 0
 
     today = datetime.now().strftime("%Y-%m-%d")
