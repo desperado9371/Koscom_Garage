@@ -407,6 +407,13 @@ def login(request):
 
     # post요청이 있을시 로그인 체크
     if request.method == "POST":
+        # print(request.POST)
+        remember = False
+        if 'remember-me' not in request.POST:
+            remember = False
+        else:
+            remember = True
+        print(remember)
         # auth에 id 와 pw 전달하여 로그인 시도
         username = request.POST["username"]
         password = request.POST["password"]
@@ -417,7 +424,12 @@ def login(request):
             # 로그인 세션 생성
             auth.login(request, user)
             response = redirect('/')
-            response.set_cookie('username', username)
+            if remember:
+                response.set_cookie('remember', 'true', max_age=86400*30 )
+                response.set_cookie('username', username, max_age=86400*30)
+            else:
+                response.set_cookie('username', username)
+                response.delete_cookie('remember')
             # print("login as "+username)
             return response
         # 로그인 실패
@@ -439,6 +451,7 @@ def signup(request):
     # post 요청이 있을 시
     if request.method == "POST":
         # 입력한 두개의 패스워드가 같으면
+
         try:
             if request.POST["password1"] == request.POST["password2"]:
                 # DB에 신규유저 추가
@@ -468,7 +481,8 @@ def logout(request):
     """
     # 쿠키 삭제 및 세션 종료 후 메인페이지로 복귀
     response = redirect('/')
-    response.delete_cookie('username')
+    if 'remember' not in request.COOKIES:
+        response.delete_cookie('username')
     response.delete_cookie('algo_seq')
     auth.logout(request)
     return response
