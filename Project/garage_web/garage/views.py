@@ -461,7 +461,7 @@ def signup(request):
                 auth.login(request, user)
                 ws = create_connection("ws://13.124.102.83:80/JoinMem")
                 ws.send("save|{}|{}".format(user.username, user.email))
-                response = redirect('/')
+                response = redirect('/algomaker')
                 response.set_cookie('username', request.POST["username"])
                 # print("login as "+username)
                 return response
