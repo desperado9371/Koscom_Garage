@@ -77,16 +77,24 @@ def test(request):
 
     # 파싱 보내기전 필요한 정보들 로드
     # 현재 알고리즘에 저장된 시작일, 종료일, 시간/일 봉 등의 정보보다 웹에서 설정한게 우선순위를 갖고있음
-    market = json_data1['algo']['market']
+    try:
+        market = json_data1['algo']['market']
+    except:
+        market = ''
     # hourday_tp = json_data1['algo']['hourday_tp']
     # srt_date = json_data1['algo']['srt_date']
     # end_date = json_data1['algo']['end_date']
     hourday_tp = request.GET.get('hourday')
     srt_date = request.GET.get('start').replace('-', '')
     end_date = request.GET.get('end').replace('-', '')
-    srt_time = json_data1['algo']['srt_time']
-    end_time = json_data1['algo']['end_time']
-    bns_tp = json_data1['algo']['buysell']
+    try:
+        srt_time = json_data1['algo']['srt_time']
+        end_time = json_data1['algo']['end_time']
+        bns_tp = json_data1['algo']['buysell']
+    except:
+        srt_time = ''
+        end_time = ''
+        bns_tp = ''
 
     # 파싱요청
     timer_start = timeit.default_timer() # 시작시간 체크
