@@ -371,9 +371,18 @@ def mypage(request):
         temp.append(i['algo_nm'])
         temp.append(i['date_created'])
         temp.append(i['algo_seq'])
-        temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
-        temp.append(eval(i['buy_algo'])['algo']['srt_date'])
-        temp.append(eval(i['buy_algo'])['algo']['end_date'])
+        try:
+            temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
+        except:
+            temp.append("")
+        try:
+            temp.append(eval(i['buy_algo'])['algo']['srt_date'])
+        except:
+            temp.append("")
+        try:
+            temp.append(eval(i['buy_algo'])['algo']['end_date'])
+        except:
+            temp.append("")
         if i['memo'] == None:
             temp.append('-')
         else:
