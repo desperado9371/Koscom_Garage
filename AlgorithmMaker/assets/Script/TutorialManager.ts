@@ -102,6 +102,7 @@ export default class TutorialManager extends cc.Component {
         this.highlightParent.active = true;
         this.tutorialHand.node.active = true;
         console.log("tutorial started");
+        this.tutorialDone();
         this.nextTutorial();
     }
 

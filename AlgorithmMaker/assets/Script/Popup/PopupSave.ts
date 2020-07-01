@@ -30,6 +30,9 @@ export default class PopupSave extends cc.Component {
 
     onSaveButton(){
         var am = AlgorithmManager.getInstance();
+        if(this.memo.string == "" || this.memo.string == null){
+            this.memo.string = " ";
+        }
         
         am.SaveAlgorithm(this.algoName.string, this.memo.string);
         am.showSaveTooltip();

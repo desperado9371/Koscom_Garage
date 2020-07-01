@@ -347,7 +347,7 @@
       "array": [
         0,
         0,
-        522.2133184820166,
+        522.4066353570717,
         0,
         0,
         0,
@@ -4899,7 +4899,7 @@
         "__id__": 113
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 117
@@ -7381,7 +7381,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 340,
-      "height": 20
+      "height": 22.68
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
