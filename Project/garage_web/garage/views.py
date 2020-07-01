@@ -77,16 +77,24 @@ def test(request):
 
     # 파싱 보내기전 필요한 정보들 로드
     # 현재 알고리즘에 저장된 시작일, 종료일, 시간/일 봉 등의 정보보다 웹에서 설정한게 우선순위를 갖고있음
-    market = json_data1['algo']['market']
+    try:
+        market = json_data1['algo']['market']
+    except:
+        market = ''
     # hourday_tp = json_data1['algo']['hourday_tp']
     # srt_date = json_data1['algo']['srt_date']
     # end_date = json_data1['algo']['end_date']
     hourday_tp = request.GET.get('hourday')
     srt_date = request.GET.get('start').replace('-', '')
     end_date = request.GET.get('end').replace('-', '')
-    srt_time = json_data1['algo']['srt_time']
-    end_time = json_data1['algo']['end_time']
-    bns_tp = json_data1['algo']['buysell']
+    try:
+        srt_time = json_data1['algo']['srt_time']
+        end_time = json_data1['algo']['end_time']
+        bns_tp = json_data1['algo']['buysell']
+    except:
+        srt_time = ''
+        end_time = ''
+        bns_tp = ''
 
     # 파싱요청
     timer_start = timeit.default_timer() # 시작시간 체크
@@ -371,9 +379,18 @@ def mypage(request):
         temp.append(i['algo_nm'])
         temp.append(i['date_created'])
         temp.append(i['algo_seq'])
-        temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
-        temp.append(eval(i['buy_algo'])['algo']['srt_date'])
-        temp.append(eval(i['buy_algo'])['algo']['end_date'])
+        try:
+            temp.append(eval(i['buy_algo'])['algo']['hourday_tp'])
+        except:
+            temp.append("")
+        try:
+            temp.append(eval(i['buy_algo'])['algo']['srt_date'])
+        except:
+            temp.append("")
+        try:
+            temp.append(eval(i['buy_algo'])['algo']['end_date'])
+        except:
+            temp.append("")
         if i['memo'] == None:
             temp.append('-')
         else:
@@ -382,7 +399,6 @@ def mypage(request):
     # print(algo_names)
     # print(algo_dates)
     # print(len(json_data['items']))
-    temp_name = algo_names[0]
     realmoney = 0
 
     today = datetime.now().strftime("%Y-%m-%d")
@@ -407,6 +423,13 @@ def login(request):
 
     # post요청이 있을시 로그인 체크
     if request.method == "POST":
+        # print(request.POST)
+        remember = False
+        if 'remember-me' not in request.POST:
+            remember = False
+        else:
+            remember = True
+        print(remember)
         # auth에 id 와 pw 전달하여 로그인 시도
         username = request.POST["username"]
         password = request.POST["password"]
@@ -417,7 +440,12 @@ def login(request):
             # 로그인 세션 생성
             auth.login(request, user)
             response = redirect('/')
-            response.set_cookie('username', username)
+            if remember:
+                response.set_cookie('remember', 'true', max_age=86400*30 )
+                response.set_cookie('username', username, max_age=86400*30)
+            else:
+                response.set_cookie('username', username)
+                response.delete_cookie('remember')
             # print("login as "+username)
             return response
         # 로그인 실패
@@ -439,6 +467,7 @@ def signup(request):
     # post 요청이 있을 시
     if request.method == "POST":
         # 입력한 두개의 패스워드가 같으면
+
         try:
             if request.POST["password1"] == request.POST["password2"]:
                 # DB에 신규유저 추가
@@ -448,7 +477,7 @@ def signup(request):
                 auth.login(request, user)
                 ws = create_connection("ws://13.124.102.83:80/JoinMem")
                 ws.send("save|{}|{}".format(user.username, user.email))
-                response = redirect('/')
+                response = redirect('/algomaker')
                 response.set_cookie('username', request.POST["username"])
                 # print("login as "+username)
                 return response
@@ -468,7 +497,8 @@ def logout(request):
     """
     # 쿠키 삭제 및 세션 종료 후 메인페이지로 복귀
     response = redirect('/')
-    response.delete_cookie('username')
+    if 'remember' not in request.COOKIES:
+        response.delete_cookie('username')
     response.delete_cookie('algo_seq')
     auth.logout(request)
     return response
