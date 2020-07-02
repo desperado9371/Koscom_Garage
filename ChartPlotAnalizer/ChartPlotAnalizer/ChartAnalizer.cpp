@@ -2,12 +2,14 @@
 
 
 
+
 ChartAnalizer::ChartAnalizer(TIME_MODE mode, tm minTime, tm maxTime, int maxLookback)
 {
 	this->mode = mode;
 	this->startTimePoint = minTime; // - maxLookback by timemode
 
-	this->results = new map<tm, map<string, TA_Real>>();
+	this->results = new map<tm, map<string, TA_Real>, cmpByStringLength>();
+	this->plots = vector<tm>();
 
 
 	//temp file read 20171109 data
@@ -97,7 +99,7 @@ ChartAnalizer::~ChartAnalizer()
 	delete results;
 }
 
-TA_RetCode ChartAnalizer::RSI(tm timePoint, int period, TA_Real* outRSI)
+TA_RetCode ChartAnalizer::CA_RSI(tm timePoint, int period, TA_Real* outRSI)
 {
 	int DO_NOT_BOTHER = 0;
 	int index = GetIndexByTime(timePoint);
@@ -107,7 +109,7 @@ TA_RetCode ChartAnalizer::RSI(tm timePoint, int period, TA_Real* outRSI)
 	return retCode;
 }
 
-TA_RetCode ChartAnalizer::ATR(tm timePoint, int period, TA_Real* outATR)
+TA_RetCode ChartAnalizer::CA_ATR(tm timePoint, int period, TA_Real* outATR)
 {
 	int DO_NOT_BOTHER = 0;
 	int index = GetIndexByTime(timePoint);
@@ -117,8 +119,61 @@ TA_RetCode ChartAnalizer::ATR(tm timePoint, int period, TA_Real* outATR)
 	return retCode;
 }
 
+void ChartAnalizer::SetPlots(vector<tm> plots)
+{
+	this->plots = plots;
+}
+
+void ChartAnalizer::PrintResults()
+{
+	char time[80];
+	char key[100];
+	for (auto iter = results->begin() ; iter != results->end() ; iter++)
+	{
+		strftime(time, 80, "%I:%M%p.", &iter->first);
+
+		cout <<":::-------" <<time << "-------::::" << endl;
+
+		for (auto inter = iter->second.begin(); inter != iter->second.end(); inter++)
+		{
+			
+			cout << inter->first << " : " << inter->second << endl;
+			cin >> key;
+		}
+	}
+}
 
 
+
+TA_RetCode ChartAnalizer::EvaluateTA()
+{
+	ClearResults();
+
+	vector<thread> threads;
+
+	//RSI test Thread
+
+	CA_RSITest(4, 20, 0, plots.size());
+	/*
+	threads.push_back(thread([this]() {
+		this->CA_RSITest(4, 20, 0, plots.size());
+			}));
+
+	threads.push_back(thread([this]() {
+		this->CA_RSITest(21, 40, 0, plots.size());
+		}));
+
+
+	for (auto& th : threads)
+	{
+		th.join();
+	}*/
+
+	return TA_RetCode();
+}
+
+
+//@@TODO FIX index
 int ChartAnalizer::GetIndexByTime(tm time)
 {
 	int div = 60; // temp 60 seconds setting
@@ -157,4 +212,62 @@ int ChartAnalizer::InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Re
 
 	lock.unlock();
 	return 0;
+}
+
+void ChartAnalizer::ClearResults()
+{
+	lock.lock();
+
+	this->results->clear();
+
+	lock.unlock();
+}
+
+void ChartAnalizer::TestRandomPlots()
+{
+	srand((unsigned int)time(NULL));
+	int randy = rand() % 50;
+	plots.clear();
+
+	for (int k = 0; k < 50 + randy; k++)
+	{
+		//temp file read 20171109 data
+		tm temp = {0};
+		int hourmin =( rand() % 1490) - 50;
+		temp.tm_year = 2017;
+		temp.tm_mon = 11;
+		temp.tm_mday = 9;
+
+
+		temp.tm_hour = hourmin / 60;
+		temp.tm_min = hourmin % 60;
+
+
+
+		
+		plots.push_back(temp);
+	}
+}
+
+void ChartAnalizer::CA_RSITest(int periodFrom, int periodTo, int plotFrom, int plotTo)
+{
+
+	for (int i = plotFrom; i < plotTo; i++)
+	{
+		tm now = this->plots[i];
+		for (int period = periodFrom; period <= periodTo; period++)
+		{
+			TA_Real output;
+			auto result = this->CA_RSI(now, period, &output);
+			if (result == TA_RetCode::TA_SUCCESS)
+			{
+				char buffer[40] = {0};
+				_itoa_s(period, buffer,40, 10);
+				
+				string key = "RSI" + string(buffer);
+				InsertResult(now, key, output);
+
+			}
+		}
+	}
 }
