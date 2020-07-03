@@ -4,16 +4,13 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from datetime import datetime
 import numpy as np
-import pandas as pd
-import json
 from backtestAPI import BacktestAPI
-import asyncio
 from websocket import create_connection
 import ParsingJson
 import timeit
+
 
 @login_required
 def test(request):
@@ -22,19 +19,15 @@ def test(request):
 ################################################################
     # 백테스트 수행 관련
 
-    # my알고리즘 페이지에서 입력한 백테스트 조건 설정에서 GET방식으로 보내준 조건 읽어서 사용
+    # my알고리즘 페이지에서 입력한 백테스트 조건 설정에서 GET 방식으로 보내준 조건 읽어서 사용
 
     # 백테스트 초기자본 셋팅
     money = request.GET.get('money')
-    money = money.replace(',','')
+    money = money.replace(',', '')
     init_krw_bal = int(money)
 
     # 백테스트 1회 거래량 셋팅
     order_quantity = float(request.GET.get('coin'))
-
-    final_balance = 0
-    final_profit = 0
-    result = []
 
     # 사용자의 이름과 요청한 알고리즘 이름 셋팅
     username = request.user.username
@@ -49,13 +42,13 @@ def test(request):
     json_data = eval(json_data)
 
     # 매수 알고리즘이 없을경우 empty string으로 대체
-    if json_data['items'][-1]['buy_algo'] == None:
+    if json_data['items'][-1]['buy_algo'] is None:
         buy_algo = ''
     else:
         buy_algo = eval(json_data['items'][-1]['buy_algo'])
 
     # if no sell algorithm use empty string
-    if json_data['items'][-1]['sell_algo'] == None:
+    if json_data['items'][-1]['sell_algo'] is None:
         sell_algo = ''
     else:
         sell_algo = eval(json_data['items'][-1]['sell_algo'])
@@ -132,9 +125,6 @@ def test(request):
     btc_bal = 0
     avg_prc = 0
 
-    # ttt = pd.DataFrame(result)
-    # ttt.to_csv(algo_name+"tradelist.csv")
-
     # 백테스트 실행
     timer_start = timeit.default_timer()  # 시작시간 체크
 
@@ -208,7 +198,6 @@ def test(request):
             temp.append(timestamps[i])
         # temp.append(tooltips[i])
         data.append(temp)
-    # print( upbit_min['close'][-30:].tolist())
 
     # 그래프에 표시할 값 계산 후 천단위 콤마 삽입
     total_prof = final_balance-init_krw_bal     # 계좌 수익금(원)
@@ -247,9 +236,6 @@ def test(request):
     init_bal = int(init_krw_bal)
     init_bal = f"{init_bal:,}"
 #########################################################
-
-    start_date = srt_date
-    end_date = end_date
 
     # 매수/매도 동시에 뜨면 무시하는 로직
     trade_temp = []
