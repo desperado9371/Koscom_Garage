@@ -9,11 +9,22 @@
 #include <thread>
 #include <mutex>
 #include <map>
+#include <unordered_map>
 #include <utility>
+#include <vector>
+#include <functional>
+#include <time.h>
 
 
 using namespace std;
-
+struct cmpByStringLength {
+	bool operator()(const tm& a, const tm& b) const {
+		tm tempa = a;
+		tm tempb = b;
+		return mktime(&tempa) < mktime(&tempb);
+		//return a.length() < b.length();
+	}
+};
 class ChartAnalizer
 {
 public :
@@ -26,16 +37,25 @@ public :
 	*/
 	ChartAnalizer(TIME_MODE mode, tm minTime, tm maxTime, int maxLookback = -1);
 	~ChartAnalizer();
-	TA_RetCode RSI(tm timePoint, int period, TA_Real *outRSI);
-	TA_RetCode ATR(tm timePoint, int period, TA_Real *outATR);
+	TA_RetCode CA_RSI(tm timePoint, int period, TA_Real *outRSI);
+	TA_RetCode CA_ATR(tm timePoint, int period, TA_Real *outATR);
+	void SetPlots(vector<tm> plots);
+	void PrintResults();
+
+	//uses Thread
+	TA_RetCode EvaluateTA();
+	void TestRandomPlots();
+	void CA_RSITest(int periodFrom, int periodTo, int plotFrom, int plotTo);
 private:
 	int GetIndexByTime(tm time);
 	int InsertResult(tm plot, string ta, TA_Real value);
 	int InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Real value);
+	void ClearResults();
 
 	mutex lock;
 
-	map<tm, map<string, TA_Real>>* results;
+	vector<tm> plots;
+	map<tm, map<string, TA_Real>, cmpByStringLength>* results;
 
 	tm startTimePoint;
 	tm endTimePoint;
