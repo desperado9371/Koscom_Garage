@@ -20,7 +20,11 @@ using namespace std;
 struct cmpByStringLength {
 	bool operator()(const tm& a, const tm& b) const {
 		tm tempa = a;
+		tempa.tm_year -= 1900;
+		tempa.tm_mon -= 1;
 		tm tempb = b;
+		tempb.tm_year -= 1900;
+		tempb.tm_mon -= 1;
 		return mktime(&tempa) < mktime(&tempb);
 		//return a.length() < b.length();
 	}
@@ -55,7 +59,7 @@ private:
 	mutex lock;
 
 	vector<tm> plots;
-	map<tm, map<string, TA_Real>, cmpByStringLength>* results;
+	map<tm, map<string, TA_Real>*, cmpByStringLength>* results;
 
 	tm startTimePoint;
 	tm endTimePoint;
@@ -65,6 +69,8 @@ private:
 	TA_Real* low;
 	TA_Real* volume;
 	TIME_MODE mode;
+
+
 
 };
 

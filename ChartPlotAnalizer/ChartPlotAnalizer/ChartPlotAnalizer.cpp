@@ -11,11 +11,15 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-
+    unsigned int st = time(NULL);
 
     ChartAnalizer ca(TIME_MODE::MINUTE, tm(), tm());
     ca.TestRandomPlots();
     ca.EvaluateTA();
     ca.PrintResults();
+    cout << "Time Taken "  << st - time(NULL) << endl;
+
+    return 0;
+
 }
 
