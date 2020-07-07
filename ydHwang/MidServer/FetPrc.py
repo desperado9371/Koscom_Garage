@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[25]:
+# In[13]:
 
 
 import glob
@@ -32,8 +32,8 @@ def FetDtPrc(market,srt_date,end_date):
         db_connection.close()
     
     #df = pd.DataFrame(data,columns=['timestamp','open','close','high','low','volumn'])
+    print("조회완료")
     s_json_data = json.dumps(data)
-    print(s_json_data)
     return str(s_json_data)
 
 def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', end_time='24'):
@@ -49,11 +49,11 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     
     try:
         if market == 'upbit' and srt_date != end_date:
-            query = 'SELECT base_dt,base_time,coin_type,open_price,close_price,high_price,low_price FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s                union SELECT base_dt,base_time,coin_type,open_price,close_price,high_price,low_price FROM history_hr_prc_upbit WHERE base_dt > %s and base_dt < %s                union SELECT base_dt,base_time,coin_type,open_price,close_price,high_price,low_price FROM history_hr_prc_upbit WHERE base_dt = %s and base_time <= %s'
+            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s                union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt > %s and base_dt < %s                union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time <= %s'
             db_cursor.execute(query,(srt_date,srt_time,srt_date,end_date,end_date,end_time))
             data = db_cursor.fetchall()  
         elif market == 'upbit' and srt_date == end_date:
-            query = 'SELECT * FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s and base_time <= %s'
+            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s and base_time <= %s'
             db_cursor.execute(query,(srt_date,srt_time,end_time))
             data = db_cursor.fetchall() 
         else :
@@ -68,12 +68,36 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     
     #df = pd.DataFrame(data,columns=['timestamp','open','close','high','low','volumn'])
     s_json_data = json.dumps(data)
+    print("조회완료")
+    return str(s_json_data)
+
+def FetDtForeStkPrc(stk_nm ,srt_date,end_date):
+    print("stk_nm: "+stk_nm)
+    print("srt_date: "+srt_date)
+    print("end_date: "+end_date)
+    db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
+    db_cursor = db_connection.cursor() 
+    
+    # 지원하지 않는 주식종목은 skip
+    if stk_nm !='apple' and stk_nm !='tesla' and stk_nm !='facebook' and stk_nm !='google' and stk_nm !='amazon' :
+        print('지원하지 않는 종목입니다')
+        return 0
+    try:
+        query = 'SELECT base_dt,open_price,close_price,high_price,low_price,volumn FROM history_dt_prc_fore_stk WHERE base_dt >= %s and base_dt <= %s and stk_type= %s'
+        db_cursor.execute(query,(srt_date,end_date,stk_nm,))
+        data = db_cursor.fetchall()  
+        db_connection.commit()
+    finally:
+        db_connection.close()
+    
+    #df = pd.DataFrame(data,columns=['timestamp','open','close','high','low','volumn'])
+    s_json_data = json.dumps(data)
     print(s_json_data)
     return str(s_json_data)
 
 if __name__ == "__main__":
     print("start")
-    FetHrPrc('upbit','20200101','20200101','00','05')
+    FetDtForeStkPrc('apple','20200101','20200301')
 
 # if __name__ == "__main__":
 #     print("start")
