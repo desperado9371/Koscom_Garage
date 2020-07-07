@@ -14,6 +14,7 @@
 #include <vector>
 #include <functional>
 #include <time.h>
+#include <set>
 
 
 using namespace std;
@@ -54,12 +55,14 @@ private:
 	int GetIndexByTime(tm time);
 	int InsertResult(tm plot, string ta, TA_Real value);
 	int InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Real value);
+	void AnalyzeResult();
 	void ClearResults();
 
 	mutex lock;
 
 	vector<tm> plots;
 	map<tm, map<string, TA_Real>*, cmpByStringLength>* results;
+	set<string> keys;
 
 	tm startTimePoint;
 	tm endTimePoint;

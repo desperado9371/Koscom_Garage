@@ -103,9 +103,16 @@ ChartAnalizer::~ChartAnalizer()
 TA_RetCode ChartAnalizer::CA_RSI(tm timePoint, int period, TA_Real* outRSI)
 {
 	int DO_NOT_BOTHER = 0;
+	int outIndex = 0;
 	int index = GetIndexByTime(timePoint);
-	TA_RetCode retCode = TA_RSI(0, TA_RSI_Lookback(period), &close[index], period, 
-								&DO_NOT_BOTHER, &DO_NOT_BOTHER, outRSI);
+	//TA_Real* tempOut = new TA_Real[period];
+	//TA_RetCode retCode = TA_RSI(0, TA_RSI_Lookback(period)+1, &close[index], period, 
+	//							&outIndex, &DO_NOT_BOTHER, tempOut);
+	TA_RetCode retCode = TA_RSI(index, index, close, period,
+		&outIndex, &DO_NOT_BOTHER, outRSI);
+	//*outRSI = tempOut[0];
+
+	//delete tempOut;
 
 	return retCode;
 }
@@ -153,7 +160,7 @@ TA_RetCode ChartAnalizer::EvaluateTA()
 
 	vector<thread> threads;
 
-	//CA_RSITest(4, 20, 0, plots.size());
+	CA_RSITest(4, 40, 0, plots.size());
 	//RSI test Thread
 
 	
@@ -173,7 +180,7 @@ TA_RetCode ChartAnalizer::EvaluateTA()
 			}));
 	}*/
 	
-	
+	/*
 	threads.push_back(thread([this]() {
 		this->CA_RSITest(4, 20, 0, plots.size()/2);
 			}));
@@ -188,7 +195,7 @@ TA_RetCode ChartAnalizer::EvaluateTA()
 	threads.push_back(thread([this]() {
 		this->CA_RSITest(21, 40, plots.size()/2, plots.size());
 		}));
-
+	*/
 	for (auto& th : threads)
 	{
 		th.join();
@@ -198,10 +205,11 @@ TA_RetCode ChartAnalizer::EvaluateTA()
 }
 
 
-//@@TODO FIX index
+//@@Warning
+//this index calculation is for 24hr full time trade use
 int ChartAnalizer::GetIndexByTime(tm time)
 {
-	int div = 360; // temp 1 min setting
+	int div = 60; // temp 1 min setting
 	time.tm_year -= 1900;
 	time.tm_mon -= 1;
 	time_t calc = mktime(&time) - mktime(&this->startTimePoint);
@@ -220,6 +228,10 @@ int ChartAnalizer::InsertResult(tm plot, string ta, TA_Real value)
 		map<string, TA_Real>* tempMap = new map<string, TA_Real>();
 		tempMap->insert(pair<string, TA_Real>(ta, value));
 		this->results->insert(pair<tm, map<string, TA_Real>*>(plot, tempMap));
+
+		//insert string key for further use
+		keys.insert(ta);
+		
 	}
 	else // key already exist
 	{
@@ -243,6 +255,28 @@ int ChartAnalizer::InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Re
 	return 0;
 }
 
+void ChartAnalizer::AnalyzeResult()
+{
+	for (auto iter = results->begin(); iter != results->end(); iter++)
+	{
+		vector<TA_Real> values;
+		for (auto inter = keys.begin(); inter != keys.end(); inter++)
+		{
+			string key = *inter;
+			if (key != "")
+			{
+				auto mapInside =iter->second->find(key);
+				if (mapInside != iter->second->end())
+				{
+					values.push_back(mapInside->second);
+				}
+			}
+		}
+		sort(values.begin(), values.end());
+
+	}
+}
+
 void ChartAnalizer::ClearResults()
 {
 	lock.lock();
@@ -255,6 +289,7 @@ void ChartAnalizer::ClearResults()
 		}
 	}
 
+	keys.clear();
 	this->results->clear();
 
 	lock.unlock();
@@ -266,6 +301,7 @@ void ChartAnalizer::TestRandomPlots()
 	int randy = rand() % 50;
 	plots.clear();
 	
+	/*
 	tm temp = { 0 };
 	int hourmin = rand() % (1440 - 50) + 50;
 	temp.tm_year = 2017;
@@ -275,9 +311,9 @@ void ChartAnalizer::TestRandomPlots()
 
 	temp.tm_hour = 21;
 	temp.tm_min = 13;
-	plots.push_back(temp);
+	plots.push_back(temp);*/
 	
-	/*
+	
 	for (int k = 0; k < 50 + randy; k++)
 	{
 		//temp file read 20171109 data
@@ -295,7 +331,7 @@ void ChartAnalizer::TestRandomPlots()
 
 		
 		plots.push_back(temp);
-	}*/
+	}
 }
 
 void ChartAnalizer::CA_RSITest(int periodFrom, int periodTo, int plotFrom, int plotTo)
@@ -304,7 +340,8 @@ void ChartAnalizer::CA_RSITest(int periodFrom, int periodTo, int plotFrom, int p
 	for (int i = plotFrom; i < plotTo; i++)
 	{
 		tm now = this->plots[i];
-		for (int period = periodFrom; period <= periodTo; period++)
+		int period = 0;
+		for (period = periodFrom; period <= periodTo; period++)
 		{
 			TA_Real output;
 			auto result = this->CA_RSI(now, period, &output);
