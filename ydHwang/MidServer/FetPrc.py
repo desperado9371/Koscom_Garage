@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
+# In[31]:
 
 
 import glob
@@ -95,10 +95,44 @@ def FetDtForeStkPrc(stk_nm ,srt_date,end_date):
     print(s_json_data)
     return str(s_json_data)
 
+def FetHrForeStkPrc(market='fore',stk_nm='apple',srt_date='0',end_date='99999999', srt_time = '00', end_time='24'):
+    print("market: "+market)
+    print("stk_nm: "+stk_nm)
+    print("srt_date: "+srt_date)
+    print("end_date: "+end_date)
+    print("srt_time: "+srt_time)
+    end_time = end_time + ':00:00'
+    print("end_time: "+end_time)
+    
+    db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
+    db_cursor = db_connection.cursor() 
+    
+    try:
+        if market == 'fore' and srt_date != end_date:
+            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_fore_stk WHERE base_dt = %s and base_time >= %s and stk_type = %s                union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_fore_stk WHERE base_dt > %s and base_dt < %s and stk_type = %s                union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_fore_stk WHERE base_dt = %s and base_time <= %s and stk_type = %s'
+            print(query)
+            db_cursor.execute(query,(srt_date,srt_time,stk_nm,srt_date,end_date,stk_nm,end_date,end_time,stk_nm))
+            
+        elif market == 'fore' and srt_date == end_date:
+            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_fore_stk WHERE base_dt = %s and base_time >= %s and base_time <= %s and stk_type = %s'
+            print(query)
+            db_cursor.execute(query,(srt_date,srt_time,end_time,stk_nm))
+        else :
+            print('Market 값이 잘못됏습니다.')  
+        data = db_cursor.fetchall() 
+        db_connection.commit()
+    finally:
+        db_connection.close()
+    
+    #df = pd.DataFrame(data,columns=['timestamp','open','close','high','low','volumn'])
+    s_json_data = json.dumps(data)
+    print(s_json_data)
+    return str(s_json_data)
+
 if __name__ == "__main__":
     print("start")
-    FetDtForeStkPrc('apple','20200101','20200301')
-
+    #FetDtForeStkPrc('apple','20200101','20200301')
+    FetHrForeStkPrc('fore','apple','20200701','20200706','21','22')
 # if __name__ == "__main__":
 #     print("start")
 #     FetDtPrc('upbit','20180101','20180301')
