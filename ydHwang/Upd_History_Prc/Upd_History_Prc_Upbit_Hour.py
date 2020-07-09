@@ -3,10 +3,10 @@
 
 # In[2]:
 
-
+import mysql.connector as sql
 import glob
 import pandas as pd
-import mysql.connector as sql
+
 
 
 # In[3]:
@@ -40,7 +40,7 @@ db_cursor.execute(query)
 print(query)
     
 db_connection.commit()
-
+db_connection.close()
 
 # In[ ]:
 

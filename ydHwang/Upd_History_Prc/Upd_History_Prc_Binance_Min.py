@@ -4,9 +4,10 @@
 # In[2]:
 
 
+import mysql.connector as sql
 import glob
 import pandas as pd
-import mysql.connector as sql
+
 
 
 # In[3]:
@@ -50,7 +51,7 @@ for i in range(len(df)):
     print(query)
     
 db_connection.commit()
-
+db_connection.close()
 
 # In[ ]:
 

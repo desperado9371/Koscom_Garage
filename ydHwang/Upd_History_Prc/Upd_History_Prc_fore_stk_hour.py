@@ -168,7 +168,7 @@ for i in range(len(df)):
     print(query)
     
 db_connection.commit()
-
+db_connection.close()
 
 # In[ ]:
 
