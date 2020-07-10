@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     ca.TestRandomPlots();
     ca.EvaluateTA();
     ca.PrintResults();
-    cout << "Time Taken "  << st - time(NULL) << endl;
+    cout << "Time Taken "  << time(NULL) - st << endl;
 
     return 0;
 

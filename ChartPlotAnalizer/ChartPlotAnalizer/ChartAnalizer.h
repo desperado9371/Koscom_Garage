@@ -9,12 +9,12 @@
 #include <thread>
 #include <mutex>
 #include <map>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 #include <functional>
 #include <time.h>
 #include <set>
+#include <algorithm>
 
 
 using namespace std;
@@ -29,6 +29,11 @@ struct cmpByStringLength {
 		return mktime(&tempa) < mktime(&tempb);
 		//return a.length() < b.length();
 	}
+};
+
+struct AnalysisOutput {
+	TA_Real valueFrom;
+	TA_Real valueTo;
 };
 class ChartAnalizer
 {
@@ -56,6 +61,7 @@ private:
 	int InsertResult(tm plot, string ta, TA_Real value);
 	int InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Real value);
 	void AnalyzeResult();
+	AnalysisOutput AnalyzeValueVector(vector<TA_Real>& source);
 	void ClearResults();
 
 	mutex lock;
