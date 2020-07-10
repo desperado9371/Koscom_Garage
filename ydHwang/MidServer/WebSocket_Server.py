@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 from flask import Flask
@@ -136,7 +136,56 @@ def BackServer_FetHr(ws):
         if msg:
             time.sleep(1)
 
+@sockets.route('/BackServer_Forestk_Day')
+def BackServer_Forestk_Day(ws):
+    while not ws.closed:
+        msg = ws.receive()
+        log.info(f'i WebServer:BackServer_Forestk_Day received:{msg}')
+        Key = str(msg).split('|')
+        log.info("WebServer:key:BackServer_Forestk_Day  " + Key[0])
 
+        # Indicators 수신시 지표정보 Json 전송
+        if Key[0] == 'load':
+            log.info("WebServer:BackServer_Forestk_Day Start load!!!!")
+            log.info("WebServer:BackServer_Forestk_Day market: " + Key[1])
+            log.info("WebServer:BackServer_Forestk_Day stk_nm: " + Key[2])
+            log.info("WebServer:BackServer_Forestk_Day srt_date: " + Key[3])
+            log.info("WebServer:BackServer_Forestk_Day end_date: " + Key[4])
+            Result = FetPrc.FetDtForeStkPrc(Key[2], Key[3], Key[4])
+            log.info("WebServer:BackServer_Forestk_Day [FET]result:" + Result)
+            ws.send(Result)
+        else:
+            ws.send("WebServer:BackServer_Forestk_Day 잘못된 패킷입니다")
+        # Echo
+        if msg:
+            time.sleep(1)
+
+@sockets.route('/BackServer_Forestk_Hr')
+def BackServer_Forestk_Hr(ws):
+    while not ws.closed:
+        msg = ws.receive()
+        log.info(f'i WebServer:received:{msg}')
+        Key = str(msg).split('|')
+        log.info("WebServer:key: " + Key[0])
+
+        # Indicators 수신시 지표정보 Json 전송
+        if Key[0] == 'load':
+            log.info("WebServer:BackServer_Forestk_Hr Start load!!!!")
+            log.info("WebServer:BackServer_Forestk_Hr market: " + Key[1])
+            log.info("WebServer:BackServer_Forestk_Hr stk_nm: " + Key[2])
+            log.info("WebServer:BackServer_Forestk_Hr srt_date: " + Key[3])
+            log.info("WebServer:BackServer_Forestk_Hr end_date: " + Key[4])
+            log.info("WebServer:BackServer_Forestk_Hr srt_time: " + Key[5])
+            log.info("WebServer:BackServer_Forestk_Hr end_time: " + Key[6])
+            Result = FetPrc.FetHrForeStkPrc(Key[1],Key[2], Key[3], Key[4], Key[5], Key[6])
+            log.info("WebServer:BackServer_Forestk_Hr [FET]result:" + Result)
+            ws.send(Result)
+        else:
+            ws.send("WebServer:BackServer_Forestk_Hr 잘못된 패킷입니다")
+        # Echo
+        if msg:
+            time.sleep(1)
+            
 @sockets.route('/JoinMem')
 def JoinMem(ws):
     while not ws.closed:
