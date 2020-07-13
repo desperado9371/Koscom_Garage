@@ -88,10 +88,22 @@ def test(request):
         srt_time = ''
         end_time = ''
         bns_tp = ''
+    target = request.GET.get('target')
+
+    market = 'upbit'
+    stk_nm = ''
+
+    if target =='upbit':
+        market = 'upbit'
+        stk_nm = ''
+    else:
+        market = 'fore'
+        stk_nm = target
+
 
     # 파싱요청
     timer_start = timeit.default_timer()  # 시작시간 체크
-    temp_result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time,
+    temp_result = ParsingJson.Parsing_Main(json_data1, json_data2, market, stk_nm, srt_date, end_date, srt_time, end_time,
                                            hourday_tp)
     timer_end = timeit.default_timer()
     print("알고리즘 파싱 {}초 소요".format(timer_end - timer_start))
@@ -110,12 +122,16 @@ def test(request):
             result.append(temp_result[ind])
             ind = ind + 1
 
+    if market == 'fore':
+        if hourday_tp == 'day':
+            bitcoin_dt = ParsingJson.Get_DtForeStkPrc(market, stk_nm, srt_date, end_date)
+    else:
     # 그래프 표시를 위해 시가 데이터 요청
-    if hourday_tp == 'day':  # 일봉일 경우
-        bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
-    else:  # 시간봉일 경우
-        bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
-        bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+        if hourday_tp == 'day':  # 일봉일 경우
+            bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
+        else:  # 시간봉일 경우
+            bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
+            bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
     # 거래 내역을 관리하기위한 변수
     trade_list = []
@@ -525,6 +541,7 @@ def loading(request):
                                                    'money': request.GET.get('money'),
                                                    'coin': request.GET.get('coin'),
                                                    'hourday': request.GET.get('hourday'),
+                                                   'target':request.GET.get('target'),
                                                    })
 
 

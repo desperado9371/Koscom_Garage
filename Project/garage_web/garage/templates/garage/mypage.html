@@ -38,6 +38,10 @@
             money = document.getElementById("money").value;
             coin = document.getElementById("coin").value;
             radios = document.getElementsByName("hourday")
+            target = document.getElementById("target").value;
+            if (target==''){
+                target='upbit'
+            }
             var hourday;
             for (var i = 0, length = radios.length; i < length; i++) {
                 if (radios[i].checked) {
@@ -47,7 +51,7 @@
                     break;
                 }
             }
-            url = '/loading?algoname=' + seq + '&start=' + start + '&end=' + end + '&money=' + money + '&coin=' + coin + '&hourday=' + hourday;
+            url = '/loading?algoname=' + seq + '&start=' + start + '&end=' + end + '&money=' + money + '&coin=' + coin + '&hourday=' + hourday +'&target=' + target;
             console.log(url)
             document.getElementById("main_frame").src = url;
             document.getElementById("main_frame").scrollIntoView();
@@ -315,13 +319,13 @@
                                     <label for="target">거래대상</label>
                                     <select name="target" id="target">
                                         <optgroup label="가상화폐"></optgroup>
-                                            <option value="bitcoin" selected="selected">&nbsp       비트코인(업비트)</option>
+                                            <option value="upbit" selected="selected">&nbsp       비트코인(업비트)</option>
                                         <optgroup label="해외주식"></optgroup>
-                                            <option value="AAPL">&nbsp      애플</option>
-                                            <option value="AMZN">&nbsp      아마존</option>
-                                            <option value="FB">&nbsp        페이스북</option>
-                                            <option value="GOOG">&nbsp      구글</option>
-                                            <option value="TSLA">&nbsp      테슬라</option>
+                                            <option value="apple">&nbsp      애플</option>
+                                            <option value="amazon">&nbsp      아마존</option>
+                                            <option value="facebook">&nbsp        페이스북</option>
+                                            <option value="google">&nbsp      구글</option>
+                                            <option value="tesla">&nbsp      테슬라</option>
                                     </select>
                                 </div>
                             </div>
