@@ -10,7 +10,7 @@ from backtestAPI import BacktestAPI
 from websocket import create_connection
 import ParsingJson
 import timeit
-
+import mysql.connector
 
 @login_required
 def test(request):
@@ -89,9 +89,19 @@ def test(request):
         end_time = ''
         bns_tp = ''
 
+    target = request.GET.get('target')
+
+    if target == 'upbit':
+        market = 'upbit'
+        stk_nm = ''
+    else:
+        market = 'fore'
+        stk_nm = target
+
+
     # 파싱요청
     timer_start = timeit.default_timer()  # 시작시간 체크
-    temp_result = ParsingJson.Parsing_Main(json_data1, json_data2, market, srt_date, end_date, srt_time, end_time,
+    temp_result = ParsingJson.Parsing_Main(json_data1, json_data2, market, stk_nm, srt_date, end_date, srt_time, end_time,
                                            hourday_tp)
     timer_end = timeit.default_timer()
     print("알고리즘 파싱 {}초 소요".format(timer_end - timer_start))
@@ -110,12 +120,42 @@ def test(request):
             result.append(temp_result[ind])
             ind = ind + 1
 
-    # 그래프 표시를 위해 시가 데이터 요청
-    if hourday_tp == 'day':  # 일봉일 경우
-        bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
-    else:  # 시간봉일 경우
-        bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
-        bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+    # 그래프 표시를 위해 시간 데이터 요청
+    if market == 'fore':
+        if hourday_tp == 'day':
+            bitcoin_dt = ParsingJson.Get_DtForeStkPrc(market, stk_nm, srt_date, end_date)
+        else:
+            bitcoin_dt = ParsingJson.Get_HrForeStkPrc(market, stk_nm, srt_date, end_date)
+            bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+    else:
+
+        if hourday_tp == 'day':  # 일봉일 경우
+            bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
+        else:  # 시간봉일 경우
+            bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
+            bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+
+    # 해외 주식일 경우 환율조회해서 적용
+    if market == 'fore':
+        mydb = mysql.connector.connect(
+            host="root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com",
+            user="root",
+            password="koscom!234",
+            database="garage_test"
+        )
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT base_dt, exchange_rate from exchange_rate")
+
+        myresult = mycursor.fetchall()
+
+        exchange_rate = myresult[-1][1]
+        bitcoin_dt['open'] *= exchange_rate
+        bitcoin_dt['low'] *= exchange_rate
+        bitcoin_dt['high'] *= exchange_rate
+        bitcoin_dt['close'] *= exchange_rate
+    print(bitcoin_dt)
 
     # 거래 내역을 관리하기위한 변수
     trade_list = []
@@ -525,6 +565,7 @@ def loading(request):
                                                    'money': request.GET.get('money'),
                                                    'coin': request.GET.get('coin'),
                                                    'hourday': request.GET.get('hourday'),
+                                                   'target':request.GET.get('target'),
                                                    })
 
 
