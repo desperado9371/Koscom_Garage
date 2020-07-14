@@ -10,7 +10,7 @@ from backtestAPI import BacktestAPI
 from websocket import create_connection
 import ParsingJson
 import timeit
-
+import mysql.connector
 
 @login_required
 def test(request):
@@ -88,12 +88,10 @@ def test(request):
         srt_time = ''
         end_time = ''
         bns_tp = ''
+
     target = request.GET.get('target')
 
-    market = 'upbit'
-    stk_nm = ''
-
-    if target =='upbit':
+    if target == 'upbit':
         market = 'upbit'
         stk_nm = ''
     else:
@@ -122,16 +120,42 @@ def test(request):
             result.append(temp_result[ind])
             ind = ind + 1
 
+    # 그래프 표시를 위해 시간 데이터 요청
     if market == 'fore':
         if hourday_tp == 'day':
             bitcoin_dt = ParsingJson.Get_DtForeStkPrc(market, stk_nm, srt_date, end_date)
+        else:
+            bitcoin_dt = ParsingJson.Get_HrForeStkPrc(market, stk_nm, srt_date, end_date)
+            bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
     else:
-    # 그래프 표시를 위해 시가 데이터 요청
+
         if hourday_tp == 'day':  # 일봉일 경우
             bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
         else:  # 시간봉일 경우
             bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
             bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+
+    # 해외 주식일 경우 환율조회해서 적용
+    if market == 'fore':
+        mydb = mysql.connector.connect(
+            host="root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com",
+            user="root",
+            password="koscom!234",
+            database="garage_test"
+        )
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT base_dt, exchange_rate from exchange_rate")
+
+        myresult = mycursor.fetchall()
+
+        exchange_rate = myresult[-1][1]
+        bitcoin_dt['open'] *= exchange_rate
+        bitcoin_dt['low'] *= exchange_rate
+        bitcoin_dt['high'] *= exchange_rate
+        bitcoin_dt['close'] *= exchange_rate
+    print(bitcoin_dt)
 
     # 거래 내역을 관리하기위한 변수
     trade_list = []

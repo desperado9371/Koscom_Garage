@@ -614,7 +614,7 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
     #     Prc_history = stoch(Prc_history)
-        print(Prc_history)
+    #     print(Prc_history)
     # 임시
     #print('매수전략 시작')
     if buy_strategy == '':
