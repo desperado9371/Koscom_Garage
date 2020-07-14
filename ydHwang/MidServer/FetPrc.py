@@ -1,19 +1,75 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[31]:
+# In[168]:
 
 
+import mysql.connector as sql
 import glob
 import pandas as pd
-import mysql.connector as sql
-from datetime import datetime
+from datetime import datetime,timedelta
 import json
 
-def FetDtPrc(market,srt_date,end_date):
-    print("market: "+market)
-    print("srt_date: "+srt_date)
-    print("end_date: "+end_date)
+#일자를 원하는 만큼 앞당김
+def Move_dt(date,movement=0):
+    if movement >0:
+        print("movement는 0이하만 가능합니다")
+        return 'movement는 0이하만 가능합니다'
+    date=str(date)
+    date_frame = datetime(int(date[0:4]), int(date[4:6]), int(date[6:8]))
+    date_frame = date_frame + timedelta(days=movement)
+    date = str(date_frame)[0:4]+ str(date_frame)[5:7]+ str(date_frame)[8:10]
+    return date
+
+def Move_hr(date,hour,movement=0):
+    if movement >0:
+        print("movement는 0이하만 가능합니다")
+        return 'movement는 0이하만 가능합니다'
+    date=str(date)
+    date_frame = datetime(int(date[0:4]), int(date[4:6]), int(date[6:8]),int(str(hour)[0:2]))
+    date_frame = date_frame + timedelta(hours=movement)
+    date = str(date_frame)[0:4]+ str(date_frame)[5:7]+ str(date_frame)[8:10]+str(date_frame)[11:13]
+    print(date)
+    return date
+
+def Move_stk_hr(date,hour,movement=0):
+    if movement >0:
+        print("movement는 0이하만 가능합니다")
+        return 'movement는 0이하만 가능합니다'
+    if int(hour) > 15 or int(hour) <9:
+        print("해외주식시장 시간은 9~15만 가능합니다")
+        return '해외주식시장 시간은 9~15만 가능합니다'  
+    hour = int(hour)
+    Move_day=abs(movement)//7
+    Move_hour=abs(movement)%7
+    print('move_day:'+str(Move_day)+' move_hour: '+str(Move_hour))
+    date=str(date)
+    date_frame = datetime(int(date[0:4]), int(date[4:6]), int(date[6:8]))
+    date_frame = date_frame + timedelta(days=(-Move_day))
+    print(date_frame)
+    print(hour - Move_hour)
+    if int(hour - Move_hour) < 9:
+        date_frame = date_frame + timedelta(days=(-1))
+        hour=16-(9-(hour - Move_hour))
+    else:
+        hour = hour - Move_hour
+    
+    if int(hour) < 10:
+        hour_string = '0'+str(hour)
+    else:
+        hour_string = str(hour)
+    date = str(date_frame)[0:4]+ str(date_frame)[5:7]+ str(date_frame)[8:10]+hour_string
+    print(date)
+    return date
+
+def FetDtPrc(market,srt_date,end_date,movement=0):
+    print("market: "+market + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
+    s_json_data=0
+    # 시작일 - 전일자
+    srt_date = Move_dt(srt_date,movement)
+    # 끝일 - 전일자
+    end_date = Move_dt(end_date,movement)
+    print("market: "+market + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
     db_cursor = db_connection.cursor() 
     
@@ -36,12 +92,21 @@ def FetDtPrc(market,srt_date,end_date):
     s_json_data = json.dumps(data)
     return str(s_json_data)
 
-def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', end_time='24'):
-    print("market: "+market)
+def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', end_time='24',movement=0):
+    s_json_data=0
+    print("market: "+market + "srt_date: "+srt_date+srt_time+ " end_date: "+end_date+end_time+" movement: "+str(movement))
+    srt_date=Move_hr(srt_date,srt_time,movement)
+    srt_time=srt_date[8:10]
+    srt_date=srt_date[0:8]
     print("srt_date: "+srt_date)
-    print("end_date: "+end_date)
     print("srt_time: "+srt_time)
+    
+    end_date=Move_hr(end_date,end_time,movement)
+    end_time=end_date[8:10]
+    print("end_time: "+end_time)
+    end_date=end_date[0:8]
     end_time = end_time + ':00:00'
+    print("end_date: "+end_date)
     print("end_time: "+end_time)
     
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
@@ -71,10 +136,14 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     print("조회완료")
     return str(s_json_data)
 
-def FetDtForeStkPrc(stk_nm ,srt_date,end_date):
-    print("stk_nm: "+stk_nm)
-    print("srt_date: "+srt_date)
-    print("end_date: "+end_date)
+def FetDtForeStkPrc(stk_nm ,srt_date,end_date,movement=0):
+    print("stk_nm: "+stk_nm + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
+    s_json_data=0
+    # 시작일 - 전일자
+    srt_date = Move_dt(srt_date,movement)
+    # 끝일 - 전일자
+    end_date = Move_dt(end_date,movement)
+    
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
     db_cursor = db_connection.cursor() 
     
@@ -95,13 +164,30 @@ def FetDtForeStkPrc(stk_nm ,srt_date,end_date):
     print(s_json_data)
     return str(s_json_data)
 
-def FetHrForeStkPrc(market='fore',stk_nm='apple',srt_date='0',end_date='99999999', srt_time = '00', end_time='24'):
-    print("market: "+market)
-    print("stk_nm: "+stk_nm)
+def FetHrForeStkPrc(market='fore',stk_nm='apple',srt_date='0',end_date='99999999', srt_time = '00', end_time='24',movement=0):
+    s_json_data=0
+    if int(srt_time) < 9:
+        srt_time = '00'
+    elif int(srt_time) >15:
+        srt_time = '15'
+    if int(end_time) < 9:
+        end_time = '00'
+    elif int(end_time) >15:
+        end_time = '15'
+        
+    print("stk_nm: "+stk_nm + "srt_date: "+srt_date+srt_time+ " end_date: "+end_date+end_time+" movement: "+str(movement))
+    srt_date=Move_stk_hr(srt_date,srt_time,movement)
+    srt_time=srt_date[8:10]
+    srt_date=srt_date[0:8]
     print("srt_date: "+srt_date)
-    print("end_date: "+end_date)
     print("srt_time: "+srt_time)
+    
+    end_date=Move_stk_hr(end_date,end_time,movement)
+    end_time=end_date[8:10]
+    print("end_time: "+end_time)
+    end_date=end_date[0:8]
     end_time = end_time + ':00:00'
+    print("end_date: "+end_date)
     print("end_time: "+end_time)
     
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
@@ -129,10 +215,15 @@ def FetHrForeStkPrc(market='fore',stk_nm='apple',srt_date='0',end_date='99999999
     print(s_json_data)
     return str(s_json_data)
 
+
+
 if __name__ == "__main__":
     print("start")
-    #FetDtForeStkPrc('apple','20200101','20200301')
-    FetHrForeStkPrc('fore','apple','20200701','20200706','21','22')
+    #FetDtPrc('upbit','20200702','20200703')
+    #FetDtForeStkPrc('apple','20200101','20200301',3)
+    #Move_stk_hr(20200714,15,-8)
+    FetHrForeStkPrc('fore','apple','20200701','20200706','21','22',-15)
+    #FetHrPrc('upbit','20200701','20200706','02','22',-6)
 # if __name__ == "__main__":
 #     print("start")
 #     FetDtPrc('upbit','20180101','20180301')
