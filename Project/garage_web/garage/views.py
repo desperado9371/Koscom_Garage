@@ -95,6 +95,10 @@ def test(request):
         end_time = ''
         bns_tp = ''
 
+    target = request.GET.get('target')
+    market = 'upbit'
+    stk_nm = ''
+
     if end_time == '24':
         end_time = '23'
 
@@ -595,7 +599,7 @@ def loading(request):
                                                    'money': request.GET.get('money'),
                                                    'coin': request.GET.get('coin'),
                                                    'hourday': request.GET.get('hourday'),
-                                                   'target':request.GET.get('target'),
+                                                   'target': request.GET.get('target'),
                                                    })
 
 
