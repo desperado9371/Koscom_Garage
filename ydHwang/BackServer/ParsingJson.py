@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[76]:
+# In[2]:
 
 
 import asyncio
@@ -115,13 +115,15 @@ def Make_indicat(indi, prc_lst, market, stk_nm, hourday_tp):
     elif indi['name'] == 'vortex_indicator_pos':
         prc_lst = vortex_indicator_pos(prc_lst, n=int(indi['val']['period']))
     elif indi['name'] == 'days_ago':
-        if market == 'upbit':
-            prc_lst = days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
+        if market == 'upbit' and hourday_tp =='day':
+            prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
+        elif market == 'upbit' and hourday_tp =='hour':
+            prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
         # 정의되어있지 않으면 그냥 PASS
     return prc_lst
 
 
-def days_ago(df, n, val):
+def upbit_days_ago(df, n, val):
     print(df.tail(1)['timestamp'])
     data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
     days_ago_data = Get_DtPrc(market, str(df['timestamp'].head(1)[0]), str(data[4]), n)
@@ -130,6 +132,25 @@ def days_ago(df, n, val):
     print(df)
     return df
 
+def upbit_hours_ago(df, n, val):
+    print('hour start')
+    # 시작날짜/시간 추출
+    date_data = df.head(1)['timestamp'][0].split('T')
+    srt_day_data = date_data[0]
+    srt_time_data = date_data[1][0:2]
+    
+    # 끝날짜/시간 추출
+    print(df.tail(1)['timestamp'])
+    date_data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')[4].split('T')
+    end_day_data = date_data[0]
+    end_time_data = date_data[1][0:2]
+    
+    days_ago_data = Get_HrPrc(market, srt_day_data, end_day_data, srt_time_data, end_time_data, n)
+    days_ago_data['timestamp'] = days_ago_data[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+    print(days_ago_data[val])
+    df['days_ago'] = days_ago_data[val].values
+    print(df)
+    return df
 
 
 ##지표 구현 부분########
@@ -481,7 +502,7 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
 
 
 # 비트코인 시간봉 기준 시세 가져오기
-def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='24', movement=0):
+def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='23', movement=0):
     print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
     print('srt_time: ' + srt_time + ' end_time: ' + end_time)
 
@@ -527,7 +548,7 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
 
 
 # 일봉 기준 시세 가져오기
-def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='24'):
+def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='23'):
     print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
     print('srt_time: ' + srt_time + ' end_time: ' + end_time)
 
@@ -599,6 +620,7 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
     return final_result
 
 
+
 if __name__ == '__main__':
     data = []
     result = []
@@ -624,7 +646,7 @@ if __name__ == '__main__':
     # 7번째 파라미터 = srt_time시작시간
     # 8번째 파라미터 = end_time종료시간
     # 9번째 파라미터 = hourday_tp 시간봉/일봉
-    result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'day')
+    result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'hour')
 
 
 
