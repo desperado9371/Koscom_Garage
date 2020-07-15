@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 from flask import Flask
@@ -46,9 +46,7 @@ def index():
 
 @sockets.route('/Cocos')
 def Cocos(ws):
-    while not ws.closed:
-        
-        
+    while not ws.closed:     
         msg = ws.receive()
         if msg !='':
             log.info(f'i WebServer:received:{msg}')
@@ -101,7 +99,8 @@ def BackServer_FetDay(ws):
             log.info("WebServer:BackServer_Day market: " + Key[1])
             log.info("WebServer:BackServer_Day srt_date: " + Key[2])
             log.info("WebServer:BackServer_Day end_date: " + Key[3])
-            Result = FetPrc.FetDtPrc(Key[1], Key[2], Key[3])
+            log.info("WebServer:BackServer_Day movement: " + Key[4])
+            Result = FetPrc.FetDtPrc(Key[1], Key[2], Key[3], Key[4])
             log.info("WebServer:BackServer_Day [FET]result:" + Result)
             ws.send(Result)
         else:
@@ -127,7 +126,8 @@ def BackServer_FetHr(ws):
             log.info("WebServer:BackServer_Hr end_date: " + Key[3])
             log.info("WebServer:BackServer_Hr srt_time: " + Key[4])
             log.info("WebServer:BackServer_Hr end_time: " + Key[5])
-            Result = FetPrc.FetHrPrc(Key[1], Key[2], Key[3], Key[4], Key[5])
+            log.info("WebServer:BackServer_Hr movement: " + Key[6])
+            Result = FetPrc.FetHrPrc(Key[1], Key[2], Key[3], Key[4], Key[5], Key[6])
             log.info("WebServer:BackServer_Hr [FET]result:" + Result)
             ws.send(Result)
         else:
@@ -151,7 +151,8 @@ def BackServer_Forestk_Day(ws):
             log.info("WebServer:BackServer_Forestk_Day stk_nm: " + Key[2])
             log.info("WebServer:BackServer_Forestk_Day srt_date: " + Key[3])
             log.info("WebServer:BackServer_Forestk_Day end_date: " + Key[4])
-            Result = FetPrc.FetDtForeStkPrc(Key[2], Key[3], Key[4])
+            log.info("WebServer:BackServer_Forestk_Day movement: " + Key[5])
+            Result = FetPrc.FetDtForeStkPrc(Key[2], Key[3], Key[4], Key[5])
             log.info("WebServer:BackServer_Forestk_Day [FET]result:" + Result)
             ws.send(Result)
         else:
@@ -177,7 +178,8 @@ def BackServer_Forestk_Hr(ws):
             log.info("WebServer:BackServer_Forestk_Hr end_date: " + Key[4])
             log.info("WebServer:BackServer_Forestk_Hr srt_time: " + Key[5])
             log.info("WebServer:BackServer_Forestk_Hr end_time: " + Key[6])
-            Result = FetPrc.FetHrForeStkPrc(Key[1],Key[2], Key[3], Key[4], Key[5], Key[6])
+            log.info("WebServer:BackServer_Forestk_Hr movement: " + Key[7])
+            Result = FetPrc.FetHrForeStkPrc(Key[1],Key[2], Key[3], Key[4], Key[5], Key[6],Key[7])
             log.info("WebServer:BackServer_Forestk_Hr [FET]result:" + Result)
             ws.send(Result)
         else:
