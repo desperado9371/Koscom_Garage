@@ -119,6 +119,10 @@ def Make_indicat(indi, prc_lst, market, stk_nm, hourday_tp):
             prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
         elif market == 'upbit' and hourday_tp == 'hour':
             prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
+        elif market == 'fore' and hourday_tp == 'day':
+            prc_lst = fore_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm)
+        elif market == 'fore' and hourday_tp == 'hour':
+            prc_lst = fore_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm)
         # 정의되어있지 않으면 그냥 PASS
     return prc_lst
 
@@ -142,6 +146,30 @@ def upbit_hours_ago(df, n, val):
     end_time_data = date_data[1][0:2]
 
     days_ago_data = Get_HrPrc(market, srt_day_data, end_day_data, srt_time_data, end_time_data, n)
+    days_ago_data['timestamp'] = days_ago_data[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+    df['days_ago'] = days_ago_data[val].values
+    return df
+
+
+def fore_days_ago(df, n, val, stk_nm):
+    data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
+    days_ago_data = Get_DtForeStkPrc(market, stk_nm, str(df['timestamp'].head(1)[0]), str(data[4]), n)
+    df['days_ago'] = days_ago_data[val].values
+    return df
+
+
+def fore_hours_ago(df, n, val, stk_nm):
+    # 시작날짜/시간 추출
+    date_data = df.head(1)['timestamp'][0].split('T')
+    srt_day_data = date_data[0]
+    srt_time_data = date_data[1][0:2]
+
+    # 끝날짜/시간 추출
+    date_data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')[4].split('T')
+    end_day_data = date_data[0]
+    end_time_data = date_data[1][0:2]
+
+    days_ago_data = Get_HrForeStkPrc(market, stk_nm, srt_day_data, end_day_data, srt_time_data, end_time_data, n)
     days_ago_data['timestamp'] = days_ago_data[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
     df['days_ago'] = days_ago_data[val].values
     return df
@@ -406,11 +434,11 @@ def Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourda
 
 def Chk_Meet_Condition(chk_list, meet_condtion):
     if eval(chk_list) == True:
-        ##print("해당조건 충족")
+        #print("해당조건 충족")
         meet_condtion = meet_condtion + 1
     else:
-        a=1
-        ##print("해당조건 미충족")
+        a = 1
+        #print("해당조건 미충족")
     return meet_condtion
 
 
@@ -427,12 +455,12 @@ def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp):
         for pars in algo['algo']:
             if pars[0:5] == 'block':
                 group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                ##print("날짜:" + Prc_history['timestamp'][row])
+                #print("날짜:" + Prc_history['timestamp'][row])
                 for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
                         chk_list = ''
-                        ##print(pars + "/" + search_group + " 시작!")
+                        #print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
                         for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
@@ -440,10 +468,10 @@ def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp):
 
                         # 비교대상값들이 chk_list 에 세팅 완료 되면 그 비교값들이 맞는지 연산
                         # 값중에 nan 이 잇을경우 그냥 패스
-                        ##print(chk_list)
+                        #print(chk_list)
                         if 'nan' in chk_list:
                             a=1
-                            ##print('nan 있으므로 비교 연산 패스')
+                            #print('nan 있으므로 비교 연산 패스')
                         else:
                             group_meet_condtion = Chk_Meet_Condition(chk_list, group_meet_condtion)
 
@@ -486,10 +514,9 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
-        #print(f"client received:{result}")
         ws.close()
     if not result:
-        a=1
+        a = 1
         #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
@@ -511,7 +538,6 @@ def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', 
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
-        #print(f"client received:{result}")
         ws.close()
     if not result:
         a = 1
@@ -525,16 +551,14 @@ def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', 
 
 
 # 일봉 기준 시세 가져오기
-def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999'):
+def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', movement=0):
     #print('market: ' + market + 'stk_nm: ' + stk_nm + ' str_date: ' + str_date + ' end_date: ' + end_date)
 
     ws = create_connection('ws://13.124.102.83:80/BackServer_Forestk_Day')
-    order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date
-    #print(order_packet)
+    order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + str(movement)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
-        #print(f"client received:{result}")
         ws.close()
     if not result:
         a = 1
@@ -547,19 +571,18 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
     return dataframe_result
 
 
-# 일봉 기준 시세 가져오기
-def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='23'):
+# 시간봉 기준 시세 가져오기
+def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='23',
+                     movement=0):
     #print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
     #print('srt_time: ' + srt_time + ' end_time: ' + end_time)
-
     ws = create_connection('ws://13.124.102.83:80/BackServer_Forestk_Hr')
-    order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time
+    order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time + '|' + str(
+        movement)
     #print(order_packet)
     if ws.connected:
         ws.send(order_packet)
-        #print()
         result = ws.recv()
-        #print(f"client received:{result}")
         ws.close()
     if not result:
         a = 1
@@ -591,9 +614,9 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
     elif market == 'fore':
         if hourday_tp == 'day':  # 일봉일 경우
-            Prc_history = Get_DtForeStkPrc(market, stk_nm, srt_date, end_date)
+            Prc_history = Get_DtForeStkPrc(market, stk_nm, srt_date, end_date, 0)
         else:  # 시간봉일 경우
-            Prc_history = Get_HrForeStkPrc(market, stk_nm, srt_date, end_date, srt_time, end_time)
+            Prc_history = Get_HrForeStkPrc(market, stk_nm, srt_date, end_date, srt_time, end_time, 0)
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
     #     Prc_history = stoch(Prc_history)
@@ -601,7 +624,7 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
     # 임시
     #print('매수전략 시작')
     if buy_strategy == '':
-        a = 1
+        a=1
         #print("매수전략 없음")
     else:
         buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', market, stk_nm, hourday_tp)
