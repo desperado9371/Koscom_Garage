@@ -44,6 +44,9 @@ def test(request):
     json_data = ws.recv()
     json_data = eval(json_data)
 
+    print("알고리즘정보---")
+    print(json_data)
+
     # 매수 알고리즘이 없을경우 empty string으로 대체
     if json_data['items'][-1]['buy_algo'] is None:
         buy_algo = ''
@@ -108,6 +111,7 @@ def test(request):
         temp_result = ParsingJson.Parsing_Main(json_data1, json_data2, market, stk_nm, srt_date, end_date, srt_time, end_time,
                                            hourday_tp)
     except:
+        print("something went wrong")
         temp_result = list()
     timer_end = timeit.default_timer()
     print("알고리즘 파싱 {}초 소요".format(timer_end - timer_start))
@@ -197,7 +201,6 @@ def test(request):
     if not result:
         print("해당 조건에 충족하는 주문일이 없습니다.")
     else:
-        print(result)
         date_list = np.array(result).T[0]
         type_list = np.array(result).T[1]
         trade_list, final_balance, final_increase, final_profit, krw_bal, btc_bal, avg_prc = backtestapi.execute_backtest(
