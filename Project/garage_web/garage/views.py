@@ -89,9 +89,13 @@ def test(request):
         end_time = ''
         bns_tp = ''
 
+    if end_time == '24':
+        end_time = '23'
     # 파싱요청
     timer_start = timeit.default_timer()  # 시작시간 체크
-    temp_result = ParsingJson.Parsing_Main(buy_strategy=json_data1, sell_strategy=json_data2, market=market, srt_date=srt_date, end_date=end_date, srt_time=srt_time, end_time=end_time,
+    temp_result = ParsingJson.Parsing_Main(buy_strategy=json_data1, sell_strategy=json_data2,
+                                           market=market, srt_date=srt_date, end_date=end_date,
+                                           srt_time=srt_time, end_time=end_time,
                                            hourday_tp=hourday_tp)
     timer_end = timeit.default_timer()
     print("알고리즘 파싱 {}초 소요".format(timer_end - timer_start))

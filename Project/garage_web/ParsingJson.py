@@ -1,3 +1,9 @@
+
+# coding: utf-8
+
+# In[ ]:
+
+
 import asyncio
 import websockets
 from websocket import create_connection
@@ -25,7 +31,7 @@ class block:
 
 
 # 지표값을 호출해서 리스트에 추가함
-def Make_indicat(indi, prc_lst):
+def Make_indicat(indi, prc_lst, market, stk_nm, hourday_tp):
     if indi['name'] == 'macd' or indi['name'] == 'macd_signal' or indi['name'] == 'macd_diff':
         prc_lst = macd(prc_lst,
                        int(indi['val']['n_slow']),
@@ -109,10 +115,36 @@ def Make_indicat(indi, prc_lst):
     elif indi['name'] == 'vortex_indicator_pos':
         prc_lst = vortex_indicator_pos(prc_lst, n=int(indi['val']['period']))
     elif indi['name'] == 'days_ago':
-        prc_lst = days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
+        if market == 'upbit' and hourday_tp == 'day':
+            prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
+        elif market == 'upbit' and hourday_tp == 'hour':
+            prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
         # 정의되어있지 않으면 그냥 PASS
-
     return prc_lst
+
+
+def upbit_days_ago(df, n, val):
+    data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
+    days_ago_data = Get_DtPrc(market, str(df['timestamp'].head(1)[0]), str(data[4]), n)
+    df['days_ago'] = days_ago_data[val].values
+    return df
+
+
+def upbit_hours_ago(df, n, val):
+    # 시작날짜/시간 추출
+    date_data = df.head(1)['timestamp'][0].split('T')
+    srt_day_data = date_data[0]
+    srt_time_data = date_data[1][0:2]
+
+    # 끝날짜/시간 추출
+    date_data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')[4].split('T')
+    end_day_data = date_data[0]
+    end_time_data = date_data[1][0:2]
+
+    days_ago_data = Get_HrPrc(market, srt_day_data, end_day_data, srt_time_data, end_time_data, n)
+    days_ago_data['timestamp'] = days_ago_data[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
+    df['days_ago'] = days_ago_data[val].values
+    return df
 
 
 ##지표 구현 부분########
@@ -350,57 +382,9 @@ def vortex_indicator_pos(df, n=14):
     return df
 
 
-#  ----- Chk_Meet_Condition 함수
-#  ----- input 으로 들어온 값들의
-# def Chk_Meet_Condition(Prc_history,group_algo,row,meet_condtion):
-#     #print("Chk_Meet_Condition 시작:" )
-#     #print(str(Prc_history[group_algo[0]['name']][row]) + str(Prc_history[group_algo[2]['name']][row]))
-#     #print(group_algo[0]['name'] + " " + group_algo[1]['val'] + " "+ group_algo[2]['name'])
-#     meet_condtion= int(meet_condtion)
-#     # (case1 지표끼리 비교시)
-#     if group_algo[0]['name'] !='num' and group_algo[2]['name'] !='num':
-#         if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True:
-#             #print('case1 지표끼리 비교시')
-#             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
-#             #print(chk)
-#             if eval(chk) == True:
-#                 #print("해당조건 충족")
-#                 meet_condtion = meet_condtion + 1
-#             else :
-#                 #print("해당조건 미충족")
-#         else :
-#              #print("NaN값이 있어서 해당조건 Pass합니다")
-#     elif group_algo[0]['name'] !='num' and group_algo[2]['name'] =='num':
-#         #print('case2 지표랑 뒷부분의 상수랑 비교시')
-#         # (case2 지표랑 뒷부분의 상수랑 비교시)
-#         if math.isnan(Prc_history[group_algo[0]['name']][row])!= True and math.isnan(float(group_algo[2]['val']))!= True:
-#             chk = str(Prc_history[group_algo[0]['name']][row])+str(group_algo[1]['val'])+str(group_algo[2]['val'])
-#             #print(chk)
-#             if eval(chk) == True:
-#                 #print("해당조건 충족")
-#                 meet_condtion = meet_condtion + 1
-#             else :
-#                 #print("해당조건 미충족")
-#         else :
-#              #print("NaN값이 있어서 해당조건 Pass합니다")
-#     elif group_algo[0]['name'] =='num' and group_algo[2]['name'] !='num':
-#         #print('case3 앞의 상수랑 뒷부분의 지표랑 비교시')
-#         # (case3 앞의 상수랑 뒷부분의 지표랑 비교시)
-#         if math.isnan(float(group_algo[0]['val']))!= True and math.isnan(Prc_history[group_algo[2]['name']][row])!= True :
-#             chk = str(group_algo[0]['val'])+str(group_algo[1]['val'])+str(Prc_history[group_algo[2]['name']][row])
-#             #print(chk)
-#             if eval(chk) == True:
-#                 #print("해당조건 충족")
-#                 meet_condtion = meet_condtion + 1
-#             else :
-#                 #print("해당조건 미충족")
-#         else :
-#              #print("NaN값이 있어서 해당조건 Pass합니다")
-#     return meet_condtion
-
-def Set_Pricelist(chk_list, group_algo, Prc_history, row):
+def Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourday_tp):
     # 지표값 세팅
-    Prc_history = Make_indicat(group_algo, Prc_history)
+    Prc_history = Make_indicat(group_algo, Prc_history, market, stk_nm, hourday_tp)
     if group_algo['name'] == 'num':
         chk_list = chk_list + str(group_algo['val'])
     elif group_algo['name'] == 'sig':
@@ -422,17 +406,17 @@ def Set_Pricelist(chk_list, group_algo, Prc_history, row):
 
 def Chk_Meet_Condition(chk_list, meet_condtion):
     if eval(chk_list) == True:
-        #print("해당조건 충족")
+        ##print("해당조건 충족")
         meet_condtion = meet_condtion + 1
     else:
         a=1
-        #print("해당조건 미충족")
+        ##print("해당조건 미충족")
     return meet_condtion
 
 
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo, bns_tp, hourday_tp):
+def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp):
     result_datelist = []
     chk_list = ''
     for row in range(len(Prc_history)):
@@ -443,30 +427,31 @@ def Fet_Algo(Prc_history, algo, bns_tp, hourday_tp):
         for pars in algo['algo']:
             if pars[0:5] == 'block':
                 group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                #print("날짜:" + Prc_history['timestamp'][row])
+                ##print("날짜:" + Prc_history['timestamp'][row])
                 for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
                         chk_list = ''
-                        #print(pars + "/" + search_group + " 시작!")
+                        ##print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
                         for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
-                            chk_list = Set_Pricelist(chk_list, group_algo, Prc_history, row)
+                            chk_list = Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourday_tp)
 
                         # 비교대상값들이 chk_list 에 세팅 완료 되면 그 비교값들이 맞는지 연산
                         # 값중에 nan 이 잇을경우 그냥 패스
-                        #print(chk_list)
+                        ##print(chk_list)
                         if 'nan' in chk_list:
                             a=1
-                            #print('nan 있으므로 비교 연산 패스')
+                            ##print('nan 있으므로 비교 연산 패스')
                         else:
                             group_meet_condtion = Chk_Meet_Condition(chk_list, group_meet_condtion)
 
                 #print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(algo['algo'][pars]['max']))
                 #print("group 충족수:" + str(group_meet_condtion))
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
-                if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(algo['algo'][pars]['max']) >= int(group_meet_condtion):
+                if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
+                        algo['algo'][pars]['max']) >= int(group_meet_condtion):
                     #print("충족!!!")
                     block_meet_condtion = 1
                 else:
@@ -497,7 +482,7 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
 
     ws = create_connection('ws://13.124.102.83:80/BackServer_Day')
     order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + str(movement)
-    print(order_packet)
+    #print(order_packet)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
@@ -515,7 +500,7 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
 
 
 # 비트코인 시간봉 기준 시세 가져오기
-def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='24', movement=0):
+def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='23', movement=0):
     #print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
     #print('srt_time: ' + srt_time + ' end_time: ' + end_time)
 
@@ -529,7 +514,7 @@ def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', 
         #print(f"client received:{result}")
         ws.close()
     if not result:
-        a=1
+        a = 1
         #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
@@ -552,7 +537,7 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
         #print(f"client received:{result}")
         ws.close()
     if not result:
-        a=1
+        a = 1
         #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
@@ -563,7 +548,7 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
 
 
 # 일봉 기준 시세 가져오기
-def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='24'):
+def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='23'):
     #print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
     #print('srt_time: ' + srt_time + ' end_time: ' + end_time)
 
@@ -577,7 +562,7 @@ def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
         #print(f"client received:{result}")
         ws.close()
     if not result:
-        a=1
+        a = 1
         #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
@@ -612,20 +597,20 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
     #     Prc_history = stoch(Prc_history)
-    #     print(Prc_history)
+    #     #print(Prc_history)
     # 임시
     #print('매수전략 시작')
     if buy_strategy == '':
-        a=1
+        a = 1
         #print("매수전략 없음")
     else:
-        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', hourday_tp)
+        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', market, stk_nm, hourday_tp)
 
     if sell_strategy == '':
-        a=1
+        a = 1
         #print("매도전략 없음")
     else:
-        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell', hourday_tp)
+        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell', market, stk_nm, hourday_tp)
 
     #print('매수리스트')
     #print(buy_result)
@@ -636,18 +621,6 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
     final_result = sorted(buy_result)
     #print(final_result)
     return final_result
-
-
-def days_ago(df, n, val):
-    #print("ago 시작")
-    # Get_DtPrc()
-    # #print(df['timestamp'].head(1)[0])
-    # data= str(df.tail(1)[0])
-    #print(df.tail(1)['timestamp'])
-    data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
-    #print(data[4])
-    days_ago_data = Get_DtPrc(market, str(df['timestamp'].head(1)[0]), str(data[4]), n)
-    # print(days_ago_data)
 
 
 if __name__ == '__main__':
@@ -675,7 +648,7 @@ if __name__ == '__main__':
     # 7번째 파라미터 = srt_time시작시간
     # 8번째 파라미터 = end_time종료시간
     # 9번째 파라미터 = hourday_tp 시간봉/일봉
-    result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'day')
+    result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'hour')
 
 
 
@@ -684,3 +657,6 @@ if __name__ == '__main__':
 
 
 
+
+
+# import backtestAPI
