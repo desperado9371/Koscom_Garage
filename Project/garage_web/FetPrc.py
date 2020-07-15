@@ -12,7 +12,7 @@ import json
 
 #일자를 원하는 만큼 앞당김
 def Move_dt(date,movement=0):
-    if movement >0:
+    if movement > 0:
         print("movement는 0이하만 가능합니다")
         return 'movement는 0이하만 가능합니다'
     date=str(date)
@@ -22,7 +22,7 @@ def Move_dt(date,movement=0):
     return date
 
 def Move_hr(date,hour,movement=0):
-    if movement >0:
+    if movement > 0:
         print("movement는 0이하만 가능합니다")
         return 'movement는 0이하만 가능합니다'
     date=str(date)
@@ -66,9 +66,9 @@ def FetDtPrc(market,srt_date,end_date,movement=0):
     print("market: "+market + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
     s_json_data=0
     # 시작일 - 전일자
-    srt_date = Move_dt(srt_date,movement)
+    srt_date = srt_date
     # 끝일 - 전일자
-    end_date = Move_dt(end_date,movement)
+    end_date = end_date
     print("market: "+market + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
     db_cursor = db_connection.cursor() 
@@ -136,13 +136,13 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     print("조회완료")
     return str(s_json_data)
 
-def FetDtForeStkPrc(stk_nm ,srt_date,end_date,movement=0):
+def FetDtForeStkPrc(market, stk_nm ,srt_date,end_date,movement=0):
     print("stk_nm: "+stk_nm + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
     s_json_data=0
     # 시작일 - 전일자
-    srt_date = Move_dt(srt_date,movement)
+    srt_date = srt_date
     # 끝일 - 전일자
-    end_date = Move_dt(end_date,movement)
+    end_date = end_date
     
     db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
     db_cursor = db_connection.cursor() 

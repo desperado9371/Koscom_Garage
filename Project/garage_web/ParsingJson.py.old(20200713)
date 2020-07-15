@@ -485,12 +485,13 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
     #print(order_packet)
     if ws.connected:
         ws.send(order_packet)
+        #print()
         result = ws.recv()
         #print(f"client received:{result}")
         ws.close()
     if not result:
-        a=1
-        #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
+        a = 1
+        # print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
         dataframe_result = pd.DataFrame(list(json_data),
@@ -510,6 +511,7 @@ def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', 
     #print(order_packet)
     if ws.connected:
         ws.send(order_packet)
+        #print()
         result = ws.recv()
         #print(f"client received:{result}")
         ws.close()
@@ -575,8 +577,8 @@ def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
 # 1. 일봉/시간봉에 따라 시세 가져옴
 # 2. 매수전략 충족리스트 받아옴
 # 3. 매도전략 충족리스트 받아옴
-def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='apple', srt_date='00000000',
-                 end_date='99999999', srt_time='00', end_time='23', hourday_tp='day'):
+def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', srt_date='00000000', end_date='99999999',
+                 srt_time='00', end_time='23', hourday_tp='day'):
     buy_result = []
     sell_result = []
     final_result = []
@@ -626,29 +628,29 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
 if __name__ == '__main__':
     data = []
     result = []
+    #print("≠")
     with open('buy.json', 'r') as f:
         json_data_buy = json.load(f)
     market = json_data_buy['algo']['market']
-    stk_nm = json_data_buy['algo']['stk_nm']
     hourday_tp = json_data_buy['algo']['hourday_tp']
     srt_date = json_data_buy['algo']['srt_date']
     end_date = json_data_buy['algo']['end_date']
     srt_time = json_data_buy['algo']['srt_time']
     end_time = json_data_buy['algo']['end_time']
     bns_tp = json_data_buy['algo']['buysell']
+
     with open('sell.json', 'r') as f:
         json_data_sell = json.load(f)
     # Parsing 함수
     # 1번째 파라미터 = buy_strategy: 매수전략
     # 2번째 파라미터 = sell_strategy: 매도전략
     # 3번째 파라미터 = marcket 거래소
-    # 4번째 파라미터 = 종목이름
-    # 5번째 파라미터 = srt_date 시작일
-    # 6번째 파라미터 = end_date 종료일
-    # 7번째 파라미터 = srt_time시작시간
-    # 8번째 파라미터 = end_time종료시간
-    # 9번째 파라미터 = hourday_tp 시간봉/일봉
-    result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'hour')
+    # 4번째 파라미터 = srt_date 시작일
+    # 5번째 파라미터 = end_date 종료일
+    # 6번째 파라미터 = srt_time시작시간
+    # 7번째 파라미터 = end_time종료시간
+    # 8번째 파라미터 = hourday_tp 시간봉/일봉
+    result = Parsing_Main(json_data_buy, json_data_sell, market, srt_date, end_date, srt_time, end_time, 'day')
 
 
 

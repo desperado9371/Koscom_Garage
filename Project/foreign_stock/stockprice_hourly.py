@@ -42,35 +42,35 @@ for i in range(len(fb_hist.index)):
     if prev_facebook.index[-1] == fb_hist.index[i]:
         fb_index = i
         break
-fb_hist = prev_facebook.append(fb_hist[fb_index-1::])
+fb_hist = prev_facebook.append(fb_hist[fb_index+1::])
 
 amzn_index = 0
 for i in range(len(amzn_hist.index)):
     if prev_amazon.index[-1] == amzn_hist.index[i]:
         amzn_index = i
         break
-amzn_hist = prev_amazon.append(amzn_hist[amzn_index-1::])
+amzn_hist = prev_amazon.append(amzn_hist[amzn_index+1::])
 
 goog_index = 0
 for i in range(len(goog_hist.index)):
     if prev_google.index[-1] == goog_hist.index[i]:
         goog_index = i
         break
-goog_hist = prev_google.append(goog_hist[goog_index-1::])
+goog_hist = prev_google.append(goog_hist[goog_index+1::])
 
 tsla_index = 0
 for i in range(len(tsla_hist.index)):
     if prev_tesla.index[-1] == tsla_hist.index[i]:
         tsla_index = i
         break
-tsla_hist = prev_tesla.append(tsla_hist[tsla_index-1::])
+tsla_hist = prev_tesla.append(tsla_hist[tsla_index+1::])
 
 aapl_index = 0
 for i in range(len(aapl_hist.index)):
     if prev_apple.index[-1] == aapl_hist.index[i]:
         aapl_index = i
         break
-aapl_hist = prev_apple.append(aapl_hist[aapl_index-1::])
+aapl_hist = prev_apple.append(aapl_hist[aapl_index+1::])
 
 fb_hist.to_csv('/home/garage/workspace/foreign_stock/facebook_1hour.csv')
 amzn_hist.to_csv('/home/garage/workspace/foreign_stock/amazon_1hour.csv')
