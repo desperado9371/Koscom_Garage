@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[11]:
+# In[ ]:
 
 
 import asyncio
@@ -406,17 +406,17 @@ def Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourda
 
 def Chk_Meet_Condition(chk_list, meet_condtion):
     if eval(chk_list) == True:
-        #print("해당조건 충족")
+        ##print("해당조건 충족")
         meet_condtion = meet_condtion + 1
     else:
         a=1
-        #print("해당조건 미충족")
+        ##print("해당조건 미충족")
     return meet_condtion
 
 
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo, bns_tp, hourday_tp):
+def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp):
     result_datelist = []
     chk_list = ''
     for row in range(len(Prc_history)):
@@ -427,28 +427,27 @@ def Fet_Algo(Prc_history, algo, bns_tp, hourday_tp):
         for pars in algo['algo']:
             if pars[0:5] == 'block':
                 group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                #print("날짜:" + Prc_history['timestamp'][row])
+                ##print("날짜:" + Prc_history['timestamp'][row])
                 for search_group in algo['algo'][pars]:
                     # group 순회시작
                     if search_group[0:5] == 'group':
                         chk_list = ''
-                        #print(pars + "/" + search_group + " 시작!")
+                        ##print(pars + "/" + search_group + " 시작!")
                         # 각 그룹의 지표 확인
                         for group_algo in algo['algo'][pars][search_group]:
                             # 알고리즘에 맞게 지표 세팅
-                            chk_list = Set_Pricelist(chk_list, group_algo, Prc_history, row, algo['algo']['market'],
-                                                     algo['algo']['stk_nm'], algo['algo']['hourday_tp'])
+                            chk_list = Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourday_tp)
 
                         # 비교대상값들이 chk_list 에 세팅 완료 되면 그 비교값들이 맞는지 연산
                         # 값중에 nan 이 잇을경우 그냥 패스
-                        #print(chk_list)
+                        ##print(chk_list)
                         if 'nan' in chk_list:
-                            a = 1
-                            #print('nan 있으므로 비교 연산 패스')
+                            a=1
+                            ##print('nan 있으므로 비교 연산 패스')
                         else:
                             group_meet_condtion = Chk_Meet_Condition(chk_list, group_meet_condtion)
 
-                #print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str( algo['algo'][pars]['max']))
+                #print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(algo['algo'][pars]['max']))
                 #print("group 충족수:" + str(group_meet_condtion))
                 # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
                 if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
@@ -490,7 +489,7 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
         #print(f"client received:{result}")
         ws.close()
     if not result:
-        a = 1
+        a=1
         #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
@@ -597,20 +596,21 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
             Prc_history = Get_HrForeStkPrc(market, stk_nm, srt_date, end_date, srt_time, end_time)
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
-
+    #     Prc_history = stoch(Prc_history)
+    #     #print(Prc_history)
     # 임시
     #print('매수전략 시작')
     if buy_strategy == '':
         a = 1
         #print("매수전략 없음")
     else:
-        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', hourday_tp)
+        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', market, stk_nm, hourday_tp)
 
     if sell_strategy == '':
         a = 1
         #print("매도전략 없음")
     else:
-        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell', hourday_tp)
+        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell', market, stk_nm, hourday_tp)
 
     #print('매수리스트')
     #print(buy_result)
