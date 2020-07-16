@@ -329,6 +329,7 @@ AnalysisOutput ChartAnalizer::AnalyzeValueVector(int numDiv, vector<TA_Real> poi
 		}
 		
 
+
 		//get closest center point
 		for (int k = 0; k < points.size(); ++k)
 		{
@@ -345,6 +346,19 @@ AnalysisOutput ChartAnalizer::AnalyzeValueVector(int numDiv, vector<TA_Real> poi
 			}
 			current[index].push_back(k);
 		}
+
+		//recalculate centerPoints
+		centerPoints.clear();
+		for (int k = 0; k < numDiv; ++k)
+		{
+			int sum = 0;
+			for (int j = 0; j < current[k].size(); ++j)
+			{
+				sum += points[current[k][j]];
+			}
+			centerPoints.push_back((double)sum / current[k].size());
+		}
+
 	} while (previous != current);
 
 
