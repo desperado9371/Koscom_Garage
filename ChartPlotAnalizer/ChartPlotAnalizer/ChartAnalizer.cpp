@@ -237,6 +237,7 @@ int ChartAnalizer::InsertResult(tm plot, string ta, TA_Real value)
 	{
 		auto found = this->results->at(plot);
 		found->insert(pair<string, TA_Real>(ta, value));
+		keys.insert(ta);
 	}
 
 	lock.unlock();
@@ -255,26 +256,100 @@ int ChartAnalizer::InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Re
 	return 0;
 }
 
-void ChartAnalizer::AnalyzeResult()
+void ChartAnalizer::AnalizeResult(string key)
 {
+	vector<TA_Real> values;
 	for (auto iter = results->begin(); iter != results->end(); iter++)
 	{
-		vector<TA_Real> values;
-		for (auto inter = keys.begin(); inter != keys.end(); inter++)
+		//for (auto inter = keys.begin(); inter != keys.end(); inter++)
+		//{
+		//	string key = *inter;
+
+		auto mapInside =iter->second->find(key);
+		if (mapInside != iter->second->end())
 		{
-			string key = *inter;
-			if (key != "")
-			{
-				auto mapInside =iter->second->find(key);
-				if (mapInside != iter->second->end())
-				{
-					values.push_back(mapInside->second);
-				}
-			}
+			values.push_back(mapInside->second);
 		}
-		sort(values.begin(), values.end());
+		
 
 	}
+	sort(values.begin(), values.end());
+	AnalyzeValueVector(5, values);
+
+}
+
+AnalysisOutput ChartAnalizer::AnalyzeValueVector(int numDiv, vector<TA_Real> points)
+{
+	srand(time(NULL));
+	vector<vector<int>> previous;
+	vector<vector<int>> current;
+	vector<int> indices;
+	vector<TA_Real> centerPoints;
+	
+	vector<vector<int>> division;
+	for (int k = 0; k < numDiv; k++)
+	{
+		previous.push_back(vector<int>());
+		current.push_back(vector<int>());
+	}
+
+	//randomly select points
+	/*while (indices.size() < numDiv)
+	{
+		int randy = rand() % points.size();
+		auto res = find(indices.begin(), indices.end(), randy);
+		if (res == indices.end()) // not found
+		{
+			indices.push_back(randy);
+			centerPoints.push_back(points[randy]);
+			
+		}
+		else // found
+		{
+			continue;
+		}
+	}
+	*/
+
+	for (int k = 0; k < numDiv; k++)
+	{
+		centerPoints.push_back(points[(points.size() / numDiv) * k]);
+	}
+
+	do
+	{
+		//copy current to previous
+		previous.clear();
+		//previous.resize(current.size());
+		copy(current.begin(), current.end(), back_inserter(previous));
+
+		for (int k = 0; k < numDiv; k++)
+		{
+			current[k].clear();
+		}
+		
+
+		//get closest center point
+		for (int k = 0; k < points.size(); ++k)
+		{
+			int index = 0;
+			double diff = DBL_MAX;
+			for (int j = 0; j < centerPoints.size(); ++j)
+			{
+				double tempDiff = abs(centerPoints[j] - points[k]);
+				if (diff > tempDiff)
+				{
+					index = j;
+					diff = tempDiff;
+				}
+			}
+			current[index].push_back(k);
+		}
+	} while (previous != current);
+
+
+
+	return AnalysisOutput();
 }
 
 void ChartAnalizer::ClearResults()

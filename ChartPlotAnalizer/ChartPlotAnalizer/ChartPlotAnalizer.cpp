@@ -16,7 +16,8 @@ int main(int argc, char* argv[])
     ChartAnalizer ca(TIME_MODE::MINUTE, tm(), tm());
     ca.TestRandomPlots();
     ca.EvaluateTA();
-    ca.PrintResults();
+    //ca.PrintResults();
+    ca.AnalizeResult("RSI04");
     cout << "Time Taken "  << time(NULL) - st << endl;
 
     return 0;

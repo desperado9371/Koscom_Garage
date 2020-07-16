@@ -56,12 +56,12 @@ public :
 	TA_RetCode EvaluateTA();
 	void TestRandomPlots();
 	void CA_RSITest(int periodFrom, int periodTo, int plotFrom, int plotTo);
+	void AnalizeResult(string key);
 private:
 	int GetIndexByTime(tm time);
 	int InsertResult(tm plot, string ta, TA_Real value);
 	int InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Real value);
-	void AnalyzeResult();
-	AnalysisOutput AnalyzeValueVector(vector<TA_Real>& source);
+	AnalysisOutput AnalyzeValueVector(int numDiv, vector<TA_Real> points);
 	void ClearResults();
 
 	mutex lock;
