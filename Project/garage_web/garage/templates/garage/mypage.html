@@ -225,27 +225,6 @@
             </div>
         </div>
     </nav>
-    <!-- section customer-->
-    <!--    <section class="page-section-small" id="customer">-->
-    <!--        <div class="container">-->
-    <!--            <div class="row justify-content-center">-->
-    <!--                <div class="col-lg-3 col-md-6">-->
-    <!--                    <div class="mt-5 pt-5 text-center">-->
-    <!--                        <img class="img" href="/" src="{% static 'garage/images/user.png'%}" alt="">-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            <div class="row justify-content-center">-->
-    <!--                <div class="col-lg-3 col-md-6">-->
-    <!--                    <div class="mt-1 pt-3 text-center">-->
-    <!--                        <h5 class="mb-2">{{ user.username }}</h5>-->
-    <!--                        <h5 class="mb-3">{{ user.email}}</h5>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </section>-->
-    <!-- section algorithm-->
     <section class="page-section-small" id="backtest_setting" style="width: 100%">
         <div class="container">
             <div class="row">
@@ -255,10 +234,6 @@
                     </div>
                 </div>
             </div>
-            {#            <div align="right">#}
-            {#                <button id="myBtn">백테스트 설정</button>#}
-            {#            </div>#}
-
             <div class="container">
                 <div class="row" id="row_setting">
                     <div class="col-lg-12" id="col-lg-12_setting">
@@ -329,21 +304,6 @@
                                     </select>
                                 </div>
                             </div>
-
-<!--                            <div class = "setting_target_detail">-->
-<!--                                <div align="center">-->
-<!--                                    <label for="target_detail">상세대상</label>-->
-<!--                                    <select name="target_detail" id="target_detail">-->
-<!--                                        <option value=""></option>-->
-<!--                                        {% if target == 'bitcoin'%}-->
-<!--                                        <option value="1">1</option>-->
-<!--                                        {% else %}-->
-<!--                                        <option value="2">2</option>-->
-<!--                                        {% endif %}-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
                         </div>
                     </div>
                 </div>
@@ -351,51 +311,6 @@
         </div>
     </section>
 
-
-    <!--
-            <h3 align="center">백테스트 조건 설정</h3>
-            <br>
-
-            <div align="center">
-                <form action="">
-                    <label for="start">테스트 시작 일자 :</label><br><br>
-                    <input type="date" id="start" name="start" min="2019-01-01" max="2020-12-31" value="2020-01-01">
-                    {#            <button type="button" onclick="test(start)"> 설정 </button>#}
-                </form>
-            </div>
-
-            <div align="center">
-                <form action="">
-                    <label for="end">테스트 종료 일자 :</label><br><br>
-                    <input type="date" id="end" name="end" min="2019-01-01" max="2020-12-31" value="2020-06-11">
-                    {#            <button type="button"> 설정 </button>#}
-                </form>
-            </div>
-
-
-            <div align="center">
-                <label for="money">테스트 초기자본(원)</label><br><br>
-                <input type="number" id="money" name="money" value="500000000" style="width: 9em" step="1000000" min="0">
-                <label for="money">원</label>
-            </div>
-            <div align="center">
-                <label for="coin">주문 1회당 거래량(BTC)</label><br><br>
-                <input type="number" id="coin" name="coin" value="0.25" style="width: 8em" step="0.25" min="0" max="10">
-                <label for="coin">BTC</label>
-            </div>
-
-            <div align="center">
-                <form action="">
-                    알고리즘 수행 시간 단위<br><br>
-                    <input type="radio" id="day" name="hourday" value="day" checked="checked">
-                    <label for="day">1일</label>
-                    <input type="radio" id="hour" name="hourday" value="hour">
-                    <label for="hour">1시간</label>
-                </form>
-            </div>
-            <br>
-
-              -->
     <section class="page-section-xsmall" id="algorithm" style="width: 100%">
         <div class="container">
             <div class="row">

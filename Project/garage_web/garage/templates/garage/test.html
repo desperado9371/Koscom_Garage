@@ -38,6 +38,8 @@
 
     <!--    Google Chart-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!--거래내역 테이블-->
     <script type="text/javascript">
         google.charts.load('current', {'packages':['table']});
         google.charts.setOnLoadCallback(drawTable);
@@ -60,6 +62,7 @@
         }
     </script>
 
+    <!--시세 및 매수/매도 그래프-->
     <script type='text/javascript'>
         google.charts.load('current', {'packages':['annotationchart']});
         google.charts.setOnLoadCallback(drawChart2);
@@ -78,6 +81,8 @@
             trade_list = {{trades|safe}} ;
             var trade_index=0;
             var trade_length = trade_list.length
+
+            {#매일/매시간 시세를 불러오는 도중 거래내역과 비교를 해서 그 당시거래가 있을 경우 해당 거래 표시#}
             for ( i=0 ; i< temp.length  ;i++)
             {
                 if( trade_index < trade_length && temp[i][8] == trade_list[trade_index][0]){
@@ -190,7 +195,7 @@
                                             <h5 style="color: #6C63FF">
                                                 원화 잔고 {{krw_bal|safe}}원<br></h5>
                                             <h5 class="tooltip2" style="color: #6C63FF">
-                                                BTC 잔고 {{btc_exch|safe}}원
+                                                평가 잔고 {{btc_exch|safe}}원
                                                 <span class="tooltiptext" style="color: #6C63FF">
                                                          {{btc_bal|safe}}BTC
                                                 </span>
