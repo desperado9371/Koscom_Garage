@@ -324,20 +324,14 @@
                 <div id="slider-div" href="/loading">
                     {% for name,date,seq,hd,start,end,memo in algo_info %}
                     <div>
-                        <!--                                <div class="slider_box" OnClick="location.href ='/loading?algoname={{seq}}'" style="cursor:pointer;">-->
                         <div class="slider_box">
                             <div class="wrap">
                                 <h4 style="font-size: 0.6em">{{name}}</h4>
-                                <!--                                       <h5><br>{{seq}}</h5>-->
-                                <!--                                       <h6>{{seq}}</h6>-->
-                                <!--                                    <h5><br>수익률 4.5%</h5>-->
                                 <h6>설명 : {{memo}}</h6>
-                                {#                                <h6 style="font-size: 0.4em">기준봉 : {{hd}}</h6>#}
                                 <h6>작성일 : {{date}}</h6>
 
                                 <button class="btn" onClick="changeIframeUrl('{{seq}}')">백테스트</button>
                                 <button class="btn" href="/algomaker" onclick="modify({{ seq }})">수정하기</button>
-
 
                             </div>
                         </div>

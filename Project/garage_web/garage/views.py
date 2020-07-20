@@ -574,7 +574,7 @@ def algomaker(request):
     return:
     """
 
-    if request.COOKIES.get('username') == None:
+    if request.COOKIES.get('username') is None:
         response = redirect('/algomaker')
         response.set_cookie('username', request.user.username)
         return response
