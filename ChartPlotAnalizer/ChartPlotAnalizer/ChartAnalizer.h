@@ -32,8 +32,10 @@ struct cmpByStringLength {
 };
 
 struct AnalysisOutput {
+	string key;
 	TA_Real valueFrom;
 	TA_Real valueTo;
+	double saturationLevel;
 };
 class ChartAnalizer
 {
@@ -61,7 +63,7 @@ private:
 	int GetIndexByTime(tm time);
 	int InsertResult(tm plot, string ta, TA_Real value);
 	int InsertResult(map<string, TA_Real>* plotInfo, string ta, TA_Real value);
-	AnalysisOutput AnalyzeValueVector(int numDiv, vector<TA_Real> points);
+	AnalysisOutput AnalyzeValueVector(string key ,int numDiv, vector<TA_Real> points);
 	void ClearResults();
 
 	mutex lock;
