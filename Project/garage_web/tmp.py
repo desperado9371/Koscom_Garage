@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[192]:
-
-
 import asyncio
 import websockets
 from websocket import create_connection
@@ -117,25 +111,25 @@ def Make_indicat(indi, prc_lst, market, stk_nm, hourday_tp):
         prc_lst = vortex_indicator_pos(prc_lst, n=int(indi['val']['period']))
     elif indi['name'] == 'days_ago':
         if market == 'upbit' and hourday_tp == 'day':
-            prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']),market)
+            prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
         elif market == 'upbit' and hourday_tp == 'hour':
-            prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']),market)
+            prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']))
         elif market == 'fore' and hourday_tp == 'day':
-            prc_lst = fore_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm,market)
+            prc_lst = fore_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm)
         elif market == 'fore' and hourday_tp == 'hour':
-            prc_lst = fore_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm,market)
+            prc_lst = fore_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm)
         # 정의되어있지 않으면 그냥 PASS
     return prc_lst
 
 
-def upbit_days_ago(df, n, val,market):
+def upbit_days_ago(df, n, val):
     data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
     days_ago_data = Get_DtPrc(market, str(df['timestamp'].head(1)[0]), str(data[4]), n)
     df['days_ago'] = days_ago_data[val].values
     return df
 
 
-def upbit_hours_ago(df, n, val,market):
+def upbit_hours_ago(df, n, val):
     # 시작날짜/시간 추출
     date_data = df.head(1)['timestamp'][0].split('T')
     srt_day_data = date_data[0]
@@ -152,14 +146,14 @@ def upbit_hours_ago(df, n, val,market):
     return df
 
 
-def fore_days_ago(df, n, val, stk_nm,market):
+def fore_days_ago(df, n, val, stk_nm):
     data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
     days_ago_data = Get_DtForeStkPrc(market, stk_nm, str(df['timestamp'].head(1)[0]), str(data[4]), n)
     df['days_ago'] = days_ago_data[val].values
     return df
 
 
-def fore_hours_ago(df, n, val, stk_nm,market):
+def fore_hours_ago(df, n, val, stk_nm):
     # 시작날짜/시간 추출
     date_data = df.head(1)['timestamp'][0].split('T')
     srt_day_data = date_data[0]
@@ -601,7 +595,7 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
     #     print('최종리스트')
     buy_result.extend(sell_result)
     final_result = sorted(buy_result)
-#     print(final_result)
+    print(final_result)
     return final_result
 
 
@@ -680,18 +674,15 @@ if __name__ == '__main__':
     # 7번째 파라미터 = srt_time시작시간
     # 8번째 파라미터 = end_time종료시간
     # 9번째 파라미터 = hourday_tp 시간봉/일봉
-#     now = datetime.now()
-#     print(now)
+    now = datetime.now()
+    print(now)
 
     result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'hour')
 
-#     now = datetime.now()
-#     print(now)
+    now = datetime.now()
+    print(now)
 
 
 
 
 
-
-
-# import backtestAPI
