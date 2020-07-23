@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[192]:
 
 
 import asyncio
@@ -15,6 +15,7 @@ import ta
 import socket
 import numpy as np
 from backtestAPI import BacktestAPI
+from multiprocessing import Process, Queue
 
 
 class Algo_Info:
@@ -410,114 +411,68 @@ def vortex_indicator_pos(df, n=14):
     return df
 
 
-def Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourday_tp):
-    # 지표값 세팅
-    Prc_history = Make_indicat(group_algo, Prc_history, market, stk_nm, hourday_tp)
-    if group_algo['name'] == 'num':
-        chk_list = chk_list + str(group_algo['val'])
-    elif group_algo['name'] == 'sig':
-        if group_algo['val'] == '≠':
-            chk_list = chk_list + '!='
-        elif group_algo['val'] == '=':
-            chk_list = chk_list + '=='
-        elif group_algo['val'] == '≥':
-            chk_list = chk_list + '>='
-        elif group_algo['val'] == '≤':
-            chk_list = chk_list + '<='
-        else:
-            chk_list = chk_list + str(group_algo['val'])
-
-    else:
-        chk_list = chk_list + str(Prc_history[group_algo['name']][row])
-    return chk_list
-
-
-def Chk_Meet_Condition(chk_list, meet_condtion):
-    if eval(chk_list) == True:
-        #print("해당조건 충족")
-        meet_condtion = meet_condtion + 1
-    else:
-        a = 1
-        #print("해당조건 미충족")
-    return meet_condtion
-
-
 #  ----- Fet 함수
 #  ----- 하루하루씩 알고리즘에 대입해서 충족하는지 확인함 확인후 모든 block 이 충족될경우 일자를 저장해서 리턴
-def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp):
+def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp, q):
     result_datelist = []
     chk_list = ''
-    for row in range(len(Prc_history)):
-        group_meet_condtion = 0  # 각 그룹의 충족갯수
-        block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
+    Chk_list = pd.DataFrame(columns=['timestamp', 'chk', 'meet_count'])
+    Chk_list['timestamp'] = Prc_history.loc[:, 'timestamp']
+    Chk_list['chk'] = ''
+    Chk_list['meet_count'] = 0
+    Chk_list['meet_count'].astype('int')
+    group_meet_condtion = 0  # 각 그룹의 충족갯수
+    block_meet_condtion = 1  # 각 블록의 충족여부 (1:충족 0: 미충족) =기본으로 충족이라고 가정하고 시작
 
-        # 알고리즘 확인후 각 일자별로 충족하는지 확인
-        for pars in algo['algo']:
-            if pars[0:5] == 'block':
-                group_meet_condtion = 0  # 그룹 충족 갯수 초기화
-                #print("날짜:" + Prc_history['timestamp'][row])
-                for search_group in algo['algo'][pars]:
-                    # group 순회시작
-                    if search_group[0:5] == 'group':
-                        chk_list = ''
-                        #print(pars + "/" + search_group + " 시작!")
-                        # 각 그룹의 지표 확인
-                        for group_algo in algo['algo'][pars][search_group]:
-                            # 알고리즘에 맞게 지표 세팅
-                            chk_list = Set_Pricelist(chk_list, group_algo, Prc_history, row, market, stk_nm, hourday_tp)
+    # 알고리즘 확인후 각 일자별로 충족하는지 확인
+    for pars in algo['algo']:
+        if pars[0:5] == 'block':
+            group_meet_condtion = 0  # 그룹 충족 갯수 초기화
+            # print("날짜:" + Prc_history['timestamp'][row])
+            for search_group in algo['algo'][pars]:
+                # group 순회시작
+                if search_group[0:5] == 'group':
+                    # print(pars + "/" + search_group + " 시작!")
+                    # 각 그룹의 지표 확인
+                    for group_algo in algo['algo'][pars][search_group]:
+                        # 알고리즘에 맞게 지표 세팅
+                        Chk_list = Set_Pricelist(Chk_list, group_algo, Prc_history, market, stk_nm, hourday_tp)
 
-                        # 비교대상값들이 chk_list 에 세팅 완료 되면 그 비교값들이 맞는지 연산
-                        # 값중에 nan 이 잇을경우 그냥 패스
-                        #print(chk_list)
-                        if 'nan' in chk_list:
-                            a=1
-                            #print('nan 있으므로 비교 연산 패스')
-                        else:
-                            group_meet_condtion = Chk_Meet_Condition(chk_list, group_meet_condtion)
+                    # 비교대상값들이 chk_list 에 세팅 완료 되면 그 비교값들이 맞는지 연산
+                    # 값중에 nan 이 잇을경우 그냥 패스
+                    # print(chk_list)
+                    Chk_list = Chk_Meet_Condition(Chk_list)
 
-                #print("순회 완료 Min: " + str(algo['algo'][pars]['min']) + " Mix: " + str(algo['algo'][pars]['max']))
-                #print("group 충족수:" + str(group_meet_condtion))
-                # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
-                if int(algo['algo'][pars]['min']) <= int(group_meet_condtion) and int(
-                        algo['algo'][pars]['max']) >= int(group_meet_condtion):
-                    #print("충족!!!")
-                    block_meet_condtion = 1
-                else:
-                    #print("미충족!")
-                    block_meet_condtion = 0
+            # 알고리즘 그룹을 다 순환하고 끝난 경우 충족조건이 맞는지 확인
+            Chk_list = Chk_Meet_Count(Chk_list, algo['algo'][pars]['min'], algo['algo'][pars]['max'])
+            # 이미 블록중에 미충족된 블록이 있는경우 더이상 순회할 필요가 없으므로 break
+            if Chk_list.empty:
+                break
+    result = list(np.array(Chk_list['timestamp'].tolist()))
 
-                # 이미 블록중에 미충족된 블록이 있는경우 더이상 순회할 필요가 없으므로 break
-                if block_meet_condtion == 0:
-                    #print("미충족 block 존재 다음 알고리즘으로 PASS")
-                    break
-        if block_meet_condtion == 1:
-            # 충족시 일자를 리스트에 추가
-            #print("이날 알고리즘은 완벽하게 충족")
-            if hourday_tp == 'day':  # 일봉인 경우
-                result_datelist.append([Prc_history['timestamp'][row][0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
-                #print(Prc_history['timestamp'][row][0:10])
-            else:  # 시간봉인경우
-                result_datelist.append([Prc_history['timestamp'][row], bns_tp])
-                #print(Prc_history['timestamp'][row])
-
-    #print(result_datelist)
+    if hourday_tp == 'day':  # 일봉인 경우
+        for row in result:
+            result_datelist.append([row[0:10], bns_tp])  # 일자에서 시간부분 잘라내기위해 [0:10] 적용
+    else:  # 시간봉인경우
+        for row in result:
+            result_datelist.append([row, bns_tp])
+    q.put(result_datelist)
     return result_datelist
 
 
 # 비트코인 일봉 기준 시세 가져오기
 def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
-    #print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
+    # print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
 
     ws = create_connection('ws://13.124.102.83:80/BackServer_Day')
     order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + str(movement)
-    #print(order_packet)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
         ws.close()
     if not result:
         a = 1
-        #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
+        # print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
         dataframe_result = pd.DataFrame(list(json_data),
@@ -528,20 +483,16 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
 
 # 비트코인 시간봉 기준 시세 가져오기
 def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='23', movement=0):
-    #print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
-    #print('srt_time: ' + srt_time + ' end_time: ' + end_time)
-
     ws = create_connection('ws://13.124.102.83:80/BackServer_Hr')
     order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time + '|' + str(
         movement)
-    #print(order_packet)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
         ws.close()
     if not result:
         a = 1
-        #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
+        # print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
         dataframe_result = pd.DataFrame(list(json_data),
@@ -552,8 +503,6 @@ def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', 
 
 # 일봉 기준 시세 가져오기
 def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', movement=0):
-    #print('market: ' + market + 'stk_nm: ' + stk_nm + ' str_date: ' + str_date + ' end_date: ' + end_date)
-
     ws = create_connection('ws://13.124.102.83:80/BackServer_Forestk_Day')
     order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + str(movement)
     if ws.connected:
@@ -562,7 +511,7 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
         ws.close()
     if not result:
         a = 1
-        #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
+        # print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
         dataframe_result = pd.DataFrame(list(json_data),
@@ -574,19 +523,17 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
 # 시간봉 기준 시세 가져오기
 def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='23',
                      movement=0):
-    #print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
-    #print('srt_time: ' + srt_time + ' end_time: ' + end_time)
     ws = create_connection('ws://13.124.102.83:80/BackServer_Forestk_Hr')
     order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time + '|' + str(
         movement)
-    #print(order_packet)
+    # print(order_packet)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
         ws.close()
     if not result:
         a = 1
-        #print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
+        # print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
         dataframe_result = pd.DataFrame(list(json_data),
@@ -619,31 +566,93 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
             Prc_history = Get_HrForeStkPrc(market, stk_nm, srt_date, end_date, srt_time, end_time, 0)
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
-    #     Prc_history = stoch(Prc_history)
-    #     #print(Prc_history)
     # 임시
-    #print('매수전략 시작')
+    BUF_SIZE = 2
+    buy_q = Queue(BUF_SIZE)
+    sell_q = Queue(BUF_SIZE)
+
+    # print('매수전략 시작')
     if buy_strategy == '':
-        a=1
-        #print("매수전략 없음")
+        print("매수전략 없음")
     else:
-        buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', market, stk_nm, hourday_tp)
+        # buy_result = Fet_Algo(Prc_history, buy_strategy, 'buy', market, stk_nm, hourday_tp, buy_q)
+        buy_processing = Process(target=Fet_Algo,
+                                 args=(Prc_history, buy_strategy, 'buy', market, stk_nm, hourday_tp, buy_q))
+        buy_processing.start()
 
     if sell_strategy == '':
-        a = 1
-        #print("매도전략 없음")
+        print("매도전략 없음")
     else:
-        sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell', market, stk_nm, hourday_tp)
+        # sell_result = Fet_Algo(Prc_history, sell_strategy, 'sell', market, stk_nm, hourday_tp, sell_q)
+        sell_processing = Process(target=Fet_Algo,
+                                  args=(Prc_history, sell_strategy, 'sell', market, stk_nm, hourday_tp, sell_q))
+        sell_processing.start()
 
-    #print('매수리스트')
-    #print(buy_result)
-    #print('매도리스트')
-    #print(sell_result)
-    #print('최종리스트')
+    if buy_strategy != '':
+        buy_processing.join()
+    if sell_strategy != '':
+        sell_processing.join()
+    buy_result = buy_q.get()
+    sell_result = sell_q.get()
+    #     print('매수리스트')
+    #     print(buy_result)
+    #     print('매도리스트')
+    #     print(sell_result)
+    #     print('최종리스트')
     buy_result.extend(sell_result)
     final_result = sorted(buy_result)
     #print(final_result)
     return final_result
+
+
+# 조건에 맞으면 count를 더함
+def Chk_Meet_Condition(Chk_list):
+    for row in Chk_list.index:
+        if 'nan' not in str(Chk_list.loc[row]['chk']):
+            if eval(Chk_list.loc[row]['chk']) == True:
+                Chk_list['meet_count'][row] = int(Chk_list['meet_count'][row]) + 1
+    Chk_list['chk'] = ''
+    return Chk_list
+
+
+# 조건 미충족 일자 삭제
+def Chk_Meet_Count(Chk_list, min_con, max_con):
+    for row in Chk_list.index:
+        if int(Chk_list['meet_count'][row]) > int(max_con) or int(Chk_list['meet_count'][row]) < int(min_con):
+            Chk_list.drop(row, inplace=True, axis=0)
+    Chk_list = Chk_list.reset_index(drop=True)
+    Chk_list['meet_count'] = 0
+    return Chk_list
+
+
+def Set_Pricelist(Chk_list, group_algo, Prc_history, market, stk_nm, hourday_tp):
+    # 지표값 세팅
+    Prc_history = Make_indicat(group_algo, Prc_history, market, stk_nm, hourday_tp)
+    # print(Prc_history)
+    if group_algo['name'] == 'num':
+        Chk_list['chk'] = Chk_list['chk'] + str(group_algo['val'])
+    elif group_algo['name'] == 'sig':
+        if group_algo['val'] == '≠':
+            Chk_list['chk'] = Chk_list['chk'] + '!='
+        elif group_algo['val'] == '=':
+            Chk_list['chk'] = Chk_list['chk'] + '=='
+        elif group_algo['val'] == '≥':
+            Chk_list['chk'] = Chk_list['chk'] + '>='
+        elif group_algo['val'] == '≤':
+            Chk_list['chk'] = Chk_list['chk'] + '<='
+        else:
+            Chk_list['chk'] = Chk_list['chk'] + str(group_algo['val'])
+    else:
+        Prc_history = Prc_history.astype(str)
+        for row in Chk_list.index:
+            #             print('체크값'+ Chk_list['chk'][row])
+            #             print('입력값'+ Prc_history[group_algo['name']][Prc_history['timestamp']==Chk_list['timestamp'][row]].values[0])
+            Chk_list['chk'][row] = Chk_list['chk'][row] + str(
+                Prc_history[group_algo['name']][Prc_history['timestamp'] == Chk_list['timestamp'][row]].values[0])
+    #             print(Chk_list['chk'][row])
+    #     print('지표값 세팅')
+    #     print(Chk_list)
+    return Chk_list
 
 
 if __name__ == '__main__':
@@ -671,10 +680,13 @@ if __name__ == '__main__':
     # 7번째 파라미터 = srt_time시작시간
     # 8번째 파라미터 = end_time종료시간
     # 9번째 파라미터 = hourday_tp 시간봉/일봉
+    #now = datetime.now()
+    #print(now)
+
     result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'hour')
 
-
-
+    #now = datetime.now()
+    #print(now)
 
 
 
