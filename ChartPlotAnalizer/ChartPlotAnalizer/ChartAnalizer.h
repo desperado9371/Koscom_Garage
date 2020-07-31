@@ -59,6 +59,12 @@ public :
 	void TestRandomPlots();
 	void CA_RSITest(int periodFrom, int periodTo, int plotFrom, int plotTo);
 	void AnalizeResult(string key);
+
+	TA_Real* open;
+	TA_Real* close;
+	TA_Real* high;
+	TA_Real* low;
+	TA_Real* volume;
 private:
 	int GetIndexByTime(tm time);
 	int InsertResult(tm plot, string ta, TA_Real value);
@@ -74,11 +80,6 @@ private:
 
 	tm startTimePoint;
 	tm endTimePoint;
-	TA_Real* open;
-	TA_Real* close;
-	TA_Real* high;
-	TA_Real* low;
-	TA_Real* volume;
 	TIME_MODE mode;
 
 
