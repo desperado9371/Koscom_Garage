@@ -102,6 +102,8 @@ export default class HandManager extends cc.Component {
         value.pushCard("close");
         value.pushCard("high");
         value.pushCard("low");
+        value.pushCard("days_ago");
+        
         
         h.push(vol);
         h.push(trend);
@@ -163,6 +165,7 @@ export default class HandManager extends cc.Component {
         value.pushCard("close");
         value.pushCard("high");
         value.pushCard("low");
+        value.pushCard("days_ago");
         
         h.push(vol);
         h.push(trend);

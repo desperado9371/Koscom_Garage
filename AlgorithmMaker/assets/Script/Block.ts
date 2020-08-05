@@ -67,6 +67,12 @@ export default class Block extends cc.Component {
             val.n_slow = "3";
             val.n_sign = "5";
         }
+        else if(cardName == 'days_ago' || cardName == 'n일전 종가')
+        {
+            json.name = 'days_ago';
+            val.period = '-'+this.getBodyString();
+            val.val = "close";
+        }
         else if(cardName == 'rsi'){
 
             val.period = this.getBodyString();
@@ -186,6 +192,10 @@ export default class Block extends cc.Component {
         }
         else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low' || cardName == 'volume'){
             this.body.active = false;
+        }
+        else if(cardName == 'days_ago' || cardName == 'n일전 종가')
+        {
+            this.setBodyString(1);
         }
         else if(cardName.includes('macd') ){
             this.title.getComponentInChildren(cc.Label).string = 'MACD\r\n시그널';
