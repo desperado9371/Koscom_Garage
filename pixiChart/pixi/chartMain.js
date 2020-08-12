@@ -18,14 +18,45 @@ function main(){
     
 
     // Move container to the center
-    container.x = app.screen.width / 2;
-    container.y = app.screen.height / 2;
+    container.x = app.screen.width;
+    container.y = app.screen.height/2;
     
     // Center bunny sprite in local container coordinates
-    container.pivot.x = container.width / 2;
-    container.pivot.y = container.height / 2;
+    container.pivot.x = container.width;
+    container.pivot.y = container.height;
     
 
+
+    initializeWithRandom();
+    chartKeyboardControl(candleRoot);
+
+
+
+    refreshCandleRoot();
+
+    // Listen for animate update
+    app.ticker.add((delta) => {
+        
+        if(keyEvents.ArrowUp == true){
+            candleRoot.scale.x += 0.05*delta;
+        }
+        if(keyEvents.ArrowDown == true){
+            candleRoot.scale.x -= 0.05*delta;
+        }
+        if(keyEvents.ArrowLeft == true){
+            candleRoot.x -= 5*delta;
+        }
+        if(keyEvents.ArrowRight == true){
+            candleRoot.x += 5*delta;
+        }
+
+        
+        //container.rotation -= 0.01 * delta;
+    });
+    
+}
+
+function initializeWithRandom(){
     var r_open = getRandomArbitrary(-100, 100);
     var r_close = getRandomArbitrary(-100, 100);
     var r_high = getRandomArbitrary(-100, 100);
@@ -48,40 +79,6 @@ function main(){
         r_low = Math.min(r_open, r_close, r_high, r_low);
 
     }
-
-    chartKeyboardControl(candleRoot);
-
-    var xPos = 0;
-    var yPos = 0;
-    //yBase++;
-    for(var k = 0; k < candleRoot.children.length; k++){
-        yPos = yBase;
-        candleRoot.children[k].x = xPos;
-        candleRoot.children[k].y = yPos;
-        xPos += 15;
-        
-    }
-
-    // Listen for animate update
-    app.ticker.add((delta) => {
-        
-        if(keyEvents.ArrowUp == true){
-            candleRoot.scale.x += 0.05*delta;
-        }
-        if(keyEvents.ArrowDown == true){
-            candleRoot.scale.x -= 0.05*delta;
-        }
-        if(keyEvents.ArrowLeft == true){
-            candleRoot.x -= 5*delta;
-        }
-        if(keyEvents.ArrowRight == true){
-            candleRoot.x += 5*delta;
-        }
-
-        
-        //container.rotation -= 0.01 * delta;
-    });
-    
 }
 
 var decendingColor = 0x4363E8;
@@ -134,6 +131,32 @@ function clearCandles(){
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function addRandomCandle(){
+    var r_open = getRandomArbitrary(-100, 100);
+    var r_close = getRandomArbitrary(-100, 100);
+    var r_high = getRandomArbitrary(-100, 100);
+    var r_low = getRandomArbitrary(-100, 100);
+    r_high = Math.max(r_open, r_close, r_high, r_low);
+    r_low = Math.min(r_open, r_close, r_high, r_low);
+    addCandle(r_open, r_close, r_high, r_low);
+}
+
+function refreshCandleRoot(){
+    var xPos = 0;
+    var yPos = 0;
+    //yBase++;
+    for(var k = 0; k < candleRoot.children.length; k++){
+        yPos = yBase;
+        candleRoot.children[k].x = xPos;
+        candleRoot.children[k].y = yPos;
+        xPos += 15;
+        
+    }
+
+    candleRoot.pivot.x = 0;
+    candleRoot.x = -xPos;
 }
 
 function keyboard(value) {
@@ -200,11 +223,13 @@ function keyboard(value) {
 
 
     right.press = () => {
-        keyEvents.ArrowRight = true;
+        addRandomCandle();
+        refreshCandleRoot();
+        //keyEvents.ArrowRight = true;
     };
 
     right.release = () => {
-        keyEvents.ArrowRight = false;
+        //keyEvents.ArrowRight = false;
     };
 
     
