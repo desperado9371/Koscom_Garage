@@ -103,6 +103,11 @@ function addCandle(open, close, high, low){
     let candle = new PIXI.Container();
     var body = candle.addChild(rectangle);
     var tail = candle.addChild(rectangle2);
+    candle.m_open = open;
+    candle.m_close = close;
+    candle.m_high = high;
+    candle.m_low = low;
+    
 
     body.width = 10;
     body.x = 0;
@@ -133,11 +138,28 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+function adjustScreen(numberOfCandles){
+    var maximumValue = Number.MIN_SAFE_INTEGER;
+    var minimumValue = Number.MAX_SAFE_INTEGER;
+
+    for(var k = 0; k < numberOfCandles; k++){
+        var previousCandle = candleRoot.children[candleRoot.children.length-(1 + k)];
+        maximumValue = Math.max(previousCandle.m_high, maximumValue);
+        minimumValue = Math.min(previousCandle.m_low, minimumValue);
+    }
+    candleRoot.pivot.y = (maximumValue + minimumValue) / 2;
+
+}
+
 function addRandomCandle(){
-    var r_open = getRandomArbitrary(-100, 100);
-    var r_close = getRandomArbitrary(-100, 100);
-    var r_high = getRandomArbitrary(-100, 100);
-    var r_low = getRandomArbitrary(-100, 100);
+    var previousCandle;
+    previousCandle = candleRoot.children[candleRoot.children.length-1];
+    var baseNumber = previousCandle.m_close;
+
+    var r_open = baseNumber;// + getRandomArbitrary(-100, 100);
+    var r_close = baseNumber + getRandomArbitrary(-100, 100);
+    var r_high = baseNumber + getRandomArbitrary(-100, 100);
+    var r_low = baseNumber + getRandomArbitrary(-100, 100);
     r_high = Math.max(r_open, r_close, r_high, r_low);
     r_low = Math.min(r_open, r_close, r_high, r_low);
     addCandle(r_open, r_close, r_high, r_low);
@@ -225,6 +247,7 @@ function keyboard(value) {
     right.press = () => {
         addRandomCandle();
         refreshCandleRoot();
+        adjustScreen(20);
         //keyEvents.ArrowRight = true;
     };
 
