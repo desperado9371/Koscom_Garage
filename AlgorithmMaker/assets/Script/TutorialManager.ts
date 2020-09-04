@@ -71,6 +71,8 @@ export default class TutorialManager extends cc.Component {
         console.log("Tutorial data recieved : " + event.data);
         this.index = 0;
 
+        //TutorialManager.getInstance().tutorialStart();
+        
         if(event.data == "0"){
             TutorialManager.getInstance().tutorialStart();
         }
@@ -102,7 +104,7 @@ export default class TutorialManager extends cc.Component {
         this.highlightParent.active = true;
         this.tutorialHand.node.active = true;
         console.log("tutorial started");
-        this.tutorialDone();
+        //this.tutorialDone();
         this.nextTutorial();
     }
 

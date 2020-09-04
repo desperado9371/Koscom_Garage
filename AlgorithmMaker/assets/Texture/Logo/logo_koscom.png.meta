@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "5d7fbd48-9fb5-4ecf-908f-4448c079d981",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 797,
+  "height": 174,
+  "platformSettings": {},
+  "subMetas": {
+    "logo_koscom": {
+      "ver": "1.0.4",
+      "uuid": "679a471b-89a7-4036-9818-a0d89f44cfb1",
+      "rawTextureUuid": "5d7fbd48-9fb5-4ecf-908f-4448c079d981",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 17,
+      "trimY": 9,
+      "width": 763,
+      "height": 156,
+      "rawWidth": 797,
+      "rawHeight": 174,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
