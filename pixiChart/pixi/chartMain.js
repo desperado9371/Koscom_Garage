@@ -2,7 +2,26 @@
 let candleRoot = null;
 var yBase = 0;
 let keyEvents = {};
+var candleData = null;
+
+function getPriceData(fromDate = "20200401", fromHour = "10", toDate ="20200403", toHour = "15"){
+    var sock = new WebSocket("ws://13.124.102.83:80/BackServer_Hr");
+    sock.onmessage = function(event){
+        var data = event.data;
+        console.log(data);
+        var evalData = eval(data);
+        initializeWithData(evalData);
+        refreshCandleRoot();
+        adjustScreen(40);
+        sock.close();
+    };
+    sock.onopen = function (event){
+        sock.send("load|upbit|"+ fromDate+"|"+ toDate+"|"+ fromHour+"|"+ toHour+"|0");
+    };
+}
+
 function main(){
+    getPriceData();
     const app = new PIXI.Application({
         width: 800, height: 600, backgroundColor: 0xF5F7FB, resolution: window.devicePixelRatio || 1,
     });
@@ -20,6 +39,8 @@ function main(){
     // Move container to the center
     container.x = app.screen.width;
     container.y = app.screen.height/2;
+    candleRoot.height = app.screen.height;
+    candleRoot.width = app.screen.width;
     
     // Center bunny sprite in local container coordinates
     container.pivot.x = container.width;
@@ -27,7 +48,8 @@ function main(){
     
 
 
-    initializeWithRandom();
+    //initializeWithRandom(40);
+    getPriceData();
     chartKeyboardControl(candleRoot);
 
 
@@ -56,35 +78,38 @@ function main(){
     
 }
 
-function initializeWithRandom(){
+function initializeWithData(data){
+
+    for(var k = 0; k < data.length; k++){
+        var item = data[k];
+        var datetime = item[0] + " " + item[1];
+
+        addCandle(item[2], item[3], item[4], item[5], datetime);
+    }
+}
+
+function initializeWithRandom(num){
     var r_open = getRandomArbitrary(-100, 100);
     var r_close = getRandomArbitrary(-100, 100);
     var r_high = getRandomArbitrary(-100, 100);
     var r_low = getRandomArbitrary(-100, 100);
     r_high = Math.max(r_open, r_close, r_high, r_low);
     r_low = Math.min(r_open, r_close, r_high, r_low);
+    addCandle(r_open, r_close, r_high, r_low);
 
+    num--;
     //addCandle(100+50,-100+50, 200+50, -200+50); 
     //addCandle(50+50,-50+50, 200+50, -200+50); 
     //addCandle(-55.30112080766614 ,-29.696022253883882 , -24.12087899429784 , -47.31065075174343); 
-    for(var k = 0; k < 80; k++){
-        
-        addCandle(r_open, r_close, r_high, r_low);
-        r_open = r_close;
-        r_high = getRandomArbitrary(-100, 100);
-        r_low = getRandomArbitrary(-100, 100);
-        r_close = getRandomArbitrary(-100, 100);
-        
-        r_high = Math.max(r_open, r_close, r_high, r_low);
-        r_low = Math.min(r_open, r_close, r_high, r_low);
-
+    for(var k = 0; k < num; k++){
+        addRandomCandle();
     }
 }
 
 var decendingColor = 0x4363E8;
 var accendingColor = 0xDD2626;
-function addCandle(open, close, high, low){
-    console.log(open, close, high, low);
+function addCandle(open, close, high, low, datetime = ""){
+    //console.log(open, close, high, low);
     const rectangle = PIXI.Sprite.from(PIXI.Texture.WHITE);
     const rectangle2 = PIXI.Sprite.from(PIXI.Texture.WHITE);
     rectangle.anchor.x = 0.5;
@@ -107,6 +132,7 @@ function addCandle(open, close, high, low){
     candle.m_close = close;
     candle.m_high = high;
     candle.m_low = low;
+    candle.m_datetime = datetime;
     
 
     body.width = 10;
@@ -148,6 +174,8 @@ function adjustScreen(numberOfCandles){
         minimumValue = Math.min(previousCandle.m_low, minimumValue);
     }
     candleRoot.pivot.y = (maximumValue + minimumValue) / 2;
+    candleRoot.scale.y = 600 / (maximumValue - minimumValue);
+
 
 }
 
@@ -233,6 +261,7 @@ function keyboard(value) {
         up = keyboard("ArrowUp"),
         right = keyboard("ArrowRight"),
         down = keyboard("ArrowDown");
+        enter = keyboard("Enter");
 
     left.press = () => {
         keyEvents.ArrowLeft = true;
@@ -242,12 +271,16 @@ function keyboard(value) {
         keyEvents.ArrowLeft = false;
     };
 
+    enter.press = () => {
+        
+    };
+
 
 
     right.press = () => {
-        addRandomCandle();
-        refreshCandleRoot();
-        adjustScreen(20);
+        //addRandomCandle();
+        //refreshCandleRoot();
+        //adjustScreen(40);
         //keyEvents.ArrowRight = true;
     };
 
