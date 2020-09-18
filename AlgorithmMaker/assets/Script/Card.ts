@@ -74,6 +74,10 @@ export default class Card extends HandItem {
         else if (cardName == 'open' || cardName == 'close' || cardName == 'high' || cardName == 'low'){
 
         }
+        else if(cardName == 'days_ago')
+        {
+            this.lblCardName.string = 'n일전 종가';
+        }
         else if(cardName.includes('macd') ){
             name = 'MACD|시그널';
             this.cardName = 'MACD|시그널';

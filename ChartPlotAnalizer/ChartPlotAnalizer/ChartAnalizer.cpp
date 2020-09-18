@@ -372,18 +372,26 @@ AnalysisOutput ChartAnalizer::AnalyzeValueVector(string key, int numDiv, vector<
 	double totalRange = points[points.size() - 1] - points[0];
 	for (int k = 0; k < current.size(); ++k)
 	{
-		TA_Real valueFrom = current[k][0];
-		TA_Real valueTo = current[k][current[k].size() - 1];
-		TA_Real valueRange = valueTo - valueFrom;
-		double valueRangeRatio = valueRange / totalRange;
-		double countRatio = current[k].size() / (double)totalCount;
-		//how to calc saturation level...
-		double saturationLevel = countRatio / valueRangeRatio;
-		if (saturationLevel > output.saturationLevel)
+		if (current[k].size() > 0)
 		{
-			output.saturationLevel = saturationLevel;
-			output.valueFrom = valueFrom;
-			output.valueTo = valueTo;
+			TA_Real valueFrom = current[k][0];
+			TA_Real valueTo = current[k][current[k].size() - 1];
+			TA_Real valueRange = valueTo - valueFrom;
+			if (valueRange < 0.01)
+			{
+				valueRange = -1;
+			}
+			double valueRangeRatio = valueRange / totalRange;
+			double countRatio = current[k].size() / (double)totalCount;
+			//how to calc saturation level...
+			double saturationLevel = countRatio / valueRangeRatio;
+			if (saturationLevel > output.saturationLevel)
+			{
+				output.saturationLevel = saturationLevel;
+				output.valueFrom = valueFrom;
+				output.valueTo = valueTo;
+			}
+
 		}
 	}
 

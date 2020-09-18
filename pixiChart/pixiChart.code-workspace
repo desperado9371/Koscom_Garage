@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "pixi"
+		}
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "pwa-chrome",
+				"request": "launch",
+				"name": "Launch Chrome against localhost",
+				"url": "file:///C:/pixiChart/index.html",
+				"webRoot": "${workspaceFolder}"
+			}
+		]
+	}
+}
