@@ -1,12 +1,12 @@
-#!/usr/bin/env python
+
 # coding: utf-8
 
-# In[2]:
-
+# In[192]:
 
 
 import asyncio
 import websockets
+from websocket import create_connection
 import math
 import json
 import pandas as pd
@@ -16,7 +16,7 @@ import socket
 import numpy as np
 from backtestAPI import BacktestAPI
 from multiprocessing import Process, Queue
-from websocket import create_connection
+
 
 class Algo_Info:
     str_date = ""
@@ -117,9 +117,9 @@ def Make_indicat(indi, prc_lst, market, stk_nm, hourday_tp):
         prc_lst = vortex_indicator_pos(prc_lst, n=int(indi['val']['period']))
     elif indi['name'] == 'days_ago':
         if market == 'upbit' and hourday_tp == 'day':
-            prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']),market,stk_nm)
+            prc_lst = upbit_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']),market)
         elif market == 'upbit' and hourday_tp == 'hour':
-            prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']),market,stk_nm)
+            prc_lst = upbit_hours_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']),market)
         elif market == 'fore' and hourday_tp == 'day':
             prc_lst = fore_days_ago(prc_lst, int(indi['val']['period']), str(indi['val']['val']), stk_nm,market)
         elif market == 'fore' and hourday_tp == 'hour':
@@ -128,14 +128,14 @@ def Make_indicat(indi, prc_lst, market, stk_nm, hourday_tp):
     return prc_lst
 
 
-def upbit_days_ago(df, n, val,market,stk_nm = 'krwbtc'):
+def upbit_days_ago(df, n, val,market):
     data = str(df.tail(1)['timestamp']).split('\n')[0].split(' ')
-    days_ago_data = Get_DtPrc(market, str(df['timestamp'].head(1)[0]), str(data[4]), n,stk_nm)
+    days_ago_data = Get_DtPrc(market, str(df['timestamp'].head(1)[0]), str(data[4]), n)
     df['days_ago'] = days_ago_data[val].values
     return df
 
 
-def upbit_hours_ago(df, n, val,market,stk_nm = 'krwbtc'):
+def upbit_hours_ago(df, n, val,market):
     # 시작날짜/시간 추출
     date_data = df.head(1)['timestamp'][0].split('T')
     srt_day_data = date_data[0]
@@ -146,7 +146,7 @@ def upbit_hours_ago(df, n, val,market,stk_nm = 'krwbtc'):
     end_day_data = date_data[0]
     end_time_data = date_data[1][0:2]
 
-    days_ago_data = Get_HrPrc(market, srt_day_data, end_day_data, srt_time_data, end_time_data, n,stk_nm)
+    days_ago_data = Get_HrPrc(market, srt_day_data, end_day_data, srt_time_data, end_time_data, n)
     days_ago_data['timestamp'] = days_ago_data[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
     df['days_ago'] = days_ago_data[val].values
     return df
@@ -461,19 +461,18 @@ def Fet_Algo(Prc_history, algo, bns_tp, market, stk_nm, hourday_tp, q):
 
 
 # 비트코인 일봉 기준 시세 가져오기
-def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0, stk_nm='krwbtc'):
+def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0):
     # print('market: ' + market + ' str_date: ' + str_date + ' end_date: ' + end_date)
 
-    ws = create_connection('ws://15.164.166.28:80/BackServer_Day')
-    order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + str(movement) + '|'+str(stk_nm)
-    print(order_packet)
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Day')
+    order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + str(movement)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
         ws.close()
     if not result:
         a = 1
-        print("DB에서 값을 못받아왔습니다. 패킷 확인하세요11111111111111")
+        # print("DB에서 값을 못받아왔습니다. 패킷 확인하세요")
     else:
         json_data = json.loads(result)
         dataframe_result = pd.DataFrame(list(json_data),
@@ -483,10 +482,10 @@ def Get_DtPrc(market='upbit', str_date='0', end_date='99999999', movement=0, stk
 
 
 # 비트코인 시간봉 기준 시세 가져오기
-def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='23', movement=0, stk_nm ='krwbtc'):
-    ws = create_connection('ws://15.164.166.28:80/BackServer_Hr')
-    order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time + '|' + str(movement) + '|' + str(stk_nm)
-    print(order_packet)
+def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', end_time='23', movement=0):
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Hr')
+    order_packet = 'load' + '|' + market + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time + '|' + str(
+        movement)
     if ws.connected:
         ws.send(order_packet)
         result = ws.recv()
@@ -504,7 +503,7 @@ def Get_HrPrc(market='upbit', str_date='0', end_date='99999999', srt_time='00', 
 
 # 일봉 기준 시세 가져오기
 def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', movement=0):
-    ws = create_connection('ws://15.164.166.28:80/BackServer_Forestk_Day')
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Forestk_Day')
     order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + str(movement)
     if ws.connected:
         ws.send(order_packet)
@@ -524,7 +523,7 @@ def Get_DtForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='9999
 # 시간봉 기준 시세 가져오기
 def Get_HrForeStkPrc(market='fore', stk_nm='apple', str_date='0', end_date='99999999', srt_time='00', end_time='23',
                      movement=0):
-    ws = create_connection('ws://15.164.166.28:80/BackServer_Forestk_Hr')
+    ws = create_connection('ws://13.124.102.83:80/BackServer_Forestk_Hr')
     order_packet = 'load' + '|' + market + '|' + stk_nm + '|' + str_date + '|' + end_date + '|' + srt_time + '|' + end_time + '|' + str(
         movement)
     # print(order_packet)
@@ -556,9 +555,9 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
     if market == 'upbit':
         # 기간시세 가져옴
         if hourday_tp == 'day':  # 일봉일 경우
-            Prc_history = Get_DtPrc(market, srt_date, end_date, 0,stk_nm)
+            Prc_history = Get_DtPrc(market, srt_date, end_date, 0)
         else:  # 시간봉일 경우
-            Prc_history = Get_HrPrc(market, srt_date, end_date, srt_time, end_time, 0,stk_nm)
+            Prc_history = Get_HrPrc(market, srt_date, end_date, srt_time, end_time, 0)
             Prc_history['timestamp'] = Prc_history[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
     elif market == 'fore':
         if hourday_tp == 'day':  # 일봉일 경우
@@ -602,7 +601,7 @@ def Parsing_Main(buy_strategy='', sell_strategy='', market='upbit', stk_nm='appl
     #     print('최종리스트')
     buy_result.extend(sell_result)
     final_result = sorted(buy_result)
-    print(final_result)
+#     print(final_result)
     return final_result
 
 
@@ -612,7 +611,6 @@ def Chk_Meet_Condition(Chk_list):
         if 'nan' not in str(Chk_list.loc[row]['chk']):
             if eval(Chk_list.loc[row]['chk']) == True:
                 Chk_list['meet_count'][row] = int(Chk_list['meet_count'][row]) + 1
-    print(Chk_list)
     Chk_list['chk'] = ''
     return Chk_list
 
@@ -623,7 +621,6 @@ def Chk_Meet_Count(Chk_list, min_con, max_con):
         if int(Chk_list['meet_count'][row]) > int(max_con) or int(Chk_list['meet_count'][row]) < int(min_con):
             Chk_list.drop(row, inplace=True, axis=0)
     Chk_list = Chk_list.reset_index(drop=True)
-    
     Chk_list['meet_count'] = 0
     return Chk_list
 
@@ -653,8 +650,8 @@ def Set_Pricelist(Chk_list, group_algo, Prc_history, market, stk_nm, hourday_tp)
             Chk_list['chk'][row] = Chk_list['chk'][row] + str(
                 Prc_history[group_algo['name']][Prc_history['timestamp'] == Chk_list['timestamp'][row]].values[0])
     #             print(Chk_list['chk'][row])
-#         print('지표값 세팅')
-#         print(Chk_list)
+    #     print('지표값 세팅')
+    #     print(Chk_list)
     return Chk_list
 
 
@@ -683,11 +680,18 @@ if __name__ == '__main__':
     # 7번째 파라미터 = srt_time시작시간
     # 8번째 파라미터 = end_time종료시간
     # 9번째 파라미터 = hourday_tp 시간봉/일봉
-    now = datetime.now()
-    print(now)
+#     now = datetime.now()
+#     print(now)
 
-    result = Parsing_Main(json_data_buy, json_data_sell, 'upbit', '', '20200916', '20200918', srt_time, end_time, 'hour')
+    result = Parsing_Main(json_data_buy, json_data_sell, market, stk_nm, srt_date, end_date, srt_time, end_time, 'hour')
 
-    now = datetime.now()
-    print(now)
+#     now = datetime.now()
+#     print(now)
 
+
+
+
+
+
+
+# import backtestAPI

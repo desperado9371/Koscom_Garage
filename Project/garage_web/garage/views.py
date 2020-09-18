@@ -37,7 +37,7 @@ def test(request):
     algo_name = request.GET.get('algoname')
 
     # 세션에셔 읽어온 사용자 이름과 http get 에서 읽어온 알고리즘 이름을 바탕으로 미들웨어에 알고리즘 정보 요청
-    ws = create_connection("ws://13.124.102.83/Cocos")
+    ws = create_connection("ws://15.164.166.28/Cocos")
     ws.send("load|{}|{}".format(username, algo_name))
 
     # 미들웨어로 부터 받은 데이터 파싱
@@ -95,7 +95,7 @@ def test(request):
         end_time = ''
         bns_tp = ''
 
-    target = request.GET.get('target')
+    target = request.GET.get('target').split('|')[0]
     market = 'upbit'
     stk_nm = ''
 
@@ -104,7 +104,8 @@ def test(request):
 
     if target == 'upbit':
         market = 'upbit'
-        stk_nm = ''
+        stk_nm = request.GET.get('target').split('|')[1]
+        print(market,stk_nm)
     else:
         market = 'fore'
         stk_nm = target
@@ -138,35 +139,35 @@ def test(request):
     # 그래프 표시를 위해 시간 데이터 요청
     if market == 'fore':
         if hourday_tp == 'day':
-            bitcoin_dt = ParsingJson.Get_DtForeStkPrc(market, stk_nm, srt_date, end_date)
+            bitcoin_dt = ParsingJson.Get_DtForeStkPrc(market=market, stk_nm=stk_nm, str_date=srt_date, end_date=end_date)
         else:
-            bitcoin_dt = ParsingJson.Get_HrForeStkPrc(market, stk_nm, srt_date, end_date)
+            bitcoin_dt = ParsingJson.Get_HrForeStkPrc(market=market, stk_nm=stk_nm, str_date=srt_date, end_date=end_date)
             bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
     else:
-
+        print(stk_nm+'+++++++++++++++++++++++++++++++++')
         if hourday_tp == 'day':  # 일봉일 경우
-            bitcoin_dt = ParsingJson.Get_DtPrc(market, srt_date, end_date)
+            bitcoin_dt = ParsingJson.Get_DtPrc(market=market, str_date=srt_date, end_date=end_date, stk_nm=stk_nm)
         else:  # 시간봉일 경우
-            bitcoin_dt = ParsingJson.Get_HrPrc(market, srt_date, end_date, srt_time, end_time)
+            bitcoin_dt = ParsingJson.Get_HrPrc(market=market, str_date=srt_date, end_date=end_date, srt_time=srt_time, end_time=end_time, stk_nm=stk_nm)
             bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
     if bitcoin_dt.empty:
         if market == 'fore':
             if hourday_tp == 'day':
-                json_result = FetPrc.FetDtForeStkPrc(market, stk_nm, srt_date, end_date)
+                json_result = FetPrc.FetDtForeStkPrc(market=market, stk_nm=stk_nm, str_date=srt_date, end_date=end_date)
                 json_data = json.loads(json_result)
                 dataframe_result = pd.DataFrame(list(json_data),
                                                 columns=['timestamp', 'open', 'close', 'high', 'low', 'volume'])
                 bitcoin_dt = dataframe_result
             else:
-                bitcoin_dt = FetPrc.FetHrForeStkPrc(market, stk_nm, srt_date, end_date)
+                bitcoin_dt = FetPrc.FetHrForeStkPrc(market=market, stk_nm=stk_nm, str_date=srt_date, end_date=end_date)
                 bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
         else:
 
             if hourday_tp == 'day':  # 일봉일 경우
-                bitcoin_dt = FetPrc.FetDtPrc(market, srt_date, end_date)
+                bitcoin_dt = FetPrc.FetDtPrc(market=market, stk_nm=stk_nm, str_date=srt_date, end_date=end_date)
             else:  # 시간봉일 경우
-                bitcoin_dt = FetPrc.FetHrPrc(market, srt_date, end_date, srt_time, end_time)
+                bitcoin_dt = FetPrc.FetHrPrc(market=market, str_date=srt_date, end_date=end_date, srt_time=srt_time, end_time=end_time, stk_nm=stk_nm)
                 bitcoin_dt['timestamp'] = bitcoin_dt[['timestamp', 'time']].apply(lambda x: 'T'.join(x), axis=1)
 
     # 해외 주식일 경우 환율조회해서 적용
@@ -418,7 +419,7 @@ def mypage(request):
     username = request.user.username
 
     # 미들웨어와 웹소켓 방식으로 연결
-    ws = create_connection("ws://13.124.102.83:80/Cocos")
+    ws = create_connection("ws://15.164.166.28:80/Cocos")
 
     # 해당사용자의 모든 알고리즘 조회 요청
     ws.send("load|{}|all".format(username))
