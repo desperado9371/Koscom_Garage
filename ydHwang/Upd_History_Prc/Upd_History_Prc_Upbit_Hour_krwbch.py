@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[17]:
+# In[1]:
 
 
 import mysql.connector as sql
@@ -9,15 +9,15 @@ import glob
 import pandas as pd
 
 
-# In[18]:
+# In[2]:
 
 
-df = pd.read_csv("/home/garage/workspace/price_update_crontab/upbit_krwbtc_1hr.csv")
+df = pd.read_csv("/home/garage/workspace/price_update_crontab/upbit_krwbch_1hr.csv")
 df = df.tail(1)
 print(df)
 
 
-# In[19]:
+# In[3]:
 
 
 db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
@@ -28,7 +28,7 @@ for i in range(len(df)):
     tmp = tmp.split('T')
     base_dt = tmp[0]
     
-    coin_type = 'krwbtc'
+    coin_type = 'bch'
     base_time = tmp[1]
     open_price = df.iloc[i]['open']
     close_price = df.iloc[i]['close']
@@ -42,10 +42,4 @@ for i in range(len(df)):
     
 db_connection.commit()
 db_connection.close()
-
-
-# In[ ]:
-
-
-
 

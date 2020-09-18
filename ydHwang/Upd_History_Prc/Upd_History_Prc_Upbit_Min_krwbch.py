@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[71]:
+# In[90]:
 
 
 import mysql.connector as sql
@@ -10,48 +10,49 @@ import pandas as pd
 from datetime import datetime
 
 
-# In[72]:
+# In[91]:
 
 
-df = pd.read_csv("/home/garage/workspace/price_update_crontab/upbit_krwbtc_1min.csv")
+df = pd.read_csv("/home/garage/workspace/price_update_crontab/upbit_krwbch_1min.csv")
 
 
-# In[73]:
+# In[92]:
 
 
 df = df.tail(11)
 print(df)
 
 
-# In[74]:
+# In[93]:
 
 
 db_connection = sql.connect(host='root.cqyptexqvznx.ap-northeast-2.rds.amazonaws.com',port=int(3306), database='garage_test', user='root', password='koscom!234')
 db_cursor = db_connection.cursor()
 
 
-# In[75]:
+# In[94]:
 
 
 
 query = 'SELECT max(base_time) FROM history_prc_upbit WHERE base_dt = %s and coin_type = %s'
-db_cursor.execute(query,(datetime.today().strftime("%Y%m%d"),'krwbtc',))
+db_cursor.execute(query,(datetime.today().strftime("%Y%m%d"),'bch',))
 print(datetime.today().strftime("%Y%m%d"))
 max_time = db_cursor.fetchone()[0]
 print(max_time)
 
 
-# In[76]:
+# In[95]:
 
 
 for i in range(len(df)):
     tmp = str(df.iloc[i]['timestamp']).replace("-","")
     tmp = tmp.split('T')
-    base_dt = tmp[0] 
-    coin_type = 'krwbtc'
-    base_time = tmp[1]
     if max_time >= tmp[1] :
-        continue  
+        continue
+    base_dt = tmp[0]
+    coin_type = 'bch'
+    base_time = tmp[1]
+    print(base_time)
     open_price = df.iloc[i]['open']
     close_price = df.iloc[i]['close']
     high_price = df.iloc[i]['high']

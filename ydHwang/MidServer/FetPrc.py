@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[208]:
+# In[10]:
 
 
 #!/usr/bin/env python
@@ -68,7 +68,7 @@ def Move_stk_hr(date,hour,movement=0):
     print(date)
     return date
 
-def FetDtPrc(market,srt_date,end_date,movement=0):
+def FetDtPrc(market,srt_date,end_date,movement=0,coin_type='krwbtc'):
     print("market: "+market + "srt_date: "+srt_date + " end_date: "+end_date+ " movement: "+str(movement))
     s_json_data=0
     # 시작일 - 전일자
@@ -81,25 +81,28 @@ def FetDtPrc(market,srt_date,end_date,movement=0):
     
     try:
         if market == 'upbit':
-            query = 'SELECT base_dt,open_price,close_price,high_price,low_price,volumn FROM history_dt_prc_upbit WHERE base_dt >= %s and base_dt <= %s '
+            query = 'SELECT base_dt,open_price,close_price,high_price,low_price,volumn FROM history_dt_prc_upbit WHERE base_dt >= %s and base_dt <= %s and coin_type= %s'
             #query = 'SELECT JSON_ARRAYAGG(JSON_OBJECT("base_dt",base_dt,"open_price",open_price,"close_price",close_price,"high_price",high_price,"low_price",low_price,"volumn",volumn)) FROM history_dt_prc_upbit WHERE base_dt >= %s and base_dt <= %s '
-            db_cursor.execute(query,(srt_date,end_date,))
+            db_cursor.execute(query,(srt_date,end_date,coin_type,))
             data = db_cursor.fetchall()  
         else :
-            query = 'SELECT base_dt,open_price,close_price,high_price,low_price,volumn FROM history_dt_prc_binance WHERE base_dt >= %s and base_dt <= %s '
-            db_cursor.execute(query,(srt_date,end_date,))
+            query = 'SELECT base_dt,open_price,close_price,high_price,low_price,volumn FROM history_dt_prc_binance WHERE base_dt >= %s and base_dt <= %s and coin_type = %s'
+            db_cursor.execute(query,(srt_date,end_date,coin_type,))
             data = db_cursor.fetchall()               
         db_connection.commit()
     finally:
         db_connection.close()
     
     #df = pd.DataFrame(data,columns=['timestamp','open','close','high','low','volumn'])
-    print("조회완료")
+    print(data)
     s_json_data = json.dumps(data)
     return str(s_json_data)
 
-def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', end_time='24',movement=0):
+def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', end_time='24',movement=0, coin_type='krwbtc'):
     s_json_data=0
+    if srt_date > end_date:
+        print('일자오류')
+        return
     print("market: "+market + "srt_date: "+srt_date+srt_time+ " end_date: "+end_date+end_time+" movement: "+str(movement))
     srt_date=Move_hr(srt_date,srt_time,movement)
     srt_time=srt_date[8:10]
@@ -120,12 +123,12 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     
     try:
         if market == 'upbit' and srt_date != end_date:
-            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s                union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt > %s and base_dt < %s                union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time <= %s'
-            db_cursor.execute(query,(srt_date,srt_time,srt_date,end_date,end_date,end_time))
+            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s and coin_type = %s                    union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt > %s and base_dt < %s and coin_type = %s                    union SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time <= %s and coin_type = %s'
+            db_cursor.execute(query,(srt_date,srt_time,coin_type,srt_date,end_date,coin_type,end_date,end_time,coin_type))
             data = db_cursor.fetchall()  
         elif market == 'upbit' and srt_date == end_date:
-            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s and base_time <= %s'
-            db_cursor.execute(query,(srt_date,srt_time,end_time))
+            query = 'SELECT base_dt,base_time,open_price,close_price,high_price,low_price,volumn FROM history_hr_prc_upbit WHERE base_dt = %s and base_time >= %s and base_time <= %s and coin_type = %s'
+            db_cursor.execute(query,(srt_date,srt_time,end_time,coin_type))
             data = db_cursor.fetchall() 
         else :
             print('바이낸스는 아직 시간봉처리 안함 2020.05.28')
@@ -139,7 +142,7 @@ def FetHrPrc(market='upbit',srt_date='0',end_date='99999999', srt_time = '00', e
     
     #df = pd.DataFrame(data,columns=['timestamp','open','close','high','low','volumn'])
     s_json_data = json.dumps(data)
-    print("조회완료")
+    print(s_json_data)
     return str(s_json_data)
 
 
@@ -184,6 +187,9 @@ def FetDtForeStkPrc(stk_nm ,srt_date,end_date,movement=0):
 
 def FetHrForeStkPrc(market='fore',stk_nm='apple',srt_date='0',end_date='99999999', srt_time = '00', end_time='24',movement=0):
     s_json_data=0
+    if srt_date > end_date:
+        print('일자오류')
+        return
     #시간입력이 범위 벗어난경우
     if int(srt_time) < 9:
         srt_time = '00'
@@ -239,11 +245,12 @@ def FetHrForeStkPrc(market='fore',stk_nm='apple',srt_date='0',end_date='99999999
 
 if __name__ == "__main__":
     print("start")
-    #FetDtPrc('upbit','20200702','20200703')
+    #FetDtPrc('upbit','20200702','20200703',0,'eth')
+    #FetDtPrc('upbit','20200702','20200703',0,'bch')
     #FetDtForeStkPrc('apple','20200304','20200306',-2)
     #Move_stk_hr(20200714,15,-8)
-    FetHrForeStkPrc('fore','tesla','20200401','20200403','10','15',-4)
-    #FetHrPrc('upbit','20200701','20200706','02','22',0)
+    #FetHrForeStkPrc('fore','tesla','20200401','20200403','10','15',-4)
+    FetHrPrc('upbit','20200916','20200916','02','03',0,'bch')
 # if __name__ == "__main__":
 #     print("start")
 #     FetDtPrc('upbit','20180101','20180301')

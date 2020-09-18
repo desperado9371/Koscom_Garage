@@ -100,7 +100,8 @@ def BackServer_FetDay(ws):
             log.info("WebServer:BackServer_Day srt_date: " + Key[2])
             log.info("WebServer:BackServer_Day end_date: " + Key[3])
             log.info("WebServer:BackServer_Day movement: " + Key[4])
-            Result = FetPrc.FetDtPrc(Key[1], Key[2], Key[3], Key[4])
+            log.info("WebServer:BackServer_Day coin_type: " + Key[5])
+            Result = FetPrc.FetDtPrc(Key[1], Key[2], Key[3], Key[4],Key[5])
             log.info("WebServer:BackServer_Day [FET]result:" + Result)
             ws.send(Result)
         else:
@@ -127,7 +128,8 @@ def BackServer_FetHr(ws):
             log.info("WebServer:BackServer_Hr srt_time: " + Key[4])
             log.info("WebServer:BackServer_Hr end_time: " + Key[5])
             log.info("WebServer:BackServer_Hr movement: " + Key[6])
-            Result = FetPrc.FetHrPrc(Key[1], Key[2], Key[3], Key[4], Key[5], Key[6])
+            log.info("WebServer:BackServer_Day coin_type: " + Key[7])
+            Result = FetPrc.FetHrPrc(Key[1], Key[2], Key[3], Key[4], Key[5], Key[6],Key[7])
             log.info("WebServer:BackServer_Hr [FET]result:" + Result)
             ws.send(Result)
         else:
