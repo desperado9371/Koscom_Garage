@@ -2,7 +2,9 @@
   "title": "AlgorithmMaker",
   "packageName": "",
   "startScene": "2d2f792f-a40c-49bb-a189-ed176a246e49",
-  "excludeScenes": [],
+  "excludeScenes": [
+    "5f4ebb40-8578-4c28-bd4a-9ed0613ca955"
+  ],
   "includeSDKBox": false,
   "orientation": {
     "landscapeLeft": true,
