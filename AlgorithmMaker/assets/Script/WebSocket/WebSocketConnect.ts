@@ -24,7 +24,7 @@ export default class WebSocketConnect extends cc.Component {
     // onLoad () {}
 
     connect(){
-      this.ws = new WebSocket("ws://13.124.102.83:80/Cocos");
+      this.ws = new WebSocket("ws://15.164.166.28:80/Cocos");
       this.ws.onopen = this.onOpen;
       this.ws.onmessage = this.onRecieve;
       this.ws.onclose = this.onClose;
@@ -83,7 +83,7 @@ export default class WebSocketConnect extends cc.Component {
           this.ws.send(str);
         } catch (error) {
           this.tempStr = str;
-          this.ws = new WebSocket("ws:/13.124.102.83:80/Cocos");
+          this.ws = new WebSocket("ws://15.164.166.28:80/Cocos");
           this.ws.onopen = this.resend;
         }
         

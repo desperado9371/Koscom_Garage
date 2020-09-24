@@ -52,7 +52,7 @@ export default class TutorialManager extends cc.Component {
 
         //this.clickTutorial(this.testFrom);
         TutorialManager.instance = this;
-        this.ws = new WebSocket("ws:/13.124.102.83:80/ControlMem");
+        this.ws = new WebSocket("ws://15.164.166.28:80/ControlMem");
         this.ws.onopen = this.onOpen;
         this.ws.onmessage = this.onRecieve;
         this.ws.onclose = this.onClose;
