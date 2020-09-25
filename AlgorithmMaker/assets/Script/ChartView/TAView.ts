@@ -76,6 +76,48 @@ export default class TAView extends cc.Component {
         var item = obj.getComponent(TAItem);
         return item;
     }
+    calcBollBand(){
+        var item = this.createItem();
+        var percent = 100;
+        item.setTitle("MACD Signal");
+
+        //calc RSI profit percentage
+
+        var output = TALib.BOLL(this.data, )
+        //var percentage = 100;
+        var isHolding = false;
+        var boughtPrice = 0;
+        var prevSignal = 0;
+        for(var k = 0; k < output[2].length; k++)
+        {
+            var currentPrice = this.data[k];
+
+                // buy
+                if(output[2][k] > 0 && prevSignal < 0){
+                    if(isHolding === false ){
+                        isHolding = true;
+                        boughtPrice = currentPrice;
+                        prevSignal = output[2][k];
+                    }
+                }
+                // sell
+                else if(output[2][k] < 0 && prevSignal > 0){
+
+                    if(isHolding === true){
+                        isHolding = false;
+                        percent += percent * ((currentPrice - boughtPrice)/boughtPrice);
+                        prevSignal = output[2][k];
+                    }
+                }
+                else if(output[2][k] != 0 && output[2][k] !== NaN){ // initialize first 
+                    prevSignal = output[2][k];
+                }
+                
+            
+        }
+
+        item.setPercent((percent-100).toFixed(2));
+    }
     calcMACD(long, short, sig){
         var item = this.createItem();
         var percent = 100;
