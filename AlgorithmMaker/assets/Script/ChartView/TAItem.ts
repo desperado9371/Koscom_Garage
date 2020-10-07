@@ -15,18 +15,35 @@ export default class TAItem extends cc.Component {
     @property(cc.Label)
     percent: cc.Label = null;
 
+    @property(cc.Label)
+    tradeCount: cc.Label = null;
+
+    @property(cc.Sprite)
+    percentageBg :cc.Sprite = null;
+
+    @property(cc.SpriteFrame)
+    lossFrame : cc.SpriteFrame = null;
+
+    @property(cc.SpriteFrame)
+    profitFrame : cc.SpriteFrame = null;
+
     setTitle(text){
         this.title.string = text;
     }
     setPercent(number){
         if(number < 0){
-            this.percent.node.color = cc.Color.BLUE;
+            this.percentageBg.spriteFrame = this.lossFrame;
         }
         else{
-            this.percent.node.color = cc.Color.RED;
+            this.percentageBg.spriteFrame = this.profitFrame;
+
 
         }
         this.percent.string = number + "%";
+    }
+
+    setTradeCount(number){
+        this.tradeCount.string = number + "회";
     }
 
     // update (dt) {}

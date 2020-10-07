@@ -107,6 +107,7 @@ export default class TAView extends cc.Component {
                         isHolding = false;
                         percent += percent * ((currentPrice - boughtPrice)/boughtPrice);
                         prevSignal = output[2][k];
+                        tradeCount++;
                     }
                 }
                 else if(output[2][k] != 0 && output[2][k] !== NaN){ // initialize first 
@@ -130,6 +131,7 @@ export default class TAView extends cc.Component {
         var isHolding = false;
         var boughtPrice = 0;
         var prevSignal = 0;
+        var tradeCount = 0;
         for(var k = 0; k < output[2].length; k++)
         {
             var currentPrice = this.data[k];
@@ -149,6 +151,7 @@ export default class TAView extends cc.Component {
                         isHolding = false;
                         percent += percent * ((currentPrice - boughtPrice)/boughtPrice);
                         prevSignal = output[2][k];
+                        tradeCount++;
                     }
                 }
                 else if(output[2][k] != 0 && output[2][k] !== NaN){ // initialize first 
@@ -159,6 +162,7 @@ export default class TAView extends cc.Component {
         }
 
         item.setPercent((percent-100).toFixed(2));
+        item.setTradeCount(tradeCount);
     }
     calcRSI(period, buyUnder, sellOver){
         var item = this.createItem();
@@ -171,6 +175,7 @@ export default class TAView extends cc.Component {
         //var percentage = 100;
         var isHolding = false;
         var boughtPrice = 0;
+        var tradeCount = 0;
         for(var k = 0; k < output.length; k++)
         {
             var currentPrice = this.data[k];
@@ -188,12 +193,14 @@ export default class TAView extends cc.Component {
                     if(isHolding === true){
                         isHolding = false;
                         percent += percent * ((currentPrice - boughtPrice)/boughtPrice);
+                        tradeCount++;
                     }
                 }
             }
         }
 
         item.setPercent((percent-100).toFixed(2));
+        item.setTradeCount(tradeCount);
         
     }
 

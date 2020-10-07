@@ -58,7 +58,8 @@ export default class LineChart extends cc.Component {
     drawChart(candles, offset, range){
         this.drawing.clear();
         this.drawing.lineWidth = 6;
-        this.drawing.strokeColor = cc.Color.RED;
+        //#FF5E99
+        this.drawing.strokeColor = new cc.Color(255, 94, 153, 255);
 
         var start = candles.length - offset - range;
         var maximumValue = Number.MIN_SAFE_INTEGER;
