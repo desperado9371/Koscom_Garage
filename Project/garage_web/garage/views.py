@@ -538,7 +538,7 @@ def signup(request):
                     username=request.POST["username"], password=request.POST["password1"], email=request.POST["email"])
                 # 해당 유저로 로그인 처리
                 auth.login(request, user)
-                ws = create_connection("ws://13.124.102.83:80/JoinMem")
+                ws = create_connection("ws://15.164.166.28:80/JoinMem")
                 ws.send("save|{}|{}".format(user.username, user.email))
                 response = redirect('/algomaker')
                 response.set_cookie('username', request.POST["username"])
